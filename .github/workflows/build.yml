@@ -1,0 +1,39 @@
+name: Build Web Application
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: sociable-weaver-web
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build web application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install Dependencies
+        run: npm install
+      - name: Build Application
+        run: npm run build
+      - name: Publish generated site to the sociable-weaver-web repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: dist
+          destination-github-username: albertattard
+          destination-repository-name: sociable-weaver-web
+          user-email: albertattard@gmail.com
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: main
