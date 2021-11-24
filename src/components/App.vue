@@ -10,7 +10,7 @@
         </li>
         <li>
           Download the application:
-          <a href="https://github.com/albertattard/sociable-weaver-app-java-boot/releases/download/v0.1/sw-app.jar"
+          <a href="https://github.com/albertattard/sociable-weaver-app-java-boot/releases/download/v0.3/sw-app.jar"
             >sw-app.jar</a
           >
         </li>
