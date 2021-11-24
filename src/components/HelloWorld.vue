@@ -1,19 +1,28 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1>{{ message }}</h1>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { Vue } from "vue-class-component";
+import appApi from "@/services/AppApi";
 
-@Options({
-  props: {
-    msg: String,
-  },
-})
 export default class HelloWorld extends Vue {
-  msg!: string;
+  private message = "Sociable Weaver";
+
+  mounted(): void {
+    this.$nextTick(() => {
+      appApi
+        .isAppRunning()
+        .then((running) => {
+          this.message = running ? "Application is running" : "Application is not running";
+        })
+        .catch(() => {
+          this.message = "Failed to check the application status";
+        });
+    });
+  }
 }
 </script>
 

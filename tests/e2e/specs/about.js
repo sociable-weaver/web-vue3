@@ -1,4 +1,4 @@
-describe("About Page", () => {
+describe("About page", () => {
   it("renders the site information", () => {
     cy.visit("/#/about");
     cy.contains("h2", "Prime directive");
