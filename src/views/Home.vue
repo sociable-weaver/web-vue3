@@ -1,16 +1,16 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Sociable Weaver" />
+    <App msg="Sociable Weaver" />
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import HelloWorld from "@/components/HelloWorld.vue";
+import App from "@/components/App.vue";
 
 @Options({
   components: {
-    HelloWorld,
+    App,
   },
 })
 export default class Home extends Vue {}
