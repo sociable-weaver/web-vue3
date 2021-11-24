@@ -25,6 +25,7 @@ describe("App", () => {
     await flushPromises();
 
     expect(wrapper.text()).toMatch("Application is not running");
+    expect(wrapper.text()).toMatch("Getting started");
   });
 
   it("displays unsuccessful message when application is not healthy", async () => {
