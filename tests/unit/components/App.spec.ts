@@ -1,10 +1,10 @@
-import { shallowMount, flushPromises } from "@vue/test-utils";
 import App from "@/components/App.vue";
-import { mocked } from "ts-jest/utils";
 import { apiClient } from "@/services/ServiceApi";
+import { flushPromises, shallowMount } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
 import healthCheckSuccessfulResponse from "../../fixtures/HealthCheckSuccessful";
-import unhealthyCheckSuccessfulResponse from "../../fixtures/UnhealthyCheckSuccessful";
 import networkError from "../../fixtures/NetworkError";
+import unhealthyCheckSuccessfulResponse from "../../fixtures/UnhealthyCheckSuccessful";
 
 jest.mock("@/services/ServiceApi");
 

@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
+import { AppStatus, isAppRunning } from "@/services/AppApi";
 import { Vue } from "vue-class-component";
-import { isAppRunning, AppStatus } from "@/services/AppApi";
 
 export default class HelloWorld extends Vue {
   private message = "Sociable Weaver";
