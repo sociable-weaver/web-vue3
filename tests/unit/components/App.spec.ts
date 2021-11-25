@@ -2,9 +2,10 @@ import App from "@/components/App.vue";
 import { apiClient } from "@/services/ServiceApi";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
+import healthCheckForbiddenResponse from "../../fixtures/HealthCheckForbidden";
+import healthCheckServerErrorResponse from "../../fixtures/HealthCheckServerError";
 import healthCheckSuccessfulResponse from "../../fixtures/HealthCheckSuccessful";
 import networkError from "../../fixtures/NetworkError";
-import unhealthyCheckSuccessfulResponse from "../../fixtures/UnhealthyCheckSuccessful";
 
 jest.mock("@/services/ServiceApi");
 
@@ -29,11 +30,20 @@ describe("App", () => {
   });
 
   it("displays unsuccessful message when application is not healthy", async () => {
-    mocked(apiClient.get).mockResolvedValueOnce(unhealthyCheckSuccessfulResponse);
+    mocked(apiClient.get).mockResolvedValueOnce(healthCheckServerErrorResponse);
 
     const wrapper = shallowMount(App);
     await flushPromises();
 
     expect(wrapper.text()).toMatch("Application is running, but unhealthy");
+  });
+
+  it("displays unsuccessful message when application forbids request", async () => {
+    mocked(apiClient.get).mockResolvedValueOnce(healthCheckForbiddenResponse);
+
+    const wrapper = shallowMount(App);
+    await flushPromises();
+
+    expect(wrapper.text()).toMatch("Application is running, but forbids requests");
   });
 });

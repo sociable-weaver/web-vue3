@@ -61,6 +61,9 @@ export default class HelloWorld extends Vue {
         this.message = "Application is not running";
         this.showHelp = true;
         break;
+      case AppStatus.Forbidden:
+        this.message = "Application is running, but forbids requests";
+        break;
       case AppStatus.Unhealthy:
         this.message = "Application is running, but unhealthy";
         break;

@@ -4,7 +4,7 @@ export function isAppRunning(): Promise<AppStatus> {
   return apiClient
     .get("/hello")
     .then((response) => response.status)
-    .then((status) => (status == 200 ? AppStatus.Healthy : AppStatus.Unhealthy))
+    .then((status) => toAppStatus(status))
     .catch((e) => {
       if (e.message !== "Network Error") {
         throw e;
@@ -14,8 +14,13 @@ export function isAppRunning(): Promise<AppStatus> {
     });
 }
 
+function toAppStatus(status: number): AppStatus {
+  return status == 200 ? AppStatus.Healthy : status == 403 ? AppStatus.Forbidden : AppStatus.Unhealthy;
+}
+
 export enum AppStatus {
   CannotBeReached,
   Unhealthy,
+  Forbidden,
   Healthy,
 }
