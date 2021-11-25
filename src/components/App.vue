@@ -10,7 +10,9 @@
         </li>
         <li>
           Download the application:
-          <a href="https://github.com/albertattard/sociable-weaver-app-java-boot/releases/download/v0.3/sw-app.jar"
+          <a
+            class="download-app"
+            href="https://github.com/albertattard/sociable-weaver-app-java-boot/releases/download/v0.3/sw-app.jar"
             >sw-app.jar</a
           >
         </li>
@@ -20,8 +22,8 @@
           You can run the application from anywhere you like and you don't have to save it in a special folder.
         </li>
         <li>
-          Click <a href="#" @click="checkApplicationStatus()">here</a> to check if the application has started
-          correctly.
+          Click <a class="try-app-again" href="#" @click="checkApplicationStatus()">here</a> to check if the application
+          has started correctly.
         </li>
       </ol>
     </div>

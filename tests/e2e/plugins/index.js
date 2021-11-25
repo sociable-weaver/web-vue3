@@ -9,11 +9,15 @@
 // /* eslint-disable import/no-extraneous-dependencies, global-require */
 // const webpack = require('@cypress/webpack-preprocessor')
 
+const { downloadFile } = require("cypress-downloadfile/lib/addPlugin");
+
 module.exports = (on, config) => {
   // on('file:preprocessor', webpack({
   //  webpackOptions: require('@vue/cli-service/webpack.config'),
   //  watchOptions: {}
   // }))
+
+  on("task", { downloadFile });
 
   return Object.assign({}, config, {
     fixturesFolder: "tests/e2e/fixtures",
