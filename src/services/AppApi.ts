@@ -6,21 +6,21 @@ export function isAppRunning(): Promise<AppStatus> {
     .then((response) => response.status)
     .then((status) => toAppStatus(status))
     .catch((e) => {
-      if (e.message !== "Network Error") {
-        throw e;
+      switch (e.message) {
+        case "Network Error":
+          return AppStatus.CannotBeReached;
+        default:
+          throw e;
       }
-
-      return AppStatus.CannotBeReached;
     });
 }
 
 function toAppStatus(status: number): AppStatus {
-  return status == 200 ? AppStatus.Healthy : status == 403 ? AppStatus.Forbidden : AppStatus.Unhealthy;
+  return status === 200 ? AppStatus.Healthy : AppStatus.Unhealthy;
 }
 
 export enum AppStatus {
   CannotBeReached,
   Unhealthy,
-  Forbidden,
   Healthy,
 }

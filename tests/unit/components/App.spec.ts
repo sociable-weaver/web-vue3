@@ -25,7 +25,7 @@ describe("App", () => {
     const wrapper = shallowMount(App);
     await flushPromises();
 
-    expect(wrapper.text()).toMatch("Application is not running");
+    expect(wrapper.text()).toMatch("Application is not running or cannot be reached by this page");
     expect(wrapper.text()).toMatch("Getting started");
   });
 
@@ -36,14 +36,5 @@ describe("App", () => {
     await flushPromises();
 
     expect(wrapper.text()).toMatch("Application is running, but unhealthy");
-  });
-
-  it("displays unsuccessful message when application forbids request", async () => {
-    mocked(apiClient.get).mockResolvedValueOnce(healthCheckForbiddenResponse);
-
-    const wrapper = shallowMount(App);
-    await flushPromises();
-
-    expect(wrapper.text()).toMatch("Application is running, but forbids requests");
   });
 });
