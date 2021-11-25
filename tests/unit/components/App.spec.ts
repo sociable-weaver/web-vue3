@@ -2,7 +2,6 @@ import App from "@/components/App.vue";
 import { apiClient } from "@/services/ServiceApi";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
-import healthCheckForbiddenResponse from "../../fixtures/HealthCheckForbidden";
 import healthCheckServerErrorResponse from "../../fixtures/HealthCheckServerError";
 import healthCheckSuccessfulResponse from "../../fixtures/HealthCheckSuccessful";
 import networkError from "../../fixtures/NetworkError";
