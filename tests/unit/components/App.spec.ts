@@ -10,30 +10,39 @@ jest.mock("@/services/ServiceApi");
 
 describe("App", () => {
   it("displays successful message when application is running", async () => {
+    /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(healthCheckSuccessfulResponse);
 
+    /* When */
     const wrapper = shallowMount(App);
     await flushPromises();
 
+    /* Then */
     expect(wrapper.text()).toMatch("Application is running");
   });
 
   it("displays unsuccessful message when application is not running", async () => {
+    /* Given */
     mocked(apiClient.get).mockRejectedValue(networkError);
 
+    /* When */
     const wrapper = shallowMount(App);
     await flushPromises();
 
+    /* Then */
     expect(wrapper.text()).toMatch("Application is not running or cannot be reached by this page");
     expect(wrapper.text()).toMatch("Getting started");
   });
 
   it("displays unsuccessful message when application is not healthy", async () => {
+    /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(healthCheckServerErrorResponse);
 
+    /* When */
     const wrapper = shallowMount(App);
     await flushPromises();
 
+    /* Then */
     expect(wrapper.text()).toMatch("Application is running, but unhealthy");
   });
 });
