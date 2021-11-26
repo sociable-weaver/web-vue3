@@ -31,8 +31,13 @@
 </template>
 
 <script lang="ts">
-import { AppStatus, isAppRunning } from "@/services/AppApi";
+import { apiClient } from "@/services/ServiceApi";
 import { Vue } from "vue-class-component";
+
+interface AppStatus {
+  message: string;
+  showHelp: boolean;
+}
 
 export default class App extends Vue {
   private message = "Sociable Weaver";
@@ -45,29 +50,31 @@ export default class App extends Vue {
   }
 
   private checkApplicationStatus(): void {
-    isAppRunning()
+    this.isAppRunning()
       .then((appStatus) => {
-        this.updateMessage(appStatus);
+        this.showHelp = appStatus.showHelp;
+        this.message = appStatus.message;
       })
       .catch((e) => {
         this.message = `Failed to check the application status (${e.message})`;
       });
   }
 
-  private updateMessage(appStatus: AppStatus): void {
-    this.showHelp = false;
-    switch (appStatus) {
-      case AppStatus.CannotBeReached:
-        this.message = "Application is not running or cannot be reached by this page";
-        this.showHelp = true;
-        break;
-      case AppStatus.Unhealthy:
-        this.message = "Application is running, but unhealthy";
-        break;
-      case AppStatus.Healthy:
-        this.message = "Application is running";
-        break;
-    }
+  private isAppRunning(): Promise<AppStatus> {
+    return apiClient
+      .get("/api/hello")
+      .then((response) => response.status)
+      .then((status) =>
+        status === 200
+          ? { message: "Application is running", showHelp: false }
+          : { message: "Application is running, but unhealthy", showHelp: false }
+      )
+      .catch((e) => {
+        if (e.message === "Network Error") {
+          return { message: "Application is not running or cannot be reached by this page", showHelp: true };
+        }
+        throw e;
+      });
   }
 }
 </script>
