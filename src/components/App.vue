@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="app">
     <h1>{{ message }}</h1>
     <div v-if="showHelp" class="help">
       <h2>Getting started</h2>
@@ -34,7 +34,7 @@
 import { AppStatus, isAppRunning } from "@/services/AppApi";
 import { Vue } from "vue-class-component";
 
-export default class HelloWorld extends Vue {
+export default class App extends Vue {
   private message = "Sociable Weaver";
   private showHelp = false;
 
