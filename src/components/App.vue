@@ -12,7 +12,7 @@
           Download the application:
           <a
             class="download-app"
-            href="https://github.com/sociable-weaver/app-java-boot/releases/download/v0.5/sw-app.jar"
+            href="https://github.com/sociable-weaver/app-java-boot/releases/download/v0.6/sw-app.jar"
             >sw-app.jar</a
           >
         </li>
@@ -52,11 +52,12 @@ export default class App extends Vue {
   private checkApplicationStatus(): void {
     this.isAppRunning()
       .then((appStatus) => {
-        this.showHelp = appStatus.showHelp;
         this.message = appStatus.message;
+        this.showHelp = appStatus.showHelp;
       })
       .catch((e) => {
         this.message = `Failed to check the application status (${e.message})`;
+        this.showHelp = false;
       });
   }
 

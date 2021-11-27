@@ -32,12 +32,15 @@
     </div>
     <div class="buttons">
       <button class="open" v-if="openFrom === 'checkout'">Checkout and Open</button>
-      <button class="open" v-else>Open</button>
+      <button class="open" v-else @click="onOpenLocal">Open</button>
+      <span class="actionMessage">{{ actionMessage }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Book } from "@/models/Book";
+import { apiClient } from "@/services/ServiceApi";
 import { Vue } from "vue-class-component";
 
 export default class Open extends Vue {
@@ -46,6 +49,31 @@ export default class Open extends Vue {
   private checkoutToFolder = "";
   private openFromFolder = "";
   private workspace = "";
+  private actionMessage = "";
+
+  onOpenLocal(): void {
+    this.actionMessage = "";
+
+    if (this.openFromFolder.trim().length === 0) {
+      this.actionMessage = "Please provide the folder path";
+      return;
+    }
+
+    this.openLocal(this.openFromFolder)
+      .then((book) => {
+        console.log("Response", book);
+      })
+      .catch((e) => {
+        console.log("Error", e);
+      });
+  }
+
+  private openLocal(path: string): Promise<Book> {
+    return apiClient
+      .get("/api/open-local", { params: { path } })
+      .then((response) => response.data)
+      .then((json) => json as Book);
+  }
 }
 </script>
 
