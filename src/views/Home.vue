@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <App @app-is-running="onAppIsRunning" />
+    <App ref="app" @app-is-running="onAppIsRunning" />
     <Open v-if="appIsRunning" />
   </div>
 </template>
@@ -20,7 +20,6 @@ export default class Home extends Vue {
   private appIsRunning = false;
 
   private onAppIsRunning(state: boolean): void {
-    console.log("State", state);
     this.appIsRunning = state;
   }
 }

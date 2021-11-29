@@ -1,15 +1,35 @@
-import App from "@/components/App.vue";
+import Open from "@/components/Open.vue";
 import Home from "@/views/Home.vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 
 describe("Home", () => {
-  it("display the open component when application is running", async () => {
+  it("does not display the open component before the app component confirms that the app is running", () => {
+    /* Given/When */
     const wrapper = mount(Home);
 
-    await wrapper.findComponent(App).trigger("appIsRunning", [true]);
-    await flushPromises();
+    /* Then */
+    expect(wrapper.findComponent(Open).exists()).toBe(false);
+  });
 
-    /* TODO: We are still figuring out this :( */
-    // expect(wrapper.findComponent(Open).exists()).toBe(true);
+  it("display the open component when application is running", async () => {
+    /* Given */
+    const wrapper = mount(Home);
+
+    /* When */
+    await wrapper.vm.$refs.app.$emit("appIsRunning", true);
+
+    /* Then */
+    expect(wrapper.findComponent(Open).exists()).toBe(true);
+  });
+
+  it("does not display the open component when application is not running", async () => {
+    /* Given */
+    const wrapper = mount(Home);
+
+    /* When */
+    await wrapper.vm.$refs.app.$emit("appIsRunning", false);
+
+    /* Then */
+    expect(wrapper.findComponent(Open).exists()).toBe(false);
   });
 });
