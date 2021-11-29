@@ -14,7 +14,7 @@ possible, thus the second repository (_sociable-weaver-web_) had to be created.
 - Install dependencies
 
   ```shell
-  $ npm install
+  $ npm ci
   ```
 
 - Lints and fixes files
