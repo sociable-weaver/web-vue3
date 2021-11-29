@@ -41,8 +41,12 @@
 <script lang="ts">
 import { Book } from "@/models/Book";
 import { apiClient } from "@/services/ServiceApi";
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 
+@Options({
+  name: "Open",
+  emits: ["openBook"],
+})
 export default class Open extends Vue {
   private openFrom = "checkout";
   private pathToRepository = "";
@@ -61,10 +65,10 @@ export default class Open extends Vue {
 
     this.openLocal(this.openFromFolder)
       .then((book) => {
-        console.log("Response", book);
+        this.$emit("openBook", book);
       })
       .catch((e) => {
-        console.log("Error", e);
+        this.actionMessage = `Failed to open book (${e.message})`;
       });
   }
 

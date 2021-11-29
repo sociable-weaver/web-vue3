@@ -58,9 +58,10 @@ describe("Open repository from local file system", () => {
 
     /* Then */
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("Please provide the folder path");
+    expect(wrapper.emitted()["openBook"]).toBeUndefined();
   });
 
-  it("displays the book", async () => {
+  it("fetches the book notifies the parent", async () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
     const wrapper = shallowMount(Open);
@@ -72,5 +73,6 @@ describe("Open repository from local file system", () => {
 
     /* Then */
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
+    expect(wrapper.emitted()["openBook"]).toEqual([[bookSuccessfulResponse.data]]);
   });
 });
