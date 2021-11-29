@@ -32,13 +32,18 @@
 
 <script lang="ts">
 import { apiClient } from "@/services/ServiceApi";
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 
 interface AppStatus {
+  isRunning: boolean;
   message: string;
   showHelp: boolean;
 }
 
+@Options({
+  name: "App",
+  emits: ["appIsRunning"],
+})
 export default class App extends Vue {
   private message = "Sociable Weaver";
   private showHelp = false;
@@ -54,10 +59,12 @@ export default class App extends Vue {
       .then((appStatus) => {
         this.message = appStatus.message;
         this.showHelp = appStatus.showHelp;
+        this.$emit("appIsRunning", appStatus.isRunning);
       })
       .catch((e) => {
         this.message = `Failed to check the application status (${e.message})`;
         this.showHelp = false;
+        this.$emit("appIsRunning", false);
       });
   }
 
@@ -67,12 +74,16 @@ export default class App extends Vue {
       .then((response) => response.status)
       .then((status) =>
         status === 200
-          ? { message: "Application is running", showHelp: false }
-          : { message: "Application is running, but unhealthy", showHelp: false }
+          ? { isRunning: true, message: "Application is running", showHelp: false }
+          : { isRunning: false, message: "Application is running, but unhealthy", showHelp: false }
       )
       .catch((e) => {
         if (e.message === "Network Error") {
-          return { message: "Application is not running or cannot be reached by this page", showHelp: true };
+          return {
+            isRunning: false,
+            message: "Application is not running or cannot be reached by this page",
+            showHelp: true,
+          };
         }
         throw e;
       });

@@ -19,6 +19,7 @@ describe("App", () => {
 
     /* Then */
     expect(wrapper.text()).toMatch("Application is running");
+    expect(wrapper.emitted()["appIsRunning"]).toEqual([[true]]);
   });
 
   it("displays unsuccessful message when application is not running", async () => {
@@ -32,6 +33,7 @@ describe("App", () => {
     /* Then */
     expect(wrapper.text()).toMatch("Application is not running or cannot be reached by this page");
     expect(wrapper.text()).toMatch("Getting started");
+    expect(wrapper.emitted()["appIsRunning"]).toEqual([[false]]);
   });
 
   it("displays unsuccessful message when application is not healthy", async () => {
@@ -44,5 +46,6 @@ describe("App", () => {
 
     /* Then */
     expect(wrapper.text()).toMatch("Application is running, but unhealthy");
+    expect(wrapper.emitted()["appIsRunning"]).toEqual([[false]]);
   });
 });

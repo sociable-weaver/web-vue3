@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <App />
-    <Open />
+    <App @app-is-running="onAppIsRunning" />
+    <Open v-if="appIsRunning" />
   </div>
 </template>
 
@@ -16,5 +16,12 @@ import { Options, Vue } from "vue-class-component";
     Open,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  private appIsRunning = false;
+
+  private onAppIsRunning(state: boolean): void {
+    console.log("State", state);
+    this.appIsRunning = state;
+  }
+}
 </script>
