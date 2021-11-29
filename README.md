@@ -13,7 +13,7 @@ tests, builds the web application, and then pushes the generated static files (f
   $ npm ci
   ```
 
-- Lints and fixes files
+- Lint and fix files
 
   ```shell
   $ npm run lint
@@ -25,7 +25,7 @@ tests, builds the web application, and then pushes the generated static files (f
   $ npm run test:unit
   ```
 
-- Run the end-2-end tests
+- Run the end-to-end tests
 
   ```shell
   $ npm run test:e2e
@@ -43,4 +43,4 @@ tests, builds the web application, and then pushes the generated static files (f
   $ npm run build
   ```
 
-  The generated files are saved in the `dist` folder
+  The generated files are saved in the `dist` directory.
