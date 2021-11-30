@@ -45,7 +45,7 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Open",
-  emits: ["openBook"],
+  emits: ["bookOpened"],
 })
 export default class Open extends Vue {
   private openFrom = "checkout";
@@ -65,7 +65,7 @@ export default class Open extends Vue {
 
     this.openLocal(this.openFromFolder)
       .then((book) => {
-        this.$emit("openBook", book);
+        this.$emit("bookOpened", book);
       })
       .catch((e) => {
         this.actionMessage = `Failed to open book (${e.message})`;

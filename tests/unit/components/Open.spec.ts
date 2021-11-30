@@ -58,7 +58,7 @@ describe("Open repository from local file system", () => {
 
     /* Then */
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("Please provide the folder path");
-    expect(wrapper.emitted()["openBook"]).toBeUndefined();
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
   it("fetches the book notifies the parent", async () => {
@@ -73,6 +73,6 @@ describe("Open repository from local file system", () => {
 
     /* Then */
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
-    expect(wrapper.emitted()["openBook"]).toEqual([[bookSuccessfulResponse.data]]);
+    expect(wrapper.emitted()["bookOpened"]).toEqual([[bookSuccessfulResponse.data]]);
   });
 });
