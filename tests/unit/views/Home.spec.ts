@@ -1,13 +1,13 @@
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
 import Home from "@/views/Home.vue";
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 
 describe("Home", () => {
   it("does not display the open component before the app component confirms that the app is running", () => {
     /* Given */
-    const wrapper = mount(Home);
+    const wrapper = shallowMount(Home);
 
     /* When */
     /* The application status is not yet checked */
@@ -20,7 +20,7 @@ describe("Home", () => {
 describe("App", () => {
   it("display the open component when application is running", async () => {
     /* Given */
-    const wrapper = mount(Home);
+    const wrapper = shallowMount(Home);
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
@@ -31,7 +31,7 @@ describe("App", () => {
 
   it("does not display the open component when application is not running", async () => {
     /* Given */
-    const wrapper = mount(Home);
+    const wrapper = shallowMount(Home);
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", false);
@@ -44,7 +44,7 @@ describe("App", () => {
 describe("Open", () => {
   it("does not display the table of content before a book is opened", async () => {
     /* Given */
-    const wrapper = mount(Home);
+    const wrapper = shallowMount(Home);
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
@@ -56,7 +56,7 @@ describe("Open", () => {
 
   it("display the table of content when book is opened", async () => {
     /* Given */
-    const wrapper = mount(Home);
+    const wrapper = shallowMount(Home);
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
