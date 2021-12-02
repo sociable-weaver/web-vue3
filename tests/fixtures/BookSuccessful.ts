@@ -3,7 +3,6 @@ export default {
   data: {
     title: "Test title",
     description: "Test description",
-    path: "somewhere",
     chapters: [
       {
         title: "Chapter 1",
