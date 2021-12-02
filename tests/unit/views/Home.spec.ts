@@ -18,7 +18,7 @@ describe("Home", () => {
 });
 
 describe("App", () => {
-  it("display the open component when application is running", async () => {
+  it("displays the open component when application is running", async () => {
     /* Given */
     const wrapper = shallowMount(Home);
 
@@ -54,7 +54,7 @@ describe("Open", () => {
     expect(wrapper.findComponent(Toc).exists()).toBe(false);
   });
 
-  it("display the table of content when book is opened", async () => {
+  it("displays the table of content when book is opened", async () => {
     /* Given */
     const wrapper = shallowMount(Home);
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
