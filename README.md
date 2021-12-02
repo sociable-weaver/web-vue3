@@ -1,5 +1,7 @@
 # Sociable Weaver
 
+![build](https://github.com/sociable-weaver/web-vue3/actions/workflows/build.yml/badge.svg)
+
 This is the Sociable Weaver web application repository. Changes to this repository trigger a pipeline that runs the
 tests, builds the web application, and then pushes the generated static files (found in the `dist` directory) to
 [another repository](https://github.com/sociable-weaver/web) which is permitted to publish those files as a
