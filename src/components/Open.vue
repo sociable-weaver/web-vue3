@@ -74,7 +74,7 @@ export default class Open extends Vue {
 
   private openLocal(path: string): Promise<Book> {
     return apiClient
-      .get("/api/open-local", { params: { path } })
+      .get("/api/book/open", { params: { path } })
       .then((response) => response.data)
       .then((json) => json as Book);
   }
