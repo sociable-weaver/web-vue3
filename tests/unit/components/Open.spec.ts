@@ -7,7 +7,7 @@ import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 jest.mock("@/services/ServiceApi");
 
 describe("Open component", () => {
-  it("started with the checkout option selected", async () => {
+  it("starts with the checkout option selected", async () => {
     /* Given/When */
     const wrapper = shallowMount(Open);
 
