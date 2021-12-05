@@ -7,7 +7,8 @@ import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 describe("Home", () => {
   it("does not display the open component before the app component confirms that the app is running", () => {
     /* Given */
-    const wrapper = shallowMount(Home);
+    const $route = { params: {} };
+    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
 
     /* When */
     /* The application status is not yet checked */
@@ -20,7 +21,8 @@ describe("Home", () => {
 describe("App", () => {
   it("displays the open component when application is running", async () => {
     /* Given */
-    const wrapper = shallowMount(Home);
+    const $route = { params: {} };
+    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
@@ -31,7 +33,8 @@ describe("App", () => {
 
   it("does not display the open component when application is not running", async () => {
     /* Given */
-    const wrapper = shallowMount(Home);
+    const $route = { params: {} };
+    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", false);
@@ -44,7 +47,8 @@ describe("App", () => {
 describe("Open", () => {
   it("does not display the table of content before a book is opened", async () => {
     /* Given */
-    const wrapper = shallowMount(Home);
+    const $route = { params: {} };
+    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
@@ -56,13 +60,19 @@ describe("Open", () => {
 
   it("displays the table of content when book is opened", async () => {
     /* Given */
-    const wrapper = shallowMount(Home);
+    const path = "path-to-book";
+    const $route = { params: { path } };
+    const $router = { push: jest.fn() };
+    const wrapper = shallowMount(Home, { global: { mocks: { $route, $router } } });
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
-    await wrapper.vm.$refs.open.$emit("bookOpened", bookSuccessfulResponse.data);
+    const book = { ...bookSuccessfulResponse.data, path };
+    await wrapper.vm.$refs.open.$emit("bookOpened", book);
 
     /* Then */
     expect(wrapper.findComponent(Toc).exists()).toBe(true);
+    expect($router.push).toHaveBeenCalledTimes(1);
+    expect($router.push).toHaveBeenCalledWith({ name: "Home", params: { path } });
   });
 });

@@ -31,11 +31,18 @@ export default class Home extends Vue {
   private chapter: Chapter | null = null;
   private workspace: Workspace = { bookPath: "", workPath: "" };
 
+  mounted(): void {
+    /* TODO: What should we do if this is an array? */
+    const path = this.$route.params.path as string;
+    this.workspace.bookPath = path || "";
+  }
+
   private onAppIsRunning(state: boolean): void {
     this.appIsRunning = state;
   }
 
   private onOpenBook(opened: Book): void {
+    this.$router.push({ name: "Home", params: { path: opened.path } });
     this.book = opened;
   }
 
