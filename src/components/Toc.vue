@@ -18,7 +18,7 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Toc",
-  emits: ["chapterRead"],
+  emits: ["chapterRead", "errorMessage"],
   props: {
     book: Object,
   },
@@ -27,18 +27,18 @@ export default class Toc extends Vue {
   private book!: Book;
 
   private onReadChapter(path: string): void {
-    this.readChapter(path)
+    this.readChapter(this.book.bookPath, path)
       .then((chapter) => {
         this.$emit("chapterRead", chapter);
       })
       .catch((e) => {
-        console.log("Failed to open chapter", e);
+        this.$emit("errorMessage", `Failed to open chapter (${e.message})`);
       });
   }
 
-  private readChapter(path: string): Promise<Chapter> {
+  private readChapter(bookPath: string, chapterPath: string): Promise<Chapter> {
     return apiClient
-      .get("/api/book/read-chapter", { params: { path } })
+      .get("/api/book/read-chapter", { params: { bookPath, chapterPath } })
       .then((response) => response.data)
       .then((json) => json as Chapter);
   }

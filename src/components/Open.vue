@@ -114,9 +114,9 @@ export default class Open extends Vue {
       });
   }
 
-  private openBook(path: string): Promise<Book> {
+  private openBook(bookPath: string): Promise<Book> {
     return apiClient
-      .get("/api/book/open", { params: { path } })
+      .get("/api/book/open", { params: { bookPath } })
       .then((response) => response.data)
       .then((json) => json as Book);
   }
