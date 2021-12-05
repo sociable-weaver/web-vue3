@@ -8,8 +8,11 @@ jest.mock("@/services/ServiceApi");
 
 describe("Open component", () => {
   it("starts with the checkout option selected", async () => {
-    /* Given/When */
-    const wrapper = shallowMount(Open);
+    /* Given */
+    const workspace = { bookPath: "path-to-book", workPath: "work-directory" };
+
+    /* When */
+    const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* Then */
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toBeUndefined();
@@ -20,7 +23,8 @@ describe("Open component", () => {
 
   it("displays the checkout options", async () => {
     /* Given */
-    const wrapper = shallowMount(Open);
+    const workspace = { bookPath: "path-to-book", workPath: "work-directory" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* When */
     await wrapper.find("input[id=checkout]").trigger("click");
@@ -34,7 +38,8 @@ describe("Open component", () => {
 
   it("displays the open local options", async () => {
     /* Given */
-    const wrapper = shallowMount(Open);
+    const workspace = { bookPath: "path-to-book", workPath: "work-directory" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* When */
     await wrapper.find("input[id=openLocal]").trigger("click");
@@ -50,7 +55,8 @@ describe("Open component", () => {
 describe("Open repository from local file system", () => {
   it("displays an error when trying to open local without providing a path", async () => {
     /* Given */
-    const wrapper = shallowMount(Open);
+    const workspace = { bookPath: "", workPath: "work-directory" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
     await wrapper.find("input[id=openLocal]").trigger("click");
 
     /* When */
@@ -64,8 +70,10 @@ describe("Open repository from local file system", () => {
   it("fetches the book notifies the parent", async () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
-    const wrapper = shallowMount(Open);
-    const path = "somewhere";
+    const workspace = { bookPath: "", workPath: "work-directory" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
+
+    const path = "path-to-book";
     await wrapper.find("input[id=openLocal]").trigger("click");
     await wrapper.find("input[id=openFromFolder]").setValue(path);
 

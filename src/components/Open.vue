@@ -12,7 +12,7 @@
       </div>
       <div>
         <label for="checkoutToFolder">Checkout to folder</label>
-        <input type="text" id="checkoutToFolder" v-model="checkoutToFolder" :disabled="openFrom === 'openLocal'" />
+        <input type="text" id="checkoutToFolder" v-model="workspace.bookPath" :disabled="openFrom === 'openLocal'" />
       </div>
       <div>
         <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
@@ -20,14 +20,14 @@
       </div>
       <div>
         <label for="openFromFolder">Open from folder</label>
-        <input type="text" id="openFromFolder" v-model="openFromFolder" :disabled="openFrom === 'checkout'" />
+        <input type="text" id="openFromFolder" v-model="workspace.bookPath" :disabled="openFrom === 'checkout'" />
       </div>
     </div>
     <div class="workspace">
       <h2>Workspace</h2>
       <div>
         <label for="workspace">Workspace</label>
-        <input type="text" id="workspace" v-model="workspace" />
+        <input type="text" id="workspace" v-model="workspace.workPath" />
       </div>
     </div>
     <div class="buttons">
@@ -40,30 +40,32 @@
 
 <script lang="ts">
 import { Book } from "@/models/Book";
+import { Workspace } from "@/models/Workspace";
 import { apiClient } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Open",
   emits: ["bookOpened"],
+  props: {
+    workspace: Object,
+  },
 })
 export default class Open extends Vue {
-  private openFrom = "checkout";
+  private workspace!: Workspace;
   private pathToRepository = "";
-  private checkoutToFolder = "";
-  private openFromFolder = "";
-  private workspace = "";
+  private openFrom = "checkout";
   private actionMessage = "";
 
   onOpenLocal(): void {
     this.actionMessage = "";
-
-    if (this.openFromFolder.trim().length === 0) {
+    const path = this.workspace.bookPath;
+    if (path.trim().length === 0) {
       this.actionMessage = "Please provide the folder path";
       return;
     }
 
-    this.openLocal(this.openFromFolder)
+    this.openLocal(path)
       .then((book) => {
         this.$emit("bookOpened", book);
       })

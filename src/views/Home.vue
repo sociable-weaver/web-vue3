@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <App ref="app" @app-is-running="onAppIsRunning" />
-    <Open ref="open" @book-opened="onOpenBook" v-if="appIsRunning" />
+    <Open ref="open" @book-opened="onOpenBook" v-if="appIsRunning" :workspace="workspace" />
     <Toc ref="toc" @chapter-read="onChapterRead" v-if="book !== null" :book="book" />
     <Content ref="content" v-if="chapter !== null" :chapter="chapter" />
   </div>
@@ -14,6 +14,7 @@ import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
 import { Book } from "@/models/Book";
 import { Chapter } from "@/models/Chapter";
+import { Workspace } from "@/models/Workspace";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -28,6 +29,7 @@ export default class Home extends Vue {
   private appIsRunning = false;
   private book: Book | null = null;
   private chapter: Chapter | null = null;
+  private workspace: Workspace = { bookPath: "", workPath: "" };
 
   private onAppIsRunning(state: boolean): void {
     this.appIsRunning = state;
