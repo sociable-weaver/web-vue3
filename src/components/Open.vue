@@ -32,7 +32,7 @@
     </div>
     <div class="buttons">
       <button class="open" v-if="openFrom === 'checkout'">Checkout and Open</button>
-      <button class="open" v-else @click="onOpenLocal">Open</button>
+      <button class="open" v-else @click="onOpenBook">Open</button>
       <span class="actionMessage">{{ actionMessage }}</span>
     </div>
   </div>
@@ -57,7 +57,16 @@ export default class Open extends Vue {
   private openFrom = "checkout";
   private actionMessage = "";
 
-  onOpenLocal(): void {
+  mounted(): void {
+    this.$nextTick(() => {
+      const path = this.workspace.bookPath;
+      if (path.trim().length > 0) {
+        this.handleOpenBook(path);
+      }
+    });
+  }
+
+  private onOpenBook(): void {
     this.actionMessage = "";
     const path = this.workspace.bookPath;
     if (path.trim().length === 0) {
@@ -65,7 +74,11 @@ export default class Open extends Vue {
       return;
     }
 
-    this.openLocal(path)
+    this.handleOpenBook(path);
+  }
+
+  private handleOpenBook(path: string): void {
+    this.openBook(path)
       .then((book) => {
         this.$emit("bookOpened", book);
       })
@@ -74,7 +87,7 @@ export default class Open extends Vue {
       });
   }
 
-  private openLocal(path: string): Promise<Book> {
+  private openBook(path: string): Promise<Book> {
     return apiClient
       .get("/api/book/open", { params: { path } })
       .then((response) => response.data)
