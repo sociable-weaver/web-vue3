@@ -20,6 +20,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("button[class=open]").text()).toEqual("Checkout and Open");
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
   it("displays the checkout options", async () => {
@@ -36,6 +37,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("button[class=open]").text()).toEqual("Checkout and Open");
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
   it("displays the open local options", async () => {
@@ -52,6 +54,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("button[class=open]").text()).toEqual("Open");
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
   it("fetches the book and notifies the parent when the path is provided", async () => {
