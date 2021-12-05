@@ -60,22 +60,23 @@ describe("Open component", () => {
   it("fetches the book and notifies the parent when the path is provided", async () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
-    const path = "path-to-book";
-    const workspace = { bookPath: path, workPath: "work-directory" };
+    const bookPath = "path-to-book";
+    const workPath = "work-directory";
+    const workspace = { bookPath, workPath };
 
     /* When */
     const wrapper = shallowMount(Open, { props: { workspace } });
     await flushPromises();
 
     /* Then */
-    const expected = { ...bookSuccessfulResponse.data, path };
+    const expected = { ...bookSuccessfulResponse.data, bookPath, workPath };
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
     expect(wrapper.emitted()["bookOpened"]).toEqual([[expected]]);
   });
 });
 
 describe("Open repository from local file system", () => {
-  it("displays an error when trying to open local without providing a path", async () => {
+  it("displays an error when trying to open local without providing a book path", async () => {
     /* Given */
     const workspace = { bookPath: "", workPath: "work-directory" };
     const wrapper = shallowMount(Open, { props: { workspace } });
@@ -86,26 +87,46 @@ describe("Open repository from local file system", () => {
     await wrapper.find("button[class=open]").trigger("click");
 
     /* Then */
-    expect(wrapper.find("span[class=actionMessage]").text()).toEqual("Please provide the folder path");
+    expect(wrapper.find("span[class=actionMessage]").text()).toEqual(
+      "Please provide both the book and workspace folder paths"
+    );
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
+  });
+
+  it("displays an error when trying to open local without providing a work path", async () => {
+    /* Given */
+    const workspace = { bookPath: "path-to-book", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
+    await flushPromises();
+    await wrapper.find("input[id=openLocal]").trigger("click");
+
+    /* When */
+    await wrapper.find("button[class=open]").trigger("click");
+
+    /* Then */
+    expect(wrapper.find("span[class=actionMessage]").text()).toEqual(
+      "Please provide both the book and workspace folder paths"
+    );
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
   it("fetches the book and notifies the parent", async () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
-    const workspace = { bookPath: "", workPath: "work-directory" };
+    const workPath = "work-directory";
+    const workspace = { bookPath: "", workPath };
     const wrapper = shallowMount(Open, { props: { workspace } });
     await flushPromises();
 
-    const path = "path-to-book";
+    const bookPath = "path-to-book";
     await wrapper.find("input[id=openLocal]").trigger("click");
-    await wrapper.find("input[id=openFromFolder]").setValue(path);
+    await wrapper.find("input[id=openFromFolder]").setValue(bookPath);
 
     /* When */
     await wrapper.find("button[class=open]").trigger("click");
 
     /* Then */
-    const expected = { ...bookSuccessfulResponse.data, path };
+    const expected = { ...bookSuccessfulResponse.data, bookPath, workPath };
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
     expect(wrapper.emitted()["bookOpened"]).toEqual([[expected]]);
   });

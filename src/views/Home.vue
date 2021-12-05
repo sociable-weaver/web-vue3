@@ -33,8 +33,8 @@ export default class Home extends Vue {
 
   mounted(): void {
     /* TODO: What should we do if this is an array? */
-    const path = this.$route.params.bookPath as string;
-    this.workspace.bookPath = path || "";
+    this.workspace.bookPath = (this.$route.params.bookPath as string) || "";
+    this.workspace.workPath = (this.$route.params.workPath as string) || "";
   }
 
   private onAppIsRunning(state: boolean): void {
@@ -42,7 +42,7 @@ export default class Home extends Vue {
   }
 
   private onOpenBook(opened: Book): void {
-    this.$router.push({ name: "Home", params: { bookPath: opened.path } });
+    this.$router.push({ name: "Home", params: { bookPath: opened.bookPath, workPath: opened.workPath } });
     this.book = opened;
   }
 

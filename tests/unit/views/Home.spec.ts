@@ -61,18 +61,19 @@ describe("Open", () => {
   it("displays the table of content when book is opened", async () => {
     /* Given */
     const bookPath = "path-to-book";
-    const $route = { params: { bookPath } };
+    const workPath = "path-to-workspace";
+    const $route = { params: { bookPath, workPath } };
     const $router = { push: jest.fn() };
     const wrapper = shallowMount(Home, { global: { mocks: { $route, $router } } });
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
-    const book = { ...bookSuccessfulResponse.data, path: bookPath };
+    const book = { ...bookSuccessfulResponse.data, bookPath, workPath };
     await wrapper.vm.$refs.open.$emit("bookOpened", book);
 
     /* Then */
     expect(wrapper.findComponent(Toc).exists()).toBe(true);
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Home", params: { bookPath } });
+    expect($router.push).toHaveBeenCalledWith({ name: "Home", params: { bookPath, workPath } });
   });
 });

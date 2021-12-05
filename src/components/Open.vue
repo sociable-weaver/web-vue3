@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="open" v-if="openFrom === 'checkout'">Checkout and Open</button>
+      <button class="open" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
       <button class="open" v-else @click="onOpenBook">Open</button>
       <span class="actionMessage">{{ actionMessage }}</span>
     </div>
@@ -39,10 +39,21 @@
 </template>
 
 <script lang="ts">
-import { Book } from "@/models/Book";
 import { Workspace } from "@/models/Workspace";
 import { apiClient } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
+
+interface Book {
+  title: string;
+  description: string;
+  chapters: Chapter[];
+}
+
+interface Chapter {
+  title: string;
+  description: string;
+  path: string;
+}
 
 @Options({
   name: "Open",
@@ -52,6 +63,8 @@ import { Options, Vue } from "vue-class-component";
   },
 })
 export default class Open extends Vue {
+  /* TODO: While it looks convenient, we should not link the workspace to the UI as that creates a two way bounding
+      with something outside this scope (component).  I still need to think about how this can be be done. */
   private workspace!: Workspace;
   private pathToRepository = "";
   private openFrom = "checkout";
@@ -59,31 +72,41 @@ export default class Open extends Vue {
 
   mounted(): void {
     this.$nextTick(() => {
-      const path = this.workspace.bookPath;
-      if (path.trim().length > 0) {
-        this.handleOpenBook(path);
+      if (this.isBookPathSet() && this.isWorkPathSet()) {
+        this.handleOpenBook();
       }
     });
   }
 
+  private onCheckoutBook(): void {
+    this.actionMessage = "This feature is not yet implemented";
+  }
+
   private onOpenBook(): void {
     this.actionMessage = "";
-    const path = this.workspace.bookPath;
-    if (path.trim().length === 0) {
-      this.actionMessage = "Please provide the folder path";
+    if (!this.isBookPathSet() || !this.isWorkPathSet()) {
+      this.actionMessage = "Please provide both the book and workspace folder paths";
       return;
     }
 
-    this.handleOpenBook(path);
+    this.handleOpenBook();
   }
 
-  private handleOpenBook(path: string): void {
-    this.openBook(path)
+  private handleOpenBook(): void {
+    const bookPath = this.workspace.bookPath;
+    const workPath = this.workspace.workPath;
+
+    this.openBook(bookPath)
       .then((book) => {
-        this.$emit("bookOpened", book);
+        const workbook = {
+          ...book,
+          bookPath: bookPath,
+          workPath: workPath,
+        };
+        this.$emit("bookOpened", workbook);
       })
       .catch((e) => {
-        this.actionMessage = `Failed to open book (${e.message})`;
+        this.actionMessage = `Failed to open working book (${e.message})`;
       });
   }
 
@@ -91,7 +114,19 @@ export default class Open extends Vue {
     return apiClient
       .get("/api/book/open", { params: { path } })
       .then((response) => response.data)
-      .then((json) => ({ ...json, path } as Book));
+      .then((json) => json as Book);
+  }
+
+  private isBookPathSet(): boolean {
+    return this.isNonBlank(this.workspace.bookPath);
+  }
+
+  private isWorkPathSet(): boolean {
+    return this.isNonBlank(this.workspace.workPath);
+  }
+
+  private isNonBlank(text: string): boolean {
+    return text.trim().length > 0;
   }
 }
 </script>

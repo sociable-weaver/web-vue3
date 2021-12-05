@@ -1,8 +1,9 @@
 export interface Book {
   title: string;
   description: string;
-  path: string;
   chapters: Chapter[];
+  bookPath: string;
+  workPath: string;
 }
 
 export interface Chapter {
