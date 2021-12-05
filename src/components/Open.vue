@@ -12,7 +12,7 @@
       </div>
       <div>
         <label for="checkoutToFolder">Checkout to folder</label>
-        <input type="text" id="checkoutToFolder" v-model="workspace.bookPath" :disabled="openFrom === 'openLocal'" />
+        <input type="text" id="checkoutToFolder" v-model="bookPath" :disabled="openFrom === 'openLocal'" />
       </div>
       <div>
         <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
@@ -20,14 +20,14 @@
       </div>
       <div>
         <label for="openFromFolder">Open from folder</label>
-        <input type="text" id="openFromFolder" v-model="workspace.bookPath" :disabled="openFrom === 'checkout'" />
+        <input type="text" id="openFromFolder" v-model="bookPath" :disabled="openFrom === 'checkout'" />
       </div>
     </div>
     <div class="workspace">
       <h2>Workspace</h2>
       <div>
         <label for="workspace">Workspace</label>
-        <input type="text" id="workspace" v-model="workspace.workPath" />
+        <input type="text" id="workspace" v-model="workPath" />
       </div>
     </div>
     <div class="buttons">
@@ -63,15 +63,19 @@ interface Chapter {
   },
 })
 export default class Open extends Vue {
-  /* TODO: While it looks convenient, we should not link the workspace to the UI as that creates a two way bounding
-      with something outside this scope (component).  I still need to think about how this can be be done. */
   private workspace!: Workspace;
+
   private pathToRepository = "";
   private openFrom = "checkout";
   private actionMessage = "";
+  private bookPath = "";
+  private workPath = "";
 
   mounted(): void {
     this.$nextTick(() => {
+      this.bookPath = this.workspace.bookPath;
+      this.workPath = this.workspace.workPath;
+
       if (this.isBookPathSet() && this.isWorkPathSet()) {
         this.handleOpenBook();
       }
@@ -93,8 +97,8 @@ export default class Open extends Vue {
   }
 
   private handleOpenBook(): void {
-    const bookPath = this.workspace.bookPath;
-    const workPath = this.workspace.workPath;
+    const bookPath = this.bookPath;
+    const workPath = this.workPath;
 
     this.openBook(bookPath)
       .then((book) => {
@@ -118,11 +122,11 @@ export default class Open extends Vue {
   }
 
   private isBookPathSet(): boolean {
-    return this.isNonBlank(this.workspace.bookPath);
+    return this.isNonBlank(this.bookPath);
   }
 
   private isWorkPathSet(): boolean {
-    return this.isNonBlank(this.workspace.workPath);
+    return this.isNonBlank(this.workPath);
   }
 
   private isNonBlank(text: string): boolean {
