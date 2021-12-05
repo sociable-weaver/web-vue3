@@ -65,14 +65,16 @@ describe("Open repository from local file system", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
     const wrapper = shallowMount(Open);
+    const path = "somewhere";
     await wrapper.find("input[id=openLocal]").trigger("click");
-    await wrapper.find("input[id=openFromFolder]").setValue("somewhere");
+    await wrapper.find("input[id=openFromFolder]").setValue(path);
 
     /* When */
     await wrapper.find("button[class=open]").trigger("click");
 
     /* Then */
+    const expected = { ...bookSuccessfulResponse.data, path };
     expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
-    expect(wrapper.emitted()["bookOpened"]).toEqual([[bookSuccessfulResponse.data]]);
+    expect(wrapper.emitted()["bookOpened"]).toEqual([[expected]]);
   });
 });

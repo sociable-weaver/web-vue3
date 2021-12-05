@@ -76,7 +76,7 @@ export default class Open extends Vue {
     return apiClient
       .get("/api/book/open", { params: { path } })
       .then((response) => response.data)
-      .then((json) => json as Book);
+      .then((json) => ({ ...json, path } as Book));
   }
 }
 </script>
