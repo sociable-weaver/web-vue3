@@ -8,6 +8,7 @@
       <Download v-else-if="entry.type === 'download'" :entry="entry" />
       <GitApplyPatch v-else-if="entry.type === 'git-apply-patch'" :entry="entry" />
       <GitCommitChanges v-else-if="entry.type === 'git-commit-changes'" :entry="entry" />
+      <GitTagCurrentCommit v-else-if="entry.type === 'git-tag-current-commit'" :entry="entry" />
       <Markdown v-else-if="entry.type === 'markdown'" :entry="entry" />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
@@ -24,6 +25,7 @@ import DockerTagAndPush from "@/components/renderers/DockerTagAndPush.vue";
 import Download from "@/components/renderers/Download.vue";
 import GitApplyPatch from "@/components/renderers/GitApplyPatch.vue";
 import GitCommitChanges from "@/components/renderers/GitCommitChanges.vue";
+import GitTagCurrentCommit from "@/components/renderers/GitTagCurrentCommit.vue";
 import Markdown from "@/components/renderers/Markdown.vue";
 import { Chapter } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
@@ -41,6 +43,7 @@ import { Options, Vue } from "vue-class-component";
     Download,
     GitApplyPatch,
     GitCommitChanges,
+    GitTagCurrentCommit,
     Markdown,
   },
 })
