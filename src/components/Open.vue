@@ -3,24 +3,32 @@
     <div class="openRepository">
       <h2>Open repository</h2>
       <div>
+        <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
+        <label for="openLocal">Open</label>
+      </div>
+      <div>
+        <label for="openFromFolder">Open from folder</label>
+        <input type="text" id="openFromFolder" v-model="bookPath" :disabled="openFrom !== 'openLocal'" />
+      </div>
+      <div>
         <input type="radio" id="checkout" value="checkout" v-model="openFrom" />
         <label for="checkout">Checkout from an online git repository, like GitHub or GitLab</label>
       </div>
       <div>
         <label for="pathToRepository">Path to repository</label>
-        <input type="text" id="pathToRepository" v-model="pathToRepository" :disabled="openFrom === 'openLocal'" />
+        <input type="text" id="pathToRepository" v-model="pathToRepository" :disabled="openFrom !== 'checkout'" />
       </div>
       <div>
         <label for="checkoutToFolder">Checkout to folder</label>
-        <input type="text" id="checkoutToFolder" v-model="bookPath" :disabled="openFrom === 'openLocal'" />
+        <input type="text" id="checkoutToFolder" v-model="bookPath" :disabled="openFrom !== 'checkout'" />
       </div>
       <div>
-        <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
-        <label for="openLocal">Open locally</label>
+        <input type="radio" id="createNew" value="createNew" v-model="openFrom" />
+        <label for="createNew">New</label>
       </div>
       <div>
-        <label for="openFromFolder">Open from folder</label>
-        <input type="text" id="openFromFolder" v-model="bookPath" :disabled="openFrom === 'checkout'" />
+        <label for="createNewFolder">Open from folder</label>
+        <input type="text" id="createNewFolder" v-model="bookPath" :disabled="openFrom !== 'createNew'" />
       </div>
     </div>
     <div class="workspace">
@@ -31,8 +39,9 @@
       </div>
     </div>
     <div class="buttons">
+      <button class="open" v-if="openFrom === 'openLocal'" @click="onOpenBook">Open</button>
       <button class="open" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
-      <button class="open" v-else @click="onOpenBook">Open</button>
+      <button class="open" v-if="openFrom === 'createNew'" @click="onCreateBook">Create</button>
       <span class="actionMessage">{{ actionMessage }}</span>
     </div>
   </div>
@@ -66,7 +75,7 @@ export default class Open extends Vue {
   private workspace!: Workspace;
 
   private pathToRepository = "";
-  private openFrom = "checkout";
+  private openFrom = "openLocal";
   private actionMessage = "";
   private bookPath = "";
   private workPath = "";
@@ -83,6 +92,10 @@ export default class Open extends Vue {
   }
 
   private onCheckoutBook(): void {
+    this.actionMessage = "This feature is not yet implemented";
+  }
+
+  private onCreateBook(): void {
     this.actionMessage = "This feature is not yet implemented";
   }
 

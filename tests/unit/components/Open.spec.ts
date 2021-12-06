@@ -7,7 +7,7 @@ import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 jest.mock("@/services/ServiceApi");
 
 describe("Open component", () => {
-  it("starts with the checkout option selected", async () => {
+  it("starts with the open local option selected", async () => {
     /* Given */
     const workspace = { bookPath: "", workPath: "" };
 
@@ -16,14 +16,15 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("button[class=open]").text()).toEqual("Checkout and Open");
+    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
+    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("button[class=open]").text()).toEqual("Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
-  it("displays the checkout options", async () => {
+  it("displays the checkout input when the checkout option is checked", async () => {
     /* Given */
     const workspace = { bookPath: "", workPath: "" };
     const wrapper = shallowMount(Open, { props: { workspace } });
@@ -33,14 +34,15 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
+    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("button[class=open]").text()).toEqual("Checkout and Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
-  it("displays the open local options", async () => {
+  it("displays the open local input when the open local option is checked", async () => {
     /* Given */
     const workspace = { bookPath: "", workPath: "" };
     const wrapper = shallowMount(Open, { props: { workspace } });
@@ -50,10 +52,29 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
+    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
+    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("button[class=open]").text()).toEqual("Open");
+    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
+  });
+
+  it("displays the create new input when the create new is option checked", async () => {
+    /* Given */
+    const workspace = { bookPath: "", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { workspace } });
+
+    /* When */
+    await wrapper.find("input[id=createNew]").trigger("click");
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toBeUndefined();
+    expect(wrapper.find("button[class=open]").text()).toEqual("Create");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
