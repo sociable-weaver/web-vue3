@@ -1,8 +1,9 @@
 import Toc from "@/components/Toc.vue";
 import { apiClient } from "@/services/ServiceApi";
-import { shallowMount } from "@vue/test-utils";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
 import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
+import chapterNotFoundResponse from "../../fixtures/ChapterNotFound";
 import chapterSuccessfulResponse from "../../fixtures/ChapterSuccessful";
 
 jest.mock("@/services/ServiceApi");
@@ -13,11 +14,7 @@ describe("Toc component", () => {
     const book = bookSuccessfulResponse.data;
 
     /* When */
-    const wrapper = shallowMount(Toc, {
-      props: {
-        book,
-      },
-    });
+    const wrapper = shallowMount(Toc, { props: { book } });
 
     /* Then */
     expect(wrapper.text()).toContain("Test title");
@@ -32,16 +29,29 @@ describe("Toc component", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(chapterSuccessfulResponse);
     const book = bookSuccessfulResponse.data;
-    const wrapper = shallowMount(Toc, {
-      props: {
-        book,
-      },
-    });
+    const wrapper = shallowMount(Toc, { props: { book } });
 
     /* When */
-    await wrapper.find("h3").trigger("click");
+    wrapper.find("h3").trigger("click");
+    await flushPromises();
 
     /* Then */
     expect(wrapper.emitted()["chapterRead"]).toEqual([[chapterSuccessfulResponse.data]]);
+  });
+
+  it("emits unsuccessful message event when the chapter is not found", async () => {
+    /* Given */
+    mocked(apiClient.get).mockRejectedValue(chapterNotFoundResponse);
+    const book = bookSuccessfulResponse.data;
+    const wrapper = shallowMount(Toc, { props: { book } });
+
+    /* When */
+    wrapper.find("h3").trigger("click");
+    await flushPromises();
+
+    /* Then */
+    const errorMessage = "Failed to open chapter (Chapter not found)";
+    expect(wrapper.emitted()["chapterRead"]).toBeUndefined();
+    expect(wrapper.emitted()["errorMessage"]).toEqual([[errorMessage]]);
   });
 });

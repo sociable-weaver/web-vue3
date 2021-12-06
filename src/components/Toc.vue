@@ -32,7 +32,8 @@ export default class Toc extends Vue {
         this.$emit("chapterRead", chapter);
       })
       .catch((e) => {
-        this.$emit("errorMessage", `Failed to open chapter (${e.message})`);
+        console.log("Error", e);
+        this.$emit("errorMessage", `Failed to open chapter (${e?.response?.data?.message || e.message})`);
       });
   }
 
