@@ -2,6 +2,25 @@ import Content from "@/components/Content.vue";
 import { flushPromises, mount } from "@vue/test-utils";
 
 describe("Content component", () => {
+  it("displays the chapter", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "chapter",
+          parameters: ["Hello world"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.text()).toEqual("Hello world");
+  });
+
   it("displays the markdown as HTML", async () => {
     /* Given */
     const chapter = {
