@@ -1,5 +1,7 @@
 export interface Chapter {
   entries: Entry[];
+  chapterPath: string;
+  bookPath: string;
 }
 
 export interface Entry {

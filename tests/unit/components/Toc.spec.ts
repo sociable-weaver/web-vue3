@@ -28,7 +28,8 @@ describe("Toc component", () => {
   it("reads the chapter and notifies the parent", async () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(chapterSuccessfulResponse);
-    const book = bookSuccessfulResponse.data;
+    const bookPath = "path-to-book";
+    const book = { ...bookSuccessfulResponse.data, bookPath };
     const wrapper = shallowMount(Toc, { props: { book } });
 
     /* When */
@@ -36,7 +37,8 @@ describe("Toc component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.emitted()["chapterRead"]).toEqual([[chapterSuccessfulResponse.data]]);
+    const expected = { ...chapterSuccessfulResponse.data, bookPath, chapterPath: "chapter-1" };
+    expect(wrapper.emitted()["chapterRead"]).toEqual([[expected]]);
   });
 
   it("emits unsuccessful message event when the chapter is not found", async () => {

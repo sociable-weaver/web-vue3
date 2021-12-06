@@ -41,7 +41,7 @@ export default class Toc extends Vue {
     return apiClient
       .get("/api/book/read-chapter", { params: { bookPath, chapterPath } })
       .then((response) => response.data)
-      .then((json) => json as Chapter);
+      .then((json) => ({ ...json, bookPath, chapterPath } as Chapter));
   }
 }
 </script>
