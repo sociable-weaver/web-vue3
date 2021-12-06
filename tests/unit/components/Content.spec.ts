@@ -60,6 +60,29 @@ describe("Content component", () => {
     expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
   });
 
+  it("displays the create with the working directory", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "create",
+          workingDirectory: "hello-world",
+          parameters: ["HelloWorld", "#!/usr/bin/java --source 17"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("div[class=filePath]").text()).toEqual(
+      "Create the file: hello-world/HelloWorld, with the following contents"
+    );
+    expect(wrapper.find("pre[class=content]").text()).toEqual("#!/usr/bin/java --source 17");
+  });
+
   it("displays the markdown as HTML", async () => {
     /* Given */
     const chapter = {

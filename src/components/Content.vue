@@ -3,6 +3,7 @@
     <div v-for="entry in chapter.entries" :key="entry.id">
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
+      <Create v-else-if="entry.type === 'create'" :entry="entry" />
       <Markdown v-else-if="entry.type === 'markdown'" :entry="entry" />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
@@ -14,6 +15,7 @@
 <script lang="ts">
 import ChapterRenderer from "@/components/renderers/Chapter.vue";
 import Command from "@/components/renderers/Command.vue";
+import Create from "@/components/renderers/Create.vue";
 import Markdown from "@/components/renderers/Markdown.vue";
 import { Chapter } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
@@ -26,6 +28,7 @@ import { Options, Vue } from "vue-class-component";
   components: {
     ChapterRenderer,
     Command,
+    Create,
     Markdown,
   },
 })
