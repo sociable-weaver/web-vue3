@@ -163,6 +163,30 @@ describe("Content component", () => {
     expect(wrapper.find("div[class=d2h-wrapper]").text()).toContain("public class HelloWorld {");
   });
 
+  it("displays the git commit changes", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "git-commit-changes",
+          workingDirectory: "hello-world",
+          parameters: ["Basic Java application", "v2.0.2"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("pre").text()).toContain("hello-world $ git add .");
+    expect(wrapper.find("pre").text()).toContain('hello-world $ git commit --message "Basic Java application"');
+    expect(wrapper.find("pre").text()).toContain(
+      'hello-world $ git tag --annotate "v2.0.2" --message "Basic Java application"'
+    );
+  });
+
   it("displays the markdown as HTML", async () => {
     /* Given */
     const chapter = {
