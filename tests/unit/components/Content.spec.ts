@@ -21,6 +21,25 @@ describe("Content component", () => {
     expect(wrapper.text()).toEqual("Hello world");
   });
 
+  it("displays the command", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "command",
+          parameters: ["java", "-jar", "hello-world.jar"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("pre").text()).toEqual("$ java -jar hello-world.jar");
+  });
+
   it("displays the markdown as HTML", async () => {
     /* Given */
     const chapter = {
