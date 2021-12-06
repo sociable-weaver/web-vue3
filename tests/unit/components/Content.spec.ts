@@ -100,7 +100,9 @@ describe("Content component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("pre").text()).toContain("hello-world $ docker tag hello-world:v8.0.4 ${DOCKER_USERNAME}/hello-world:v8.0.4");
+    expect(wrapper.find("pre").text()).toContain(
+      "hello-world $ docker tag hello-world:v8.0.4 ${DOCKER_USERNAME}/hello-world:v8.0.4"
+    );
     expect(wrapper.find("pre").text()).toContain("hello-world $ docker push ${DOCKER_USERNAME}/hello-world:v8.0.4");
   });
 
@@ -111,7 +113,10 @@ describe("Content component", () => {
         {
           type: "download",
           workingDirectory: "hello-world",
-          parameters: ["https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar", "hello-world-jar-demo.jar"],
+          parameters: [
+            "https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar",
+            "hello-world-jar-demo.jar",
+          ],
         },
       ],
     };
@@ -121,7 +126,41 @@ describe("Content component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("pre").text()).toEqual("hello-world $ curl --location https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar --output hello-world-jar-demo.jar");
+    expect(wrapper.find("pre").text()).toEqual(
+      "hello-world $ curl --location https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar --output hello-world-jar-demo.jar"
+    );
+  });
+
+  it("displays the git apply diff as HTML", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "git-apply-patch",
+          workingDirectory: "hello-world",
+          parameters: [
+            "diff --git a/HelloWorld.java b/HelloWorld.java",
+            "index cc78ded..cd36a67 100755",
+            "--- a/HelloWorld.java",
+            "+++ b/HelloWorld.java",
+            "@@ -1,5 +1,3 @@",
+            "-#!/usr/bin/java --source 17",
+            "-",
+            " public class HelloWorld {",
+            "     public static void main(final String[] args) {",
+            '         System.out.println("Hello World!!");',
+            "",
+          ],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("div[class=d2h-wrapper]").text()).toContain("public class HelloWorld {");
   });
 
   it("displays the markdown as HTML", async () => {
