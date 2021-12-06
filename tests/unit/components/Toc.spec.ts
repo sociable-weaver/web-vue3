@@ -12,9 +12,10 @@ describe("Toc component", () => {
   it("displays the book table of contents", async () => {
     /* Given */
     const book = bookSuccessfulResponse.data;
+    const chapterPath = "";
 
     /* When */
-    const wrapper = shallowMount(Toc, { props: { book } });
+    const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* Then */
     expect(wrapper.text()).toContain("Test title");
@@ -30,7 +31,8 @@ describe("Toc component", () => {
     mocked(apiClient.get).mockResolvedValueOnce(chapterSuccessfulResponse);
     const bookPath = "path-to-book";
     const book = { ...bookSuccessfulResponse.data, bookPath };
-    const wrapper = shallowMount(Toc, { props: { book } });
+    const chapterPath = "";
+    const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* When */
     wrapper.find("h3").trigger("click");
@@ -45,7 +47,8 @@ describe("Toc component", () => {
     /* Given */
     mocked(apiClient.get).mockRejectedValue(chapterNotFoundResponse);
     const book = bookSuccessfulResponse.data;
-    const wrapper = shallowMount(Toc, { props: { book } });
+    const chapterPath = "";
+    const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* When */
     wrapper.find("h3").trigger("click");

@@ -21,18 +21,27 @@ import { Options, Vue } from "vue-class-component";
   emits: ["chapterRead", "errorMessage"],
   props: {
     book: Object,
+    chapterPath: String,
   },
 })
 export default class Toc extends Vue {
   private book!: Book;
+  private chapterPath!: string;
 
-  private onReadChapter(path: string): void {
-    this.readChapter(this.book.bookPath, path)
+  mounted(): void {
+    this.$nextTick(() => {
+      if (this.chapterPath.trim().length > 0) {
+        this.onReadChapter(this.chapterPath);
+      }
+    });
+  }
+
+  private onReadChapter(chapterPath: string): void {
+    this.readChapter(this.book.bookPath, chapterPath)
       .then((chapter) => {
         this.$emit("chapterRead", chapter);
       })
       .catch((e) => {
-        console.log("Error", e);
         this.$emit("errorMessage", `Failed to open chapter (${e?.response?.data?.message || e.message})`);
       });
   }

@@ -3,7 +3,14 @@
     <MessageBar ref="messageBar" v-if="message !== null" :message="message" />
     <App ref="app" @app-is-running="onAppIsRunning" />
     <Open ref="open" @book-opened="onOpenBook" v-if="appIsRunning" :workspace="workspace" />
-    <Toc ref="toc" @chapter-read="onChapterRead" @error-message="onErrorMessage" v-if="book !== null" :book="book" />
+    <Toc
+      ref="toc"
+      @chapter-read="onChapterRead"
+      @error-message="onErrorMessage"
+      v-if="book !== null"
+      :book="book"
+      :chapterPath="workspace.chapterPath"
+    />
     <Content ref="content" v-if="chapter !== null" :chapter="chapter" />
   </div>
 </template>
@@ -32,13 +39,14 @@ export default class Home extends Vue {
   private appIsRunning = false;
   private book: Book | null = null;
   private chapter: Chapter | null = null;
-  private workspace: Workspace = { bookPath: "", workPath: "" };
+  private workspace: Workspace = { bookPath: "", workPath: "", chapterPath: "" };
   private message: string | null = null;
 
   mounted(): void {
     /* TODO: What should we do if this is an array? */
     this.workspace.bookPath = (this.$route.params.bookPath as string) || "";
     this.workspace.workPath = (this.$route.params.workPath as string) || "";
+    this.workspace.chapterPath = (this.$route.params.chapterPath as string) || "";
   }
 
   private onAppIsRunning(state: boolean): void {
@@ -46,11 +54,25 @@ export default class Home extends Vue {
   }
 
   private onOpenBook(opened: Book): void {
-    this.$router.push({ name: "Home", params: { bookPath: opened.bookPath, workPath: opened.workPath } });
+    this.workspace.bookPath = opened.bookPath;
+    this.workspace.workPath = opened.workPath;
+    this.$router.push({
+      name: "Home",
+      params: { bookPath: this.workspace.bookPath, workPath: this.workspace.workPath },
+    });
     this.book = opened;
   }
 
   private onChapterRead(read: Chapter): void {
+    this.workspace.chapterPath = read.chapterPath;
+    this.$router.push({
+      name: "Home",
+      params: {
+        bookPath: this.workspace.bookPath,
+        workPath: this.workspace.workPath,
+        chapterPath: this.workspace.chapterPath,
+      },
+    });
     this.chapter = read;
   }
 
