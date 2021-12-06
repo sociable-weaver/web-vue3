@@ -17,7 +17,9 @@ export default class Command extends Vue {
   private command = "";
 
   mounted(): void {
-    this.command = "$ " + this.entry.parameters.join(" ");
+    const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
+    const commandPromptSymbol = "$";
+    this.command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join(" ")}`;
   }
 }
 </script>

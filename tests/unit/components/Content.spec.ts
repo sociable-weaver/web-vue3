@@ -21,7 +21,7 @@ describe("Content component", () => {
     expect(wrapper.text()).toEqual("Hello world");
   });
 
-  it("displays the command", async () => {
+  it("displays the command without working directory", async () => {
     /* Given */
     const chapter = {
       entries: [
@@ -38,6 +38,26 @@ describe("Content component", () => {
 
     /* Then */
     expect(wrapper.find("pre").text()).toEqual("$ java -jar hello-world.jar");
+  });
+
+  it("displays the command with working directory", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "command",
+          workingDirectory: "hello-world",
+          parameters: ["java", "-jar", "hello-world.jar"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
   });
 
   it("displays the markdown as HTML", async () => {
