@@ -1,9 +1,10 @@
 <template>
-  <h2 class="chapter">{{ chapter }}</h2>
+  <div class="markdown" v-html="html" />
 </template>
 
 <script lang="ts">
 import { Entry } from "@/models/Chapter";
+import { Marked } from "@ts-stack/markdown";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -14,10 +15,11 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Markdown extends Vue {
   private entry!: Entry;
-  private chapter = "";
+  private html = "";
 
   mounted(): void {
-    this.chapter = this.entry.parameters[0];
+    const markdown = this.entry.parameters.join("\n");
+    this.html = Marked.parse(markdown);
   }
 }
 </script>

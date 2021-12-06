@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <div v-for="entry in chapter.entries" :key="entry.id">
-      <ChapterEntry v-if="entry.type === 'chapter'" :entry="entry" />
-      <MarkdownEntry v-else-if="entry.type === 'markdown'" :entry="entry" />
+      <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
+      <MarkdownRenderer v-else-if="entry.type === 'markdown'" :entry="entry" />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import ChapterEntry from "@/components/renderers/ChapterEntry.vue";
-import MarkdownEntry from "@/components/renderers/MarkdownEntry.vue";
+import ChapterRenderer from "@/components/renderers/Chapter.vue";
+import MarkdownRenderer from "@/components/renderers/Markdown.vue";
 import { Chapter } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
@@ -22,8 +22,8 @@ import { Options, Vue } from "vue-class-component";
     chapter: Object,
   },
   components: {
-    ChapterEntry,
-    MarkdownEntry,
+    ChapterRenderer,
+    MarkdownRenderer,
   },
 })
 export default class Content extends Vue {
