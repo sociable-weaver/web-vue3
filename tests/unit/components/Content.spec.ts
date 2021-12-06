@@ -60,6 +60,27 @@ describe("Content component", () => {
     expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
   });
 
+  it("displays the docker tag and push with the working directory", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "docker-tag-and-push",
+          workingDirectory: "hello-world",
+          parameters: ["hello-world:v8.0.4", "${DOCKER_USERNAME}/hello-world:v8.0.4"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("pre").text()).toContain("hello-world $ docker tag hello-world:v8.0.4 ${DOCKER_USERNAME}/hello-world:v8.0.4");
+    expect(wrapper.find("pre").text()).toContain("hello-world $ docker push ${DOCKER_USERNAME}/hello-world:v8.0.4");
+  });
+
   it("displays the create with the working directory", async () => {
     /* Given */
     const chapter = {
