@@ -289,6 +289,68 @@ describe("Content component", () => {
     expect(wrapper.find("h4").text()).toEqual("Hello world");
   });
 
+  it("displays the non-sensitive variable input", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "variable",
+          name: "NAME",
+          sensitive: false,
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("label").text()).toEqual("NAME");
+    expect(wrapper.find("input").attributes("type")).toBeUndefined();
+  });
+
+  it("displays the sensitive variable input", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "variable",
+          name: "PASSWORD",
+          sensitive: true,
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("label").text()).toEqual("PASSWORD");
+    expect(wrapper.find("input").attributes("type")).toEqual("password");
+  });
+
+  it("displays the default sensitive variable input", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "variable",
+          name: "PASSWORD",
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("label").text()).toEqual("PASSWORD");
+    expect(wrapper.find("input").attributes("type")).toEqual("password");
+  });
+
   it("displays a message indicating that this type is not yet supported", async () => {
     /* Given */
     const type = "unsupported-type";
