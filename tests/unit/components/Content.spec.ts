@@ -351,6 +351,28 @@ describe("Content component", () => {
     expect(wrapper.find("input").attributes("type")).toEqual("password");
   });
 
+  it("displays the variable default input", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "variable",
+          name: "NAME",
+          sensitive: false,
+          parameters: ["Albert Attard"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("label").text()).toEqual("NAME");
+    expect(wrapper.find("input").element.value).toEqual("Albert Attard");
+  });
+
   it("displays a message indicating that this type is not yet supported", async () => {
     /* Given */
     const type = "unsupported-type";

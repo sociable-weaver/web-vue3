@@ -2,8 +2,8 @@
   <div>
     <div>Variable</div>
     <label for="{{name}}-value">{{ name }}</label>
-    <input type="password" v-if="sensitive" v-bind="value" id="{{name}}-value" />
-    <input v-else v-bind="value" id="{{name}}-value" />
+    <input type="password" v-if="sensitive" v-model="value" id="{{name}}-value" />
+    <input v-else v-model="value" id="{{name}}-value" />
     <button>Set</button>
   </div>
 </template>
@@ -27,6 +27,8 @@ export default class Variable extends Vue {
   mounted(): void {
     this.name = this.entry.name;
     this.sensitive = this.entry.sensitive === undefined ? true : this.entry.sensitive;
+    this.value =
+      this.entry.parameters !== undefined && this.entry.parameters.length > 0 ? this.entry.parameters[0] : "";
   }
 }
 </script>
