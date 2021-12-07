@@ -26,9 +26,23 @@ export default class Variable extends Vue {
 
   mounted(): void {
     this.name = this.entry.name;
-    this.sensitive = this.entry.sensitive === undefined ? true : this.entry.sensitive;
-    this.value =
-      this.entry.parameters !== undefined && this.entry.parameters.length > 0 ? this.entry.parameters[0] : "";
+    this.sensitive = this.readSensitiveFromEntity();
+    this.value = this.readDefaultValueOrEmptyFromEntry();
+  }
+
+  private readSensitiveFromEntity(): boolean {
+    if (this.entry.sensitive === undefined) {
+      return true;
+    }
+    return this.entry.sensitive;
+  }
+
+  private readDefaultValueOrEmptyFromEntry(): string {
+    if (this.entry.parameters === undefined || this.entry.parameters.length == 0) {
+      return "";
+    }
+
+    return this.entry.parameters[0];
   }
 }
 </script>
