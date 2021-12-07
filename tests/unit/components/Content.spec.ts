@@ -18,7 +18,7 @@ describe("Content component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.text()).toEqual("Hello world");
+    expect(wrapper.find("h2").text()).toEqual("Hello world");
   });
 
   it("displays the command without working directory", async () => {
@@ -249,6 +249,44 @@ describe("Content component", () => {
       "Replace the file: hello-world/HelloWorld, with the following contents"
     );
     expect(wrapper.find("pre[class=content]").text()).toEqual("#!/usr/bin/java --source 17");
+  });
+
+  it("displays the section", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "section",
+          parameters: ["Hello world"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("h3").text()).toEqual("Hello world");
+  });
+
+  it("displays the subsection", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "subsection",
+          parameters: ["Hello world"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("h4").text()).toEqual("Hello world");
   });
 
   it("displays a message indicating that this type is not yet supported", async () => {

@@ -1,5 +1,5 @@
 <template>
-  <h2>{{ chapter }}</h2>
+  <h4>{{ subsection }}</h4>
 </template>
 
 <script lang="ts">
@@ -7,17 +7,17 @@ import { Entry } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
-  name: "Chapter",
+  name: "Subsection",
   props: {
     entry: Object,
   },
 })
-export default class Chapter extends Vue {
+export default class Subsection extends Vue {
   private entry!: Entry;
-  private chapter = "";
+  private subsection = "";
 
   mounted(): void {
-    this.chapter = this.entry.parameters[0];
+    this.subsection = this.entry.parameters[0];
   }
 }
 </script>
