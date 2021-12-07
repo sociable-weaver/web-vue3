@@ -10,6 +10,7 @@
       <GitCommitChanges v-else-if="entry.type === 'git-commit-changes'" :entry="entry" />
       <GitTagCurrentCommit v-else-if="entry.type === 'git-tag-current-commit'" :entry="entry" />
       <Markdown v-else-if="entry.type === 'markdown'" :entry="entry" />
+      <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
@@ -27,6 +28,7 @@ import GitApplyPatch from "@/components/renderers/GitApplyPatch.vue";
 import GitCommitChanges from "@/components/renderers/GitCommitChanges.vue";
 import GitTagCurrentCommit from "@/components/renderers/GitTagCurrentCommit.vue";
 import Markdown from "@/components/renderers/Markdown.vue";
+import Replace from "@/components/renderers/Replace.vue";
 import { Chapter } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
@@ -45,6 +47,7 @@ import { Options, Vue } from "vue-class-component";
     GitCommitChanges,
     GitTagCurrentCommit,
     Markdown,
+    Replace,
   },
 })
 export default class Content extends Vue {

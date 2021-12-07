@@ -228,6 +228,29 @@ describe("Content component", () => {
     expect(wrapper.find("strong").text()).toEqual("Hello world");
   });
 
+  it("displays the replace with the working directory", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "replace",
+          workingDirectory: "hello-world",
+          parameters: ["HelloWorld", "#!/usr/bin/java --source 17"],
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("div[class=filePath]").text()).toEqual(
+      "Replace the file: hello-world/HelloWorld, with the following contents"
+    );
+    expect(wrapper.find("pre[class=content]").text()).toEqual("#!/usr/bin/java --source 17");
+  });
+
   it("displays a message indicating that this type is not yet supported", async () => {
     /* Given */
     const type = "unsupported-type";
