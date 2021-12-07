@@ -24,4 +24,12 @@ export default class Markdown extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped>
+.markdown >>> pre {
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: lightgrey;
+  color: black;
+}
+</style>
