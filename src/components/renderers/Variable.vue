@@ -4,7 +4,7 @@
     <label for="{{name}}-value">{{ name }}</label>
     <input type="password" v-if="sensitive" v-model="value" id="{{name}}-value" />
     <input v-else v-model="value" id="{{name}}-value" />
-    <button>Set</button>
+    <button @click="onVariableSet">Set</button>
   </div>
 </template>
 
@@ -17,6 +17,7 @@ import { Options, Vue } from "vue-class-component";
   props: {
     entry: Object,
   },
+  emits: ["variableUpdated"],
 })
 export default class Variable extends Vue {
   private entry!: Entry;
@@ -28,6 +29,13 @@ export default class Variable extends Vue {
     this.name = this.entry.name;
     this.sensitive = this.readSensitiveFromEntity();
     this.value = this.readDefaultValueOrEmptyFromEntry();
+  }
+
+  private onVariableSet(): void {
+    const previousValue = this.readDefaultValueOrEmptyFromEntry();
+    if (this.value !== previousValue) {
+      this.$emit("variableUpdated", { name: this.name, value: this.value, previousValue });
+    }
   }
 
   private readSensitiveFromEntity(): boolean {
