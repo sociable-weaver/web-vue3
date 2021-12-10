@@ -14,12 +14,22 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Command extends Vue {
   private entry!: Entry;
-  private command = "";
 
-  mounted(): void {
+  get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
-    this.command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join(" ")}`;
+    let command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join(" ")}`;
+
+    if (this.entry.variables != undefined && this.entry.values != undefined) {
+      this.entry.variables.forEach((variable) => {
+        const value = this.entry.values[variable];
+        if (value !== undefined) {
+          command = command.replaceAll(`\${${variable}}`, value);
+        }
+      });
+    }
+
+    return command;
   }
 }
 </script>

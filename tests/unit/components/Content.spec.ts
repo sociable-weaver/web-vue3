@@ -60,6 +60,29 @@ describe("Content component", () => {
     expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
   });
 
+  it("displays the command with variable values", async () => {
+    /* Given */
+    const chapter = {
+      entries: [
+        {
+          type: "command",
+          parameters: ["echo", "${NAME}", "${NAME}"],
+          variables: ["NAME"],
+          values: {
+            NAME: "Albert",
+          },
+        },
+      ],
+    };
+
+    /* When */
+    const wrapper = mount(Content, { props: { chapter } });
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.find("pre").text()).toEqual("$ echo Albert Albert");
+  });
+
   it("displays the create with the working directory", async () => {
     /* Given */
     const chapter = {
