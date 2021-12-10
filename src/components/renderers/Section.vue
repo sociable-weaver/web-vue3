@@ -14,10 +14,9 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Section extends Vue {
   private entry!: Entry;
-  private section = "";
 
-  mounted(): void {
-    this.section = this.entry.parameters[0];
+  get section(): string {
+    return this.entry.parameters[0];
   }
 }
 </script>

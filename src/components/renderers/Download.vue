@@ -14,14 +14,13 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Download extends Vue {
   private entry!: Entry;
-  private command = "";
 
-  mounted(): void {
+  get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
     const link = this.entry.parameters[0];
     const path = this.entry.parameters[1];
-    this.command = `${workingDirectory}${commandPromptSymbol} curl --location ${link} --output ${path}`;
+    return `${workingDirectory}${commandPromptSymbol} curl --location ${link} --output ${path}`;
   }
 }
 </script>

@@ -14,10 +14,9 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Subsection extends Vue {
   private entry!: Entry;
-  private subsection = "";
 
-  mounted(): void {
-    this.subsection = this.entry.parameters[0];
+  get subsection(): string {
+    return this.entry.parameters[0];
   }
 }
 </script>

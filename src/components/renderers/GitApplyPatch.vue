@@ -15,11 +15,10 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class GitApplyPatch extends Vue {
   private entry!: Entry;
-  private patch = "";
 
-  mounted(): void {
+  get patch(): string {
     const config = { drawFileList: false, fileContentToggle: false } as Diff2HtmlConfig;
-    this.patch = html(this.entry.parameters.join("\n"), config);
+    return html(this.entry.parameters.join("\n"), config);
   }
 }
 </script>

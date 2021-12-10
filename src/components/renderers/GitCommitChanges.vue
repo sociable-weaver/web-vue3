@@ -14,24 +14,24 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class GitCommitChanges extends Vue {
   private entry!: Entry;
-  private command = "";
 
-  mounted(): void {
+  get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
     const message = this.entry.parameters[0];
     const tag = this.entry.parameters.length > 1 ? this.entry.parameters[1] : false;
     const pushChanges = this.entry.pushChanges || false;
-    this.command = `${workingDirectory}${commandPromptSymbol} git add .`;
-    this.command += `\n${workingDirectory}${commandPromptSymbol} git commit --message "${message}"`;
+    let command = `${workingDirectory}${commandPromptSymbol} git add .`;
+    command += `\n${workingDirectory}${commandPromptSymbol} git commit --message "${message}"`;
     if (tag) {
-      this.command += `\n${workingDirectory}${commandPromptSymbol} git tag --annotate "${tag}" --message "${message}"`;
+      command += `\n${workingDirectory}${commandPromptSymbol} git tag --annotate "${tag}" --message "${message}"`;
       if (pushChanges) {
-        this.command += `\n${workingDirectory}${commandPromptSymbol} git push --atomic origin main "${tag}"`;
+        command += `\n${workingDirectory}${commandPromptSymbol} git push --atomic origin main "${tag}"`;
       }
     } else if (pushChanges) {
-      this.command += `\n${workingDirectory}${commandPromptSymbol} git push origin main`;
+      command += `\n${workingDirectory}${commandPromptSymbol} git push origin main`;
     }
+    return command;
   }
 }
 </script>

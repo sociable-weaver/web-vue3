@@ -21,28 +21,29 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Variable extends Vue {
   private entry!: Entry;
-  private name = "";
-  private sensitive = true;
   private value = "";
 
   mounted(): void {
-    this.name = this.entry.name;
-    this.sensitive = this.readSensitiveFromEntity();
     this.value = this.readDefaultValueOrEmptyFromEntry();
+  }
+
+  get name(): string {
+    return this.entry.name;
+  }
+
+  get sensitive(): boolean {
+    if (this.entry.sensitive === undefined) {
+      return true;
+    }
+
+    return this.entry.sensitive;
   }
 
   private onVariableSet(): void {
     const previousValue = this.readDefaultValueOrEmptyFromEntry();
     if (this.value !== previousValue) {
-      this.$emit("variableUpdated", { name: this.name, value: this.value, previousValue });
+      this.$emit("variableUpdated", { name: this.entry.name, value: this.value, previousValue });
     }
-  }
-
-  private readSensitiveFromEntity(): boolean {
-    if (this.entry.sensitive === undefined) {
-      return true;
-    }
-    return this.entry.sensitive;
   }
 
   private readDefaultValueOrEmptyFromEntry(): string {

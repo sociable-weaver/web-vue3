@@ -14,10 +14,9 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Chapter extends Vue {
   private entry!: Entry;
-  private chapter = "";
 
-  mounted(): void {
-    this.chapter = this.entry.parameters[0];
+  get chapter(): string {
+    return this.entry.parameters[0];
   }
 }
 </script>

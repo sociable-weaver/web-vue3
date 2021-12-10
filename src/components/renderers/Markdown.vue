@@ -15,11 +15,10 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Markdown extends Vue {
   private entry!: Entry;
-  private html = "";
 
-  mounted(): void {
+  get html(): string {
     const markdown = this.entry.parameters.join("\n");
-    this.html = Marked.parse(markdown);
+    return Marked.parse(markdown);
   }
 }
 </script>

@@ -15,13 +15,14 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Replace extends Vue {
   private entry!: Entry;
-  private filePath = "";
-  private content = "";
 
-  mounted(): void {
+  get filePath(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory}/` : "";
-    this.filePath = `${workingDirectory}${this.entry.parameters[0]}`;
-    this.content = `${this.entry.parameters.slice(1).join("\n")}\n`;
+    return `${workingDirectory}${this.entry.parameters[0]}`;
+  }
+
+  get content(): string {
+    return `${this.entry.parameters.slice(1).join("\n")}\n`;
   }
 }
 </script>
