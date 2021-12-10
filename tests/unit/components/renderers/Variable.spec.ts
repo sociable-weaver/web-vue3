@@ -26,6 +26,7 @@ describe("Variable", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.emitted()["variableUpdated"]).toEqual([[{ name: "NAME", value: "Albert", previousValue: "" }]]);
+    const expected = { name: "NAME", value: "Albert", previousValue: "" };
+    expect(wrapper.emitted()["variableUpdated"]).toEqual([[expected]]);
   });
 });

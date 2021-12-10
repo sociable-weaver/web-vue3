@@ -13,7 +13,7 @@
       <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <Section v-else-if="entry.type === 'section'" :entry="entry" />
       <Subsection v-else-if="entry.type === 'subsection'" :entry="entry" />
-      <Variable v-else-if="entry.type === 'variable'" :entry="entry" />
+      <Variable v-else-if="entry.type === 'variable'" :entry="entry" @variable-updated="onVariableUpdated" />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
@@ -35,7 +35,7 @@ import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
-import { Chapter } from "@/models/Chapter";
+import { Chapter, VariableUpdated } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -58,9 +58,14 @@ import { Options, Vue } from "vue-class-component";
     Subsection,
     Variable,
   },
+  emits: ["variableUpdated"],
 })
 export default class Content extends Vue {
   private chapter!: Chapter;
+
+  private onVariableUpdated(update: VariableUpdated): void {
+    this.$emit("variableUpdated", update);
+  }
 }
 </script>
 
