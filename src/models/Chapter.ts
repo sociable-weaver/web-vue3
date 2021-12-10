@@ -29,6 +29,9 @@ export interface VariableUpdated {
 
 export function updateValue(entry: Entry, update: VariableUpdated): void {
   if (entry.variables !== undefined && entry.variables.indexOf(update.name) > -1) {
+    if (entry.values === undefined) {
+      entry.values = {};
+    }
     entry.values[update.name] = update.value;
   }
 }
