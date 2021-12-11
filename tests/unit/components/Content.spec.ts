@@ -40,49 +40,6 @@ describe("Content component", () => {
     expect(wrapper.find("pre").text()).toEqual("$ java -jar hello-world.jar");
   });
 
-  it("displays the command with working directory", async () => {
-    /* Given */
-    const chapter = {
-      entries: [
-        {
-          type: "command",
-          workingDirectory: "hello-world",
-          parameters: ["java -jar hello-world.jar"],
-        },
-      ],
-    };
-
-    /* When */
-    const wrapper = mount(Content, { props: { chapter } });
-    await flushPromises();
-
-    /* Then */
-    expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
-  });
-
-  it("displays the command with variable values", async () => {
-    /* Given */
-    const chapter = {
-      entries: [
-        {
-          type: "command",
-          parameters: ["echo ${NAME} ${NAME}"],
-          variables: ["NAME"],
-          values: {
-            NAME: "Albert",
-          },
-        },
-      ],
-    };
-
-    /* When */
-    const wrapper = mount(Content, { props: { chapter } });
-    await flushPromises();
-
-    /* Then */
-    expect(wrapper.find("pre").text()).toEqual("$ echo Albert Albert");
-  });
-
   it("displays the create with the working directory", async () => {
     /* Given */
     const chapter = {
@@ -251,7 +208,7 @@ describe("Content component", () => {
     expect(wrapper.find("strong").text()).toEqual("Hello world");
   });
 
-  it("displays the replace with the working directory", async () => {
+  it("displays the replace", async () => {
     /* Given */
     const chapter = {
       entries: [
@@ -331,69 +288,6 @@ describe("Content component", () => {
     /* Then */
     expect(wrapper.find("label").text()).toEqual("NAME");
     expect(wrapper.find("input").attributes("type")).toBeUndefined();
-  });
-
-  it("displays the sensitive variable input", async () => {
-    /* Given */
-    const chapter = {
-      entries: [
-        {
-          type: "variable",
-          name: "PASSWORD",
-          sensitive: true,
-        },
-      ],
-    };
-
-    /* When */
-    const wrapper = mount(Content, { props: { chapter } });
-    await flushPromises();
-
-    /* Then */
-    expect(wrapper.find("label").text()).toEqual("PASSWORD");
-    expect(wrapper.find("input").attributes("type")).toEqual("password");
-  });
-
-  it("displays the default sensitive variable input", async () => {
-    /* Given */
-    const chapter = {
-      entries: [
-        {
-          type: "variable",
-          name: "PASSWORD",
-        },
-      ],
-    };
-
-    /* When */
-    const wrapper = mount(Content, { props: { chapter } });
-    await flushPromises();
-
-    /* Then */
-    expect(wrapper.find("label").text()).toEqual("PASSWORD");
-    expect(wrapper.find("input").attributes("type")).toEqual("password");
-  });
-
-  it("displays the variable default input", async () => {
-    /* Given */
-    const chapter = {
-      entries: [
-        {
-          type: "variable",
-          name: "NAME",
-          sensitive: false,
-          parameters: ["Albert Attard"],
-        },
-      ],
-    };
-
-    /* When */
-    const wrapper = mount(Content, { props: { chapter } });
-    await flushPromises();
-
-    /* Then */
-    expect(wrapper.find("label").text()).toEqual("NAME");
-    expect(wrapper.find("input").element.value).toEqual("Albert Attard");
   });
 
   it("displays a message indicating that this type is not yet supported", async () => {
