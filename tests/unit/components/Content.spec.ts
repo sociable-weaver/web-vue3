@@ -27,7 +27,7 @@ describe("Content component", () => {
       entries: [
         {
           type: "command",
-          parameters: ["java", "-jar", "hello-world.jar"],
+          parameters: ["java -jar hello-world.jar"],
         },
       ],
     };
@@ -47,7 +47,7 @@ describe("Content component", () => {
         {
           type: "command",
           workingDirectory: "hello-world",
-          parameters: ["java", "-jar", "hello-world.jar"],
+          parameters: ["java -jar hello-world.jar"],
         },
       ],
     };
@@ -66,7 +66,7 @@ describe("Content component", () => {
       entries: [
         {
           type: "command",
-          parameters: ["echo", "${NAME}", "${NAME}"],
+          parameters: ["echo ${NAME} ${NAME}"],
           variables: ["NAME"],
           values: {
             NAME: "Albert",

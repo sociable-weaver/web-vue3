@@ -1,5 +1,5 @@
 <template>
-  <pre class="command">{{ command }}</pre>
+  <pre>{{ command }}</pre>
 </template>
 
 <script lang="ts">
@@ -18,7 +18,7 @@ export default class Command extends Vue {
   get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
-    let command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join(" ")}`;
+    let command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join("\n")}`;
 
     if (this.entry.variables != undefined && this.entry.values != undefined) {
       this.entry.variables.forEach((variable) => {
