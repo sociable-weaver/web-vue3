@@ -17,7 +17,7 @@ import { Options, Vue } from "vue-class-component";
   props: {
     entry: Object,
   },
-  emits: ["variableUpdated"],
+  emits: ["variableUpdated", "variableInitialised"],
 })
 export default class Variable extends Vue {
   private entry!: Entry;
@@ -25,6 +25,10 @@ export default class Variable extends Vue {
 
   mounted(): void {
     this.value = this.readDefaultValueOrEmptyFromEntry();
+    if (this.value.length > 0) {
+      const init = { name: this.entry.name, value: this.value };
+      this.$emit("variableInitialised", init);
+    }
   }
 
   get name(): string {

@@ -11,7 +11,13 @@
       :book="book"
       :chapterPath="workspace.chapterPath"
     />
-    <Content ref="content" v-if="chapter !== null" :chapter="chapter" @variable-updated="onVariableUpdated" />
+    <Content
+      ref="content"
+      v-if="chapter !== null"
+      :chapter="chapter"
+      @variable-updated="onVariableUpdated"
+      @variable-initialised="onVariableUpdated"
+    />
   </div>
 </template>
 
@@ -22,7 +28,7 @@ import MessageBar from "@/components/MessageBar.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
 import { Book } from "@/models/Book";
-import { Chapter, updateValue, VariableUpdated } from "@/models/Chapter";
+import { Chapter, setValue, VariableUpdated } from "@/models/Chapter";
 import { Workspace } from "@/models/Workspace";
 import { Options, Vue } from "vue-class-component";
 
@@ -82,7 +88,7 @@ export default class Home extends Vue {
 
   private onVariableUpdated(update: VariableUpdated): void {
     this.chapter?.entries.forEach((entry) => {
-      updateValue(entry, update);
+      setValue(entry, update);
     });
   }
 }

@@ -21,13 +21,16 @@ export interface Entry {
   commandTimeout: number;
 }
 
-export interface VariableUpdated {
+export interface VariableInitialised {
   name: string;
   value: string;
+}
+
+export interface VariableUpdated extends VariableInitialised {
   previousValue: string;
 }
 
-export function updateValue(entry: Entry, update: VariableUpdated): void {
+export function setValue(entry: Entry, update: VariableInitialised): void {
   if (entry.variables !== undefined && entry.variables.indexOf(update.name) > -1) {
     if (entry.values === undefined) {
       entry.values = {};

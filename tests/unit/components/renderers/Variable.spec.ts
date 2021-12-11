@@ -35,7 +35,7 @@ describe("Variable", () => {
     expect(wrapper.find("input").attributes("type")).toEqual("password");
   });
 
-  it("displays the variable default input", async () => {
+  it("displays the variable default input and emits event", async () => {
     /* Given */
     const entry = {
       type: "variable",
@@ -51,6 +51,8 @@ describe("Variable", () => {
     /* Then */
     expect(wrapper.find("label").text()).toEqual("NAME");
     expect(wrapper.find("input").element.value).toEqual("Albert Attard");
+    const expected = { name: "NAME", value: "Albert Attard" };
+    expect(wrapper.emitted()["variableInitialised"]).toEqual([[expected]]);
   });
 
   it("does not emit an event when the variable is not changed", async () => {

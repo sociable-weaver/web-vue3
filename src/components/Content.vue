@@ -13,7 +13,12 @@
       <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <Section v-else-if="entry.type === 'section'" :entry="entry" />
       <Subsection v-else-if="entry.type === 'subsection'" :entry="entry" />
-      <Variable v-else-if="entry.type === 'variable'" :entry="entry" @variable-updated="onVariableUpdated" />
+      <Variable
+        v-else-if="entry.type === 'variable'"
+        :entry="entry"
+        @variable-updated="onVariableUpdated"
+        @variable-initialised="onVariableInitialised"
+      />
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
@@ -35,7 +40,7 @@ import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
-import { Chapter, VariableUpdated } from "@/models/Chapter";
+import { Chapter, VariableInitialised, VariableUpdated } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -58,10 +63,14 @@ import { Options, Vue } from "vue-class-component";
     Subsection,
     Variable,
   },
-  emits: ["variableUpdated"],
+  emits: ["variableUpdated", "variableInitialised"],
 })
 export default class Content extends Vue {
   private chapter!: Chapter;
+
+  private onVariableInitialised(init: VariableInitialised): void {
+    this.$emit("variableInitialised", init);
+  }
 
   private onVariableUpdated(update: VariableUpdated): void {
     this.$emit("variableUpdated", update);
