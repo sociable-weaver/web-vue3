@@ -184,7 +184,7 @@ div.error {
 pre.output {
   padding: 20px;
   background-color: black;
-  color: greenyellow;
+  color: aliceblue;
 }
 
 pre.error {
@@ -206,8 +206,20 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  background-color: #c4c3bb;
+  color: #5e5e5a;
+  cursor: wait;
+}
+
 button.primary {
   background-color: #337ab7;
   color: white;
+}
+
+button.primary:disabled {
+  background-color: #84a0b8;
+  color: #5e5e5a;
+  cursor: wait;
 }
 </style>

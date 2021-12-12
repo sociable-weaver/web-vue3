@@ -20,7 +20,7 @@ export default class Download extends Vue {
     const commandPromptSymbol = "$";
     const link = this.entry.parameters[0];
     const path = this.entry.parameters[1];
-    return `${workingDirectory}${commandPromptSymbol} curl --location ${link} --output ${path}`;
+    return `${workingDirectory}${commandPromptSymbol} curl --location '${link}' --output '${path}'`;
   }
 }
 </script>
