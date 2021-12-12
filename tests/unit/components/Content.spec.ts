@@ -107,7 +107,7 @@ describe("Content component", () => {
 
     /* Then */
     expect(wrapper.find("pre").text()).toEqual(
-      "hello-world $ curl --location https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar --output hello-world-jar-demo.jar"
+      "hello-world $ curl --location 'https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar' --output 'hello-world-jar-demo.jar'"
     );
   });
 
