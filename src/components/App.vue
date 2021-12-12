@@ -12,7 +12,7 @@
           Download the application:
           <a
             class="download-app"
-            href="https://github.com/sociable-weaver/app-java-boot/releases/download/v0.9/sw-app.jar"
+            href="https://github.com/sociable-weaver/app-java-boot/releases/download/v0.10/sw-app.jar"
             >sw-app.jar</a
           >
         </li>
