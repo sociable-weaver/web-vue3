@@ -1,4 +1,3 @@
-import { Entry } from "@/models/Chapter";
 import { CompatClient, IMessage, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
@@ -6,7 +5,23 @@ export interface RunMessage {
   content: string;
 }
 
-export function run(entry: Entry, handleMessage: (message: RunMessage) => void): Promise<RunMessage> {
+export interface RunnableEntry {
+  type: string;
+  id: string;
+  name: string;
+  workPath: string;
+  workingDirectory: string;
+  parameters: string[];
+  variables: string[];
+  values: { [name: string]: string };
+  ignoreErrors: boolean;
+  pushChanges: boolean;
+  dryRun: boolean;
+  expectedExitValue: number;
+  commandTimeout: number;
+}
+
+export function runEntry(entry: RunnableEntry, handleMessage: (message: RunMessage) => void): Promise<RunMessage> {
   return new Promise((resolve, reject) => {
     try {
       const socket = new SockJS("http://localhost:8077/ws");
@@ -22,7 +37,6 @@ export function run(entry: Entry, handleMessage: (message: RunMessage) => void):
           resolve(body);
         });
 
-        /* TODO: we are sending the whole object, but we don't need that.  We should remove the things that are not needed by the backend. */
         connection.send("/api/command/run", {}, JSON.stringify(entry));
       });
     } catch (e) {

@@ -80,6 +80,7 @@ export default class Home extends Vue {
       },
     });
     this.chapter = read;
+    this.chapter.workPath = this.workspace.workPath;
   }
 
   private onErrorMessage(message: string): void {

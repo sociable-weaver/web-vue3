@@ -2,6 +2,7 @@ export interface Chapter {
   entries: Entry[];
   chapterPath: string;
   bookPath: string;
+  workPath: string;
 }
 
 export interface Entry {

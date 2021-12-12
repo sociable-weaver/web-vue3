@@ -47,7 +47,7 @@ import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
 import { Chapter, Entry, VariableInitialised, VariableUpdated } from "@/models/Chapter";
-import { run } from "@/services/RunEntryService";
+import { runEntry, RunnableEntry } from "@/services/RunEntryService";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -98,7 +98,7 @@ export default class Content extends Vue {
     }
 
     const entry: Entry = this.chapter.entries[index];
-    if (entry.runnable !== true) {
+    if (entry.runnable !== true || entry.dryRun === true) {
       this.runNext(index + 1, until);
       return;
     }
@@ -117,7 +117,9 @@ export default class Content extends Vue {
     entry.failed = false;
     entry.output = "";
     entry.error = "";
-    run(entry, (message) => (entry.output += message.content))
+
+    const runnableEntry = this.createRunableEntry(entry);
+    runEntry(runnableEntry, (message) => (entry.output += message.content))
       .then((result) => {
         switch (result.content) {
           case "FINISHED_AS_EXPECTED":
@@ -130,6 +132,24 @@ export default class Content extends Vue {
       })
       .catch((e) => (entry.error = `Failed to run (${e.meesage})`))
       .finally(onFinally);
+  }
+
+  private createRunableEntry(entry: Entry): RunnableEntry {
+    return {
+      type: entry.type,
+      id: entry.id,
+      name: entry.name,
+      workPath: this.chapter.workPath,
+      workingDirectory: entry.workingDirectory,
+      parameters: entry.parameters,
+      variables: entry.variables,
+      values: entry.values,
+      ignoreErrors: entry.ignoreErrors,
+      pushChanges: entry.pushChanges,
+      dryRun: entry.dryRun,
+      expectedExitValue: entry.expectedExitValue,
+      commandTimeout: entry.commandTimeout,
+    };
   }
 
   private onVariableInitialised(init: VariableInitialised): void {
