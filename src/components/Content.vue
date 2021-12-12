@@ -170,15 +170,27 @@ export default class Content extends Vue {
 </script>
 
 <style scoped lang="scss">
+.content {
+  width: 95%;
+  padding: 8px 8px 0 8px;
+}
+
 div.error {
   padding: 20px;
   background-color: orangered;
   color: white;
 }
 
-.content {
-  width: 95%;
-  padding: 8px 8px 0 8px;
+pre.output {
+  padding: 20px;
+  background-color: black;
+  color: greenyellow;
+}
+
+pre.error {
+  padding: 20px;
+  background-color: orangered;
+  color: white;
 }
 
 button {
