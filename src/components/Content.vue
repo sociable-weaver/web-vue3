@@ -160,4 +160,22 @@ div.error {
   width: 95%;
   padding: 8px 8px 0 8px;
 }
+
+button {
+  background-color: #dddddd;
+  border: 1px solid #5e5e5a;
+  border-radius: 2px;
+  color: black;
+  margin: 0 5px 0 0;
+  padding: 2px 5px 3px 5px;
+  text-align: center;
+  vertical-align: top;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button.primary {
+  background-color: #337ab7;
+  color: white;
+}
 </style>
