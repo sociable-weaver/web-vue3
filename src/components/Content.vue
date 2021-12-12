@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-for="entry in chapter.entries" :key="entry.id" :id="entry.id">
+    <div v-for="(entry, index) in chapter.entries" :key="entry.id" :id="entry.id">
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <Create v-else-if="entry.type === 'create'" :entry="entry" />
@@ -26,7 +26,7 @@
       <pre v-if="entry.error" class="error">{{ entry.error }}</pre>
       <div v-if="entry.runnable" class="buttons runnable">
         <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
-        <button :disabled="disabled" @click="onRunUntilHere(entry)">Run Until Here</button>
+        <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
       </div>
     </div>
   </div>
@@ -79,6 +79,41 @@ export default class Content extends Vue {
   private onRun(entry: Entry): void {
     this.disabled = true;
 
+    const onComplete = () => {
+      /**/
+    };
+    const onFinally = () => (this.disabled = false);
+
+    this.run(entry, onComplete, onFinally);
+  }
+
+  private onRunUntilHere(index: number): void {
+    this.runNext(0, index);
+  }
+
+  private runNext(index: number, until: number) {
+    if (index > until) {
+      this.disabled = false;
+      return;
+    }
+
+    const entry: Entry = this.chapter.entries[index];
+    if (entry.runnable !== true) {
+      this.runNext(index + 1, until);
+      return;
+    }
+
+    this.scrollToEntry(entry);
+
+    const onComplete = () => this.runNext(index + 1, until);
+    const onFinally = () => {
+      /**/
+    };
+
+    this.run(entry, onComplete, onFinally);
+  }
+
+  private run(entry: Entry, onComplete: () => void, onFinally: () => void) {
     entry.failed = false;
     entry.output = "";
     entry.error = "";
@@ -87,17 +122,14 @@ export default class Content extends Vue {
         switch (result.content) {
           case "FINISHED_AS_EXPECTED":
           case "FINISHED_WITH_SUPPRESSED_ERROR":
+            onComplete();
             break;
           default:
             entry.failed = true;
         }
       })
       .catch((e) => (entry.error = `Failed to run (${e.meesage})`))
-      .finally(() => (this.disabled = false));
-  }
-
-  private onRunUntilHere(entry: Entry): void {
-    console.log("Running until", entry);
+      .finally(onFinally);
   }
 
   private onVariableInitialised(init: VariableInitialised): void {
@@ -106,6 +138,13 @@ export default class Content extends Vue {
 
   private onVariableUpdated(update: VariableUpdated): void {
     this.$emit("variableUpdated", update);
+  }
+
+  private scrollToEntry(entry: Entry): void {
+    const element = document.getElementById(entry.id);
+    if (element !== null) {
+      element.scrollIntoView({ behavior: "auto" });
+    }
   }
 }
 </script>

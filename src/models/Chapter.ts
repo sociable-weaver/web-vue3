@@ -12,6 +12,7 @@ export interface Entry {
   parameters: string[];
   variables: string[];
   values: { [name: string]: string };
+  runnable: boolean;
   ignoreErrors: boolean;
   pushChanges: boolean;
   dryRun: boolean;
