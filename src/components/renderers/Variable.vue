@@ -1,9 +1,9 @@
 <template>
   <div>
     <div>Variable</div>
-    <label for="{{name}}-value">{{ name }}</label>
-    <input type="password" v-if="sensitive" v-model="value" id="{{name}}-value" />
-    <input v-else v-model="value" id="{{name}}-value" />
+    <label>{{ name }}</label>
+    <input type="password" v-if="sensitive" v-model="value" />
+    <input v-else v-model="value" />
     <button @click="onVariableSet">Set</button>
   </div>
 </template>

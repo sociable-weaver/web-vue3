@@ -19,6 +19,9 @@ export interface Entry {
   sensitive: boolean;
   expectedExitValue: number;
   commandTimeout: number;
+  failed: boolean;
+  output: string;
+  error: string;
 }
 
 export interface VariableInitialised {

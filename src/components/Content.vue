@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-for="entry in chapter.entries" :key="entry.id">
+    <div v-for="entry in chapter.entries" :key="entry.id" :id="entry.id">
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <Create v-else-if="entry.type === 'create'" :entry="entry" />
@@ -22,6 +22,12 @@
       <div v-else class="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
+      <pre v-if="entry.output" class="output" :class="{ error: entry.failed }">{{ entry.output }}</pre>
+      <pre v-if="entry.error" class="error">{{ entry.error }}</pre>
+      <div v-if="entry.runnable" class="buttons runnable">
+        <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
+        <button :disabled="disabled" @click="onRunUntilHere(entry)">Run Until Here</button>
+      </div>
     </div>
   </div>
 </template>
@@ -40,7 +46,8 @@ import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
-import { Chapter, VariableInitialised, VariableUpdated } from "@/models/Chapter";
+import { Chapter, Entry, VariableInitialised, VariableUpdated } from "@/models/Chapter";
+import { run } from "@/services/RunEntryService";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -67,6 +74,31 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Content extends Vue {
   private chapter!: Chapter;
+  private disabled = false;
+
+  private onRun(entry: Entry): void {
+    this.disabled = true;
+
+    entry.failed = false;
+    entry.output = "";
+    entry.error = "";
+    run(entry, (message) => (entry.output += message.content))
+      .then((result) => {
+        switch (result.content) {
+          case "FINISHED_AS_EXPECTED":
+          case "FINISHED_WITH_SUPPRESSED_ERROR":
+            break;
+          default:
+            entry.failed = true;
+        }
+      })
+      .catch((e) => (entry.error = `Failed to run (${e.meesage})`))
+      .finally(() => (this.disabled = false));
+  }
+
+  private onRunUntilHere(entry: Entry): void {
+    console.log("Running until", entry);
+  }
 
   private onVariableInitialised(init: VariableInitialised): void {
     this.$emit("variableInitialised", init);
