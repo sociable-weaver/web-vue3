@@ -82,4 +82,23 @@ describe("Variable", () => {
     const expected = { name: "NAME", value: "Albert", previousValue: "" };
     expect(wrapper.emitted()["variableUpdated"]).toEqual([[expected]]);
   });
+
+  it("emits an event when the variable is changed back to its original value", async () => {
+    /* Given */
+    const entry = { name: "NAME", parameters: ["Hello world"] };
+    const wrapper = shallowMount(Variable, { props: { entry } });
+
+    /* When */
+    wrapper.find("input").setValue("Hallo Welt");
+    wrapper.find("button").trigger("click");
+    wrapper.find("input").setValue("Hello world");
+    wrapper.find("button").trigger("click");
+    await flushPromises();
+
+    /* Then */
+    expect(wrapper.emitted()["variableUpdated"]).toEqual([
+      [{ name: "NAME", value: "Hallo Welt", previousValue: "Hello world" }],
+      [{ name: "NAME", value: "Hello world", previousValue: "Hallo Welt" }],
+    ]);
+  });
 });

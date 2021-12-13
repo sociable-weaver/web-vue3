@@ -46,6 +46,7 @@ export default class Variable extends Vue {
   private onVariableSet(): void {
     const previousValue = this.readDefaultValueOrEmptyFromEntry();
     if (this.value !== previousValue) {
+      this.entry.parameters = [this.value];
       this.$emit("variableUpdated", { name: this.entry.name, value: this.value, previousValue });
     }
   }
