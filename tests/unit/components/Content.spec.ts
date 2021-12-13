@@ -161,9 +161,9 @@ describe("Content component", () => {
 
     /* Then */
     expect(wrapper.find("pre").text()).toContain("hello-world $ git add .");
-    expect(wrapper.find("pre").text()).toContain('hello-world $ git commit --message "Basic Java application"');
+    expect(wrapper.find("pre").text()).toContain("hello-world $ git commit --message 'Basic Java application'");
     expect(wrapper.find("pre").text()).toContain(
-      'hello-world $ git tag --annotate "v2.0.2" --message "Basic Java application"'
+      "hello-world $ git tag --annotate 'v2.0.2' --message 'Basic Java application'"
     );
   });
 
@@ -185,7 +185,7 @@ describe("Content component", () => {
 
     /* Then */
     expect(wrapper.find("pre").text()).toEqual(
-      'hello-world $ git tag --annotate "v2.0.0" --message "Start of Basic Java Application"'
+      "hello-world $ git tag --annotate 'v2.0.0' --message 'Start of Basic Java Application'"
     );
   });
 

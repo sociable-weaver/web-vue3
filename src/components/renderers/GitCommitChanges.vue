@@ -18,18 +18,20 @@ export default class GitCommitChanges extends Vue {
   get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
+    const prefix = `${workingDirectory}${commandPromptSymbol}`;
     const message = this.entry.parameters[0];
     const tag = this.entry.parameters.length > 1 ? this.entry.parameters[1] : false;
     const pushChanges = this.entry.pushChanges || false;
-    let command = `${workingDirectory}${commandPromptSymbol} git add .`;
-    command += `\n${workingDirectory}${commandPromptSymbol} git commit --message "${message}"`;
+
+    let command = `${prefix} git add .`;
+    command += `\n${prefix} git commit --message '${message}'`;
     if (tag) {
-      command += `\n${workingDirectory}${commandPromptSymbol} git tag --annotate "${tag}" --message "${message}"`;
+      command += `\n${prefix} git tag --annotate '${tag}' --message '${message}'`;
       if (pushChanges) {
-        command += `\n${workingDirectory}${commandPromptSymbol} git push --atomic origin main "${tag}"`;
+        command += `\n${prefix} git push --atomic origin main '${tag}'`;
       }
     } else if (pushChanges) {
-      command += `\n${workingDirectory}${commandPromptSymbol} git push origin main`;
+      command += `\n${prefix} git push origin main`;
     }
     return command;
   }

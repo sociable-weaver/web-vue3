@@ -20,9 +20,9 @@ export default class GitTagCurrentCommit extends Vue {
     const commandPromptSymbol = "$";
     const tag = this.entry.parameters[0];
     const message = this.entry.parameters.length > 1 ? this.entry.parameters[1] : false;
-    let command = `${workingDirectory}${commandPromptSymbol} git tag --annotate "${tag}"`;
+    let command = `${workingDirectory}${commandPromptSymbol} git tag --annotate '${tag}'`;
     if (message) {
-      command += ` --message "${message}"`;
+      command += ` --message '${message}'`;
     }
     return command;
   }
