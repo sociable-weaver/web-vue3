@@ -1,5 +1,8 @@
 <template>
-  <div class="filePath">Replace the file: {{ filePath }}, with the following contents</div>
+  <div class="filePath">
+    Replace the file: <code>{{ filePath }}</code
+    >, with the following contents
+  </div>
   <pre class="content">{{ content }}</pre>
 </template>
 
