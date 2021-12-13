@@ -171,8 +171,9 @@ export default class Content extends Vue {
 
 <style scoped lang="scss">
 .content {
-  width: 95%;
-  padding: 8px 8px 0 8px;
+  padding: 10px;
+  border: 1px black solid;
+  border-radius: 5px;
 }
 
 div.error {
