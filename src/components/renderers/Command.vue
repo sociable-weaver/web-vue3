@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Entry } from "@/models/Chapter";
+import { Entry, interpolate } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -20,16 +20,7 @@ export default class Command extends Vue {
     const commandPromptSymbol = "$";
     let command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join("\n")}`;
 
-    if (this.entry.variables != undefined && this.entry.values != undefined) {
-      this.entry.variables.forEach((variable) => {
-        const value = this.entry.values[variable];
-        if (value !== undefined) {
-          command = command.replaceAll(`\${${variable}}`, value);
-        }
-      });
-    }
-
-    return command;
+    return interpolate(this.entry.variables, this.entry.values, command);
   }
 }
 </script>

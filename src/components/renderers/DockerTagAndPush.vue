@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Entry } from "@/models/Chapter";
+import { Entry, interpolate } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -22,7 +22,7 @@ export default class DockerTagAndPush extends Vue {
     const remote = this.entry.parameters[1];
     let command = `${workingDirectory}${commandPromptSymbol} docker tag ${source} ${remote}\n`;
     command += `${workingDirectory}${commandPromptSymbol} docker push ${remote}`;
-    return command;
+    return interpolate(this.entry.variables, this.entry.values, command);
   }
 }
 </script>

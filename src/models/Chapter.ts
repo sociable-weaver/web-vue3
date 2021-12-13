@@ -43,3 +43,20 @@ export function setValue(entry: Entry, update: VariableInitialised): void {
     entry.values[update.name] = update.value;
   }
 }
+
+export function interpolate(variables: string[], values: { [name: string]: string }, text: string): string {
+  if (variables === undefined || values === undefined) {
+    return text;
+  }
+
+  let interpolated = text;
+
+  variables.forEach((variable) => {
+    const value = values[variable];
+    if (value !== undefined) {
+      interpolated = interpolated.replaceAll(`\${${variable}}`, value);
+    }
+  });
+
+  return interpolated;
+}
