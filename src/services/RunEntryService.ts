@@ -13,6 +13,7 @@ export interface RunnableEntry {
   workingDirectory: string;
   parameters: string[];
   variables: string[];
+  environmentVariables: string[];
   values: { [name: string]: string };
   ignoreErrors: boolean;
   pushChanges: boolean;

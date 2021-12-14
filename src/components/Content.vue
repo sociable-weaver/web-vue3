@@ -143,6 +143,7 @@ export default class Content extends Vue {
       workingDirectory: entry.workingDirectory,
       parameters: entry.parameters,
       variables: entry.variables,
+      environmentVariables: entry.environmentVariables,
       values: entry.values,
       ignoreErrors: entry.ignoreErrors,
       pushChanges: entry.pushChanges,

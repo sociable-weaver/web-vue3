@@ -12,6 +12,7 @@ export interface Entry {
   workingDirectory: string;
   parameters: string[];
   variables: string[];
+  environmentVariables: string[];
   values: { [name: string]: string };
   runnable: boolean;
   ignoreErrors: boolean;
