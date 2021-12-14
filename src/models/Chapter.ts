@@ -45,6 +45,22 @@ export function setValue(entry: Entry, update: VariableInitialised): void {
   }
 }
 
+export function doAllVariablesHaveValues(entry: Entry): boolean {
+  if (entry.variables === undefined || entry.variables.length == 0) {
+    return true;
+  }
+
+  if (entry.values === undefined) {
+    return false;
+  }
+
+  const missingVariables = entry.variables
+    .map((variable) => entry.values[variable])
+    .filter((value) => value === undefined || value.length == 0).length;
+
+  return missingVariables === 0;
+}
+
 export function interpolate(variables: string[], values: { [name: string]: string }, text: string): string {
   if (variables === undefined || values === undefined) {
     return text;

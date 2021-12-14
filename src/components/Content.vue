@@ -46,7 +46,7 @@ import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
-import { Chapter, Entry, VariableInitialised, VariableUpdated } from "@/models/Chapter";
+import { Chapter, doAllVariablesHaveValues, Entry, VariableInitialised, VariableUpdated } from "@/models/Chapter";
 import { runEntry, RunnableEntry } from "@/services/RunEntryService";
 import { Options, Vue } from "vue-class-component";
 
@@ -117,6 +117,12 @@ export default class Content extends Vue {
     entry.failed = false;
     entry.output = "";
     entry.error = "";
+
+    if (doAllVariablesHaveValues(entry) === false) {
+      entry.failed = true;
+      entry.error = "Variables not set!!";
+      return;
+    }
 
     const runnableEntry = this.createRunableEntry(entry);
     runEntry(runnableEntry, (message) => (entry.output += message.content))
