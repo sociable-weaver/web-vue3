@@ -19,14 +19,25 @@
         @variable-updated="onVariableUpdated"
         @variable-initialised="onVariableInitialised"
       />
-      <div v-else class="error">
+      <div v-else class="error" role="error">
         Do not know how to renter entries of type: <code>{{ entry.type }}</code>
       </div>
       <pre v-if="entry.output" class="output" :class="{ error: entry.failed }">{{ entry.output }}</pre>
       <pre v-if="entry.error" class="error">{{ entry.error }}</pre>
-      <div v-if="entry.runnable" class="buttons runnable">
-        <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
-        <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
+      <div v-if="entry.edit === true" class="buttons-bar" role="buttons-bar">
+        <div class="buttons editable" role="save-buttons">
+          <button :disabled="disabled" @click="onCancel(entry)">Cancel</button>
+          <button :disabled="disabled" @click="onSave(entry)" class="primary" role="save">Save</button>
+        </div>
+      </div>
+      <div v-else class="buttons-bar" role="run-buttons">
+        <div v-if="entry.runnable" class="buttons runnable">
+          <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
+          <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
+        </div>
+        <div class="buttons editable" role="edit-buttons">
+          <button :disabled="disabled" @click="onEdit(entry)">Edit</button>
+        </div>
       </div>
     </div>
   </div>
@@ -46,9 +57,37 @@ import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Variable from "@/components/renderers/Variable.vue";
-import { Chapter, doAllVariablesHaveValues, Entry, VariableInitialised, VariableUpdated } from "@/models/Chapter";
+import {
+  Chapter,
+  doAllVariablesHaveValues,
+  Entry,
+  OnSaveOutcome,
+  VariableInitialised,
+  VariableUpdated,
+} from "@/models/Chapter";
 import { runEntry, RunnableEntry } from "@/services/RunEntryService";
+import { apiClient } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
+
+/* The application is only expecting the following and it will fail if we provide more.  
+    That's why we are stripping down properties that are not needed by the application. */
+interface SaveEntry {
+  type: string;
+  id: string;
+  name: string;
+  workingDirectory: string;
+  parameters: string[];
+  variables: string[];
+  environmentVariables: string[];
+  values: { [name: string]: string };
+  ignoreErrors: boolean;
+  pushChanges: boolean;
+  dryRun: boolean;
+  visible: boolean;
+  sensitive: boolean;
+  expectedExitValue: number;
+  commandTimeout: number;
+}
 
 @Options({
   name: "Content",
@@ -159,6 +198,72 @@ export default class Content extends Vue {
     };
   }
 
+  private onEdit(entry: Entry): void {
+    entry.edit = true;
+  }
+
+  private onCancel(entry: Entry): void {
+    entry.edit = false;
+  }
+
+  private onSave(entry: Entry): void {
+    const outcome = entry.onSave();
+    switch (outcome as OnSaveOutcome) {
+      case OnSaveOutcome.Changed:
+        this.handleChanged(entry);
+        break;
+
+      case OnSaveOutcome.NotChanged:
+        this.handleNotChanged(entry);
+        break;
+    }
+  }
+
+  private handleChanged(entry: Entry): void {
+    const saveEntry = this.createSaveEntry(entry);
+    this.saveEntry(saveEntry)
+      .then((saved) => Object.assign(entry, saved))
+      .then((updated) => (updated.edit = false))
+      .catch((e) => {
+        entry.error = `Failed to save entry (${e.message})`;
+      });
+  }
+
+  private handleNotChanged(entry: Entry): void {
+    entry.edit = false;
+  }
+
+  private saveEntry(entry: SaveEntry): Promise<Entry> {
+    return apiClient
+      .put("/api/book/entry", entry, {
+        params: {
+          bookPath: this.chapter.bookPath,
+          chapterPath: this.chapter.chapterPath,
+        },
+      })
+      .then((response) => response.data);
+  }
+
+  private createSaveEntry(entry: Entry): SaveEntry {
+    return {
+      type: entry.type,
+      id: entry.id,
+      name: entry.name,
+      workingDirectory: entry.workingDirectory,
+      parameters: entry.parameters,
+      variables: entry.variables,
+      environmentVariables: entry.environmentVariables,
+      values: entry.values,
+      ignoreErrors: entry.ignoreErrors,
+      pushChanges: entry.pushChanges,
+      dryRun: entry.dryRun,
+      visible: entry.visible,
+      sensitive: entry.sensitive,
+      expectedExitValue: entry.expectedExitValue,
+      commandTimeout: entry.commandTimeout,
+    };
+  }
+
   private onVariableInitialised(init: VariableInitialised): void {
     this.$emit("variableInitialised", init);
   }
@@ -178,9 +283,11 @@ export default class Content extends Vue {
 
 <style scoped lang="scss">
 .content {
+  margin: auto;
   padding: 10px;
   border: 1px black solid;
   border-radius: 5px;
+  width: 98%;
 }
 
 div.error {
@@ -199,6 +306,21 @@ pre.error {
   padding: 20px;
   background-color: orangered;
   color: white;
+}
+
+div.buttons-bar::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+div.buttons {
+  display: inline;
+}
+
+div.editable {
+  float: right;
+  right: 0px;
 }
 
 button {

@@ -22,9 +22,17 @@ export interface Entry {
   sensitive: boolean;
   expectedExitValue: number;
   commandTimeout: number;
+  edit: boolean;
   failed: boolean;
   output: string;
   error: string;
+  onSave: () => OnSaveOutcome;
+}
+
+export enum OnSaveOutcome {
+  Changed,
+  NotChanged,
+  KeepEditing,
 }
 
 export interface VariableInitialised {
