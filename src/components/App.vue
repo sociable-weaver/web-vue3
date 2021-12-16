@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 interface AppStatus {
@@ -62,7 +62,7 @@ export default class App extends Vue {
         this.$emit("appIsRunning", appStatus.isRunning);
       })
       .catch((e) => {
-        this.message = `Failed to check the application status (${e.message})`;
+        this.message = `Failed to check the application status (${formatError(e)})`;
         this.showHelp = false;
         this.$emit("appIsRunning", false);
       });
@@ -78,7 +78,7 @@ export default class App extends Vue {
           : { isRunning: false, message: "Application is running, but unhealthy", showHelp: false }
       )
       .catch((e) => {
-        if (e.message === "Network Error") {
+        if (e?.message === "Network Error") {
           return {
             isRunning: false,
             message: "Application is not running or cannot be reached by this page",

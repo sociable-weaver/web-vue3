@@ -1,5 +1,5 @@
 import Toc from "@/components/Toc.vue";
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
 import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
@@ -46,6 +46,7 @@ describe("Toc component", () => {
   it("emits unsuccessful message event when the chapter is not found", async () => {
     /* Given */
     mocked(apiClient.get).mockRejectedValue(chapterNotFoundResponse);
+    mocked(formatError).mockReturnValue("Chapter not found");
     const book = bookSuccessfulResponse.data;
     const chapterPath = "";
     const wrapper = shallowMount(Toc, { props: { book, chapterPath } });

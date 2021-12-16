@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { Workspace } from "@/models/Workspace";
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 interface Book {
@@ -123,13 +123,13 @@ export default class Open extends Vue {
         this.$emit("bookOpened", workbook);
       })
       .catch((e) => {
-        this.actionMessage = `Failed to open working book (${e.message})`;
+        this.actionMessage = `Failed to open working book (${formatError(e)})`;
       });
   }
 
   private openBook(bookPath: string): Promise<Book> {
     return apiClient
-      .get("/api/book/open", { params: { bookPath } })
+      .get("/api/book", { params: { bookPath } })
       .then((response) => response.data)
       .then((json) => json as Book);
   }

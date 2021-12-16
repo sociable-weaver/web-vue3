@@ -66,7 +66,7 @@ import {
   VariableUpdated,
 } from "@/models/Chapter";
 import { runEntry, RunnableEntry } from "@/services/RunEntryService";
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 /* The application is only expecting the following and it will fail if we provide more.  
@@ -175,7 +175,7 @@ export default class Content extends Vue {
             entry.failed = true;
         }
       })
-      .catch((e) => (entry.error = `Failed to run (${e.meesage})`))
+      .catch((e) => (entry.error = `Failed to run (${formatError(e)})`))
       .finally(onFinally);
   }
 
@@ -225,7 +225,7 @@ export default class Content extends Vue {
       .then((saved) => Object.assign(entry, saved))
       .then((updated) => (updated.edit = false))
       .catch((e) => {
-        entry.error = `Failed to save entry (${e.message})`;
+        entry.error = `Failed to save entry (${formatError(e)})`;
       });
   }
 
@@ -235,7 +235,7 @@ export default class Content extends Vue {
 
   private saveEntry(entry: SaveEntry): Promise<Entry> {
     return apiClient
-      .put("/api/book/entry", entry, {
+      .put("/api/entry", entry, {
         params: {
           bookPath: this.chapter.bookPath,
           chapterPath: this.chapter.chapterPath,

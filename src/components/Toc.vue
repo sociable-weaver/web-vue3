@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Book } from "@/models/Book";
 import { Chapter } from "@/models/Chapter";
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -42,13 +42,13 @@ export default class Toc extends Vue {
         this.$emit("chapterRead", chapter);
       })
       .catch((e) => {
-        this.$emit("errorMessage", `Failed to open chapter (${e?.response?.data?.message || e.message})`);
+        this.$emit("errorMessage", `Failed to open chapter (${formatError(e)})`);
       });
   }
 
   private readChapter(bookPath: string, chapterPath: string): Promise<Chapter> {
     return apiClient
-      .get("/api/book/read-chapter", { params: { bookPath, chapterPath } })
+      .get("/api/chapter", { params: { bookPath, chapterPath } })
       .then((response) => response.data)
       .then((json) => ({ ...json, bookPath, chapterPath } as Chapter));
   }
