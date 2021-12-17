@@ -18,7 +18,6 @@ export interface Entry {
   ignoreErrors: boolean;
   pushChanges: boolean;
   dryRun: boolean;
-  visible: boolean;
   sensitive: boolean;
   expectedExitValue: number;
   commandTimeout: number;
