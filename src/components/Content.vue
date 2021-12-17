@@ -83,7 +83,6 @@ interface SaveEntry {
   ignoreErrors: boolean;
   pushChanges: boolean;
   dryRun: boolean;
-  visible: boolean;
   sensitive: boolean;
   expectedExitValue: number;
   commandTimeout: number;
@@ -257,11 +256,10 @@ export default class Content extends Vue {
       ignoreErrors: entry.ignoreErrors,
       pushChanges: entry.pushChanges,
       dryRun: entry.dryRun,
-      visible: entry.visible,
       sensitive: entry.sensitive,
       expectedExitValue: entry.expectedExitValue,
       commandTimeout: entry.commandTimeout,
-    };
+    } as SaveEntry;
   }
 
   private onVariableInitialised(init: VariableInitialised): void {
