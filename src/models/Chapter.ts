@@ -14,7 +14,6 @@ export interface Entry {
   variables: string[];
   environmentVariables: string[];
   values: { [name: string]: string };
-  runnable: boolean;
   ignoreErrors: boolean;
   pushChanges: boolean;
   dryRun: boolean;

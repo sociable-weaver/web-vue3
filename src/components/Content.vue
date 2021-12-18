@@ -31,7 +31,7 @@
         </div>
       </div>
       <div v-else class="buttons-bar" role="run-buttons">
-        <div v-if="entry.runnable" class="buttons runnable">
+        <div v-if="isRunnable(entry)" class="buttons runnable">
           <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
           <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
         </div>
@@ -114,6 +114,20 @@ export default class Content extends Vue {
   private chapter!: Chapter;
   private disabled = false;
 
+  private isRunnable(entry: Entry): boolean {
+    const runnable = [
+      "command",
+      "create",
+      "docker-tag-and-push",
+      "download",
+      "git-apply-patch",
+      "git-commit-changes",
+      "git-tag-current-commit",
+      "replace",
+    ];
+    return runnable.find((type) => type === entry.type) !== undefined;
+  }
+
   private onRun(entry: Entry): void {
     this.disabled = true;
 
@@ -136,7 +150,7 @@ export default class Content extends Vue {
     }
 
     const entry: Entry = this.chapter.entries[index];
-    if (entry.runnable !== true || entry.dryRun === true) {
+    if (!this.isRunnable(entry) || entry.dryRun) {
       this.runNext(index + 1, until);
       return;
     }
@@ -156,13 +170,13 @@ export default class Content extends Vue {
     entry.output = "";
     entry.error = "";
 
-    if (doAllVariablesHaveValues(entry) === false) {
+    if (!doAllVariablesHaveValues(entry)) {
       entry.failed = true;
       entry.error = "Variables not set!!";
       return;
     }
 
-    const runnableEntry = this.createRunableEntry(entry);
+    const runnableEntry = this.createRunnableEntry(entry);
     runEntry(runnableEntry, (message) => (entry.output += message.content))
       .then((result) => {
         switch (result.content) {
@@ -178,7 +192,7 @@ export default class Content extends Vue {
       .finally(onFinally);
   }
 
-  private createRunableEntry(entry: Entry): RunnableEntry {
+  private createRunnableEntry(entry: Entry): RunnableEntry {
     return {
       type: entry.type,
       id: entry.id,
