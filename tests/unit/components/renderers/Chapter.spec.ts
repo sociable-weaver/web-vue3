@@ -57,6 +57,7 @@ describe("Chapter", () => {
       /* Then */
       expect(outcome).toEqual(OnSaveOutcome.KeepEditing);
       expect(entry.error).toEqual("The chapter title cannot be empty");
+      expect(entry.parameters).toEqual(["Hello world"]);
     });
 
     it("returns NotChanged when the title is not changed", async () => {
@@ -74,6 +75,7 @@ describe("Chapter", () => {
 
       /* Then */
       expect(outcome).toEqual(OnSaveOutcome.NotChanged);
+      expect(entry.parameters).toEqual(["Hello world"]);
     });
 
     it("returns Changed when the title is changed", async () => {
@@ -94,6 +96,7 @@ describe("Chapter", () => {
       /* Then */
       expect(outcome).toEqual(OnSaveOutcome.Changed);
       expect(entry.error).toEqual("");
+      expect(entry.parameters).toEqual(["Hallo Welt"]);
     });
   });
 });
