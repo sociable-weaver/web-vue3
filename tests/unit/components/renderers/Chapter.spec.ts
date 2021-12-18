@@ -39,7 +39,7 @@ describe("Chapter", () => {
   });
 
   describe("onSave()", () => {
-    it("returns KeepEditing when the title is set to emtpy", async () => {
+    it("returns KeepEditing when the title is set to empty", async () => {
       /* Given */
       const entry = {
         type: "chapter",
@@ -50,7 +50,8 @@ describe("Chapter", () => {
       await flushPromises();
 
       /* When */
-      wrapper.find("input").setValue("");
+      await wrapper.find("input").setValue("");
+      await flushPromises();
       const outcome = entry.onSave();
 
       /* Then */
@@ -86,7 +87,8 @@ describe("Chapter", () => {
       await flushPromises();
 
       /* When */
-      wrapper.find("input").setValue("Hallo Welt");
+      await wrapper.find("input").setValue("Hallo Welt");
+      await flushPromises();
       const outcome = entry.onSave();
 
       /* Then */
