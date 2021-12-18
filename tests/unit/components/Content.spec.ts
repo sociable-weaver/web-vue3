@@ -8,7 +8,7 @@ import saveEntrySuccessfulResponse from "../../fixtures/SaveEntrySuccessful";
 jest.mock("@/services/ServiceApi");
 
 describe("Content", () => {
-  describe("Rednering", () => {
+  describe("Rendering", () => {
     it("displays the chapter", async () => {
       /* Given */
       const chapter = {
@@ -372,7 +372,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* When */
-      wrapper.find("button[role=save]").trigger("click");
+      await wrapper.find("button[role=save]").trigger("click");
       await flushPromises();
 
       /* Then */
@@ -399,7 +399,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* When */
-      wrapper.find("button[role=save]").trigger("click");
+      await wrapper.find("button[role=save]").trigger("click");
       await flushPromises();
 
       /* Then */
@@ -427,7 +427,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* When */
-      wrapper.find("button[role=save]").trigger("click");
+      await wrapper.find("button[role=save]").trigger("click");
       await flushPromises();
 
       /* Then */
