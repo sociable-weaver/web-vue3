@@ -1,12 +1,12 @@
 <template>
   <div v-if="entry.edit === true">
-    <input v-model="editChapter" placeholder="Title" />
+    <input v-model="editChapter" placeholder="Chapter title" />
   </div>
   <h2 v-else>{{ chapter }}</h2>
 </template>
 
 <script lang="ts">
-import { Entry, OnSaveOutcome } from "@/models/Chapter";
+import { createSaveEntry, Entry, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -17,30 +17,41 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Chapter extends Vue {
   private entry!: Entry;
-  private editChapter = "";
+  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
 
   mounted(): void {
     this.entry.onSave = this.onSave;
-    this.editChapter = this.entry.parameters[0];
+    this.edit = createSaveEntry(this.entry);
   }
 
-  private onSave(): OnSaveOutcome {
+  get editChapter(): string {
+    return this.getChapterFrom(this.edit.parameters);
+  }
+
+  set editChapter(value: string) {
+    this.edit.parameters = [value];
+  }
+
+  private onSave(): OnSaveResult {
     this.entry.error = "";
-    if (this.editChapter.length === 0) {
+    if (this.edit.parameters[0].length === 0) {
       this.entry.error = "The chapter title cannot be empty";
-      return OnSaveOutcome.KeepEditing;
+      return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
 
-    if (this.editChapter !== this.entry.parameters[0]) {
-      this.entry.parameters = [this.editChapter];
-      return OnSaveOutcome.Changed;
+    if (this.edit.parameters[0] !== this.entry.parameters[0]) {
+      return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
     }
 
-    return OnSaveOutcome.NotChanged;
+    return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 
   get chapter(): string {
-    return this.entry.parameters[0];
+    return this.getChapterFrom(this.entry.parameters);
+  }
+
+  private getChapterFrom(parameters: string[]): string {
+    return !Array.isArray(parameters) || parameters.length == 0 ? "" : parameters[0];
   }
 }
 </script>

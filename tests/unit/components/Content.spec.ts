@@ -1,9 +1,11 @@
 import Content from "@/components/Content.vue";
 import { OnSaveOutcome } from "@/models/Chapter";
-import { apiClient } from "@/services/ServiceApi";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { flushPromises, mount, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
+import networkError from "../../fixtures/NetworkError";
 import saveEntrySuccessfulResponse from "../../fixtures/SaveEntrySuccessful";
+import resetAllMocks = jest.resetAllMocks;
 
 jest.mock("@/services/ServiceApi");
 
@@ -312,6 +314,10 @@ describe("Content", () => {
   });
 
   describe("Editing", () => {
+    beforeEach(() => {
+      resetAllMocks();
+    });
+
     it("displays the edit buttons when viewing the entry", async () => {
       /* Given */
       const chapter = {
@@ -356,7 +362,7 @@ describe("Content", () => {
     it("does not make an API call when invalid input was provided (the onSave() returns KeepEditing)", async () => {
       /* Given */
       const onSave = jest.fn();
-      onSave.mockReturnValueOnce(OnSaveOutcome.KeepEditing);
+      onSave.mockReturnValueOnce({ outcome: OnSaveOutcome.KeepEditing });
 
       const chapter = {
         entries: [
@@ -383,7 +389,7 @@ describe("Content", () => {
     it("does not make an API call when nothing is changed", async () => {
       /* Given */
       const onSave = jest.fn();
-      onSave.mockReturnValueOnce(OnSaveOutcome.NotChanged);
+      onSave.mockReturnValueOnce({ outcome: OnSaveOutcome.NotChanged });
 
       const chapter = {
         entries: [
@@ -410,7 +416,10 @@ describe("Content", () => {
     it("makes an API call when the entry is changed", async () => {
       /* Given */
       const onSave = jest.fn();
-      onSave.mockReturnValueOnce(OnSaveOutcome.Changed);
+      onSave.mockReturnValueOnce({
+        outcome: OnSaveOutcome.Changed,
+        entry: { type: "chapter", parameters: ["Hallo Welt"] },
+      });
       mocked(apiClient.put).mockResolvedValueOnce(saveEntrySuccessfulResponse);
 
       const chapter = {
@@ -431,11 +440,48 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      expect(chapter.entries[0].edit).toEqual(false);
+      const entry = chapter.entries[0];
+      expect(entry.edit).toEqual(false);
       /* Make sure that the entry now looks like the one returned, which may be different from the one submitted.  
           After, saving, the application will read the entry back and will return this to the frontend.  Later on 
           we may validate the response and notify the user if we see any discrepancies. */
-      expect(chapter.entries[0].parameters).toEqual(saveEntrySuccessfulResponse.data.parameters);
+      expect(entry.parameters).toEqual(saveEntrySuccessfulResponse.data.parameters);
+      expect(apiClient.put).toHaveBeenCalledTimes(1);
+    });
+
+    it("reverts to the original entry after the application returns an error", async () => {
+      /* Given */
+      const onSave = jest.fn();
+      onSave.mockReturnValueOnce({
+        outcome: OnSaveOutcome.Changed,
+        entry: { type: "chapter", parameters: ["Hallo Welt"] },
+      });
+      mocked(apiClient.put).mockRejectedValue(networkError);
+      mocked(formatError).mockReturnValue(networkError.message);
+
+      const chapter = {
+        entries: [
+          {
+            type: "chapter",
+            parameters: ["Hello world"],
+            edit: true,
+            error: "",
+            onSave,
+          },
+        ],
+      };
+      const wrapper = shallowMount(Content, { props: { chapter } });
+      await flushPromises();
+
+      /* When */
+      await wrapper.find("button[role=save]").trigger("click");
+      await flushPromises();
+
+      /* Then */
+      const entry = chapter.entries[0];
+      expect(entry.edit).toEqual(true);
+      expect(entry.parameters).toEqual(["Hello world"]);
+      expect(entry.error).toEqual(`Failed to save entry (${networkError.message})`);
       expect(apiClient.put).toHaveBeenCalledTimes(1);
     });
   });

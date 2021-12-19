@@ -62,31 +62,14 @@ import {
   doAllVariablesHaveValues,
   Entry,
   OnSaveOutcome,
+  OnSaveResult,
+  SaveEntry,
   VariableInitialised,
   VariableUpdated,
 } from "@/models/Chapter";
 import { runEntry, RunnableEntry } from "@/services/RunEntryService";
 import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
-
-/* The application is only expecting the following and it will fail if we provide more.  
-    That's why we are stripping down properties that are not needed by the application. */
-interface SaveEntry {
-  type: string;
-  id: string;
-  name: string;
-  workingDirectory: string;
-  parameters: string[];
-  variables: string[];
-  environmentVariables: string[];
-  values: { [name: string]: string };
-  ignoreErrors: boolean;
-  pushChanges: boolean;
-  dryRun: boolean;
-  sensitive: boolean;
-  expectedExitValue: number;
-  commandTimeout: number;
-}
 
 @Options({
   name: "Content",
@@ -220,10 +203,10 @@ export default class Content extends Vue {
   }
 
   private onSave(entry: Entry): void {
-    const outcome = entry.onSave();
-    switch (outcome as OnSaveOutcome) {
+    const result: OnSaveResult = entry.onSave();
+    switch (result.outcome as OnSaveOutcome) {
       case OnSaveOutcome.Changed:
-        this.handleChanged(entry);
+        this.handleChanged(entry, result.entry as SaveEntry);
         break;
 
       case OnSaveOutcome.NotChanged:
@@ -232,14 +215,11 @@ export default class Content extends Vue {
     }
   }
 
-  private handleChanged(entry: Entry): void {
-    const saveEntry = this.createSaveEntry(entry);
+  private handleChanged(entry: Entry, saveEntry: SaveEntry): void {
     this.saveEntry(saveEntry)
       .then((saved) => Object.assign(entry, saved))
       .then((updated) => (updated.edit = false))
-      .catch((e) => {
-        entry.error = `Failed to save entry (${formatError(e)})`;
-      });
+      .catch((e) => (entry.error = `Failed to save entry (${formatError(e)})`));
   }
 
   private handleNotChanged(entry: Entry): void {
@@ -255,25 +235,6 @@ export default class Content extends Vue {
         },
       })
       .then((response) => response.data);
-  }
-
-  private createSaveEntry(entry: Entry): SaveEntry {
-    return {
-      type: entry.type,
-      id: entry.id,
-      name: entry.name,
-      workingDirectory: entry.workingDirectory,
-      parameters: entry.parameters,
-      variables: entry.variables,
-      environmentVariables: entry.environmentVariables,
-      values: entry.values,
-      ignoreErrors: entry.ignoreErrors,
-      pushChanges: entry.pushChanges,
-      dryRun: entry.dryRun,
-      sensitive: entry.sensitive,
-      expectedExitValue: entry.expectedExitValue,
-      commandTimeout: entry.commandTimeout,
-    } as SaveEntry;
   }
 
   private onVariableInitialised(init: VariableInitialised): void {

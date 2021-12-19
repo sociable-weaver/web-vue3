@@ -52,7 +52,7 @@ describe("Toc component", () => {
     const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* When */
-    wrapper.find("h3").trigger("click");
+    await wrapper.find("h3").trigger("click");
     await flushPromises();
 
     /* Then */

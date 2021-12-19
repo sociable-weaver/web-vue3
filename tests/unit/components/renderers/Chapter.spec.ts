@@ -55,7 +55,7 @@ describe("Chapter", () => {
       const outcome = entry.onSave();
 
       /* Then */
-      expect(outcome).toEqual(OnSaveOutcome.KeepEditing);
+      expect(outcome).toEqual({ outcome: OnSaveOutcome.KeepEditing });
       expect(entry.error).toEqual("The chapter title cannot be empty");
       expect(entry.parameters).toEqual(["Hello world"]);
     });
@@ -74,7 +74,7 @@ describe("Chapter", () => {
       const outcome = entry.onSave();
 
       /* Then */
-      expect(outcome).toEqual(OnSaveOutcome.NotChanged);
+      expect(outcome).toEqual({ outcome: OnSaveOutcome.NotChanged });
       expect(entry.parameters).toEqual(["Hello world"]);
     });
 
@@ -94,9 +94,10 @@ describe("Chapter", () => {
       const outcome = entry.onSave();
 
       /* Then */
-      expect(outcome).toEqual(OnSaveOutcome.Changed);
+      expect(outcome.outcome).toEqual(OnSaveOutcome.Changed);
+      expect(outcome.entry?.parameters).toEqual(["Hallo Welt"]);
       expect(entry.error).toEqual("");
-      expect(entry.parameters).toEqual(["Hallo Welt"]);
+      expect(entry.parameters).toEqual(["Hello world"]);
     });
   });
 });

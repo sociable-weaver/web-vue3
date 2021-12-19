@@ -1,4 +1,4 @@
-import { doAllVariablesHaveValues, Entry, setValue } from "@/models/Chapter";
+import { createSaveEntry, doAllVariablesHaveValues, Entry, SaveEntry, setValue } from "@/models/Chapter";
 
 describe("Entry", () => {
   describe("setValue()", () => {
@@ -55,6 +55,7 @@ describe("Entry", () => {
     it("returns true if all variables have a value", () => {
       /* Given */
       const entry = { variables: ["NAME"], values: {} } as Entry;
+      /* TODO: How can I inline this? */
       entry.values["NAME"] = "Albert";
 
       /* When */
@@ -95,6 +96,56 @@ describe("Entry", () => {
 
       /* Then */
       expect(result).toEqual(true);
+    });
+  });
+
+  describe("createSaveEntry()", () => {
+    it("copies all values", () => {
+      /* Given */
+      const entry = {
+        type: "test-type",
+        id: "86e03298-367e-48f9-afa8-2d90438f4d2b",
+        name: "copy all values",
+        workingDirectory: "working-directory",
+        parameters: ["param-1", "param-2"],
+        variables: ["var-1", "var-2"],
+        environmentVariables: ["env-1", "env-2"],
+        values: {},
+        ignoreErrors: true,
+        pushChanges: true,
+        dryRun: true,
+        sensitive: true,
+        expectedExitValue: 1,
+        commandTimeout: 600,
+      } as Entry;
+      /* TODO: How can I inline these? */
+      entry.values["NAME"] = "Albert";
+      entry.values["SURNAME"] = "Attard";
+
+      /* When */
+      const result = createSaveEntry(entry);
+
+      /* Then */
+      const expected = {
+        type: "test-type",
+        id: "86e03298-367e-48f9-afa8-2d90438f4d2b",
+        name: "copy all values",
+        workingDirectory: "working-directory",
+        parameters: ["param-1", "param-2"],
+        variables: ["var-1", "var-2"],
+        environmentVariables: ["env-1", "env-2"],
+        values: {},
+        ignoreErrors: true,
+        pushChanges: true,
+        dryRun: true,
+        sensitive: true,
+        expectedExitValue: 1,
+        commandTimeout: 600,
+      } as SaveEntry;
+      /* TODO: How can I inline these? */
+      expected.values["NAME"] = "Albert";
+      expected.values["SURNAME"] = "Attard";
+      expect(result).toEqual(expected);
     });
   });
 });

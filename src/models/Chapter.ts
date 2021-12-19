@@ -5,6 +5,25 @@ export interface Chapter {
   workPath: string;
 }
 
+/* The application is only expecting the following and it will fail if we provide more.
+    That's why we are stripping down properties that are not needed by the application. */
+export interface SaveEntry {
+  type: string;
+  id: string;
+  name: string;
+  workingDirectory: string;
+  parameters: string[];
+  variables: string[];
+  environmentVariables: string[];
+  values: { [name: string]: string };
+  ignoreErrors: boolean;
+  pushChanges: boolean;
+  dryRun: boolean;
+  sensitive: boolean;
+  expectedExitValue: number;
+  commandTimeout: number;
+}
+
 export interface Entry {
   type: string;
   id: string;
@@ -24,13 +43,18 @@ export interface Entry {
   failed: boolean;
   output: string;
   error: string;
-  onSave: () => OnSaveOutcome;
+  onSave: () => OnSaveResult;
 }
 
 export enum OnSaveOutcome {
   Changed,
   NotChanged,
   KeepEditing,
+}
+
+export interface OnSaveResult {
+  outcome: OnSaveOutcome;
+  entry: SaveEntry | null;
 }
 
 export interface VariableInitialised {
@@ -82,4 +106,23 @@ export function interpolate(variables: string[], values: { [name: string]: strin
   });
 
   return interpolated;
+}
+
+export function createSaveEntry(entry: Entry): SaveEntry {
+  return {
+    type: entry.type,
+    id: entry.id,
+    name: entry.name,
+    workingDirectory: entry.workingDirectory,
+    parameters: Object.assign([], entry.parameters),
+    variables: Object.assign([], entry.variables),
+    environmentVariables: Object.assign([], entry.environmentVariables),
+    values: Object.assign({}, entry.values),
+    ignoreErrors: entry.ignoreErrors,
+    pushChanges: entry.pushChanges,
+    dryRun: entry.dryRun,
+    sensitive: entry.sensitive,
+    expectedExitValue: entry.expectedExitValue,
+    commandTimeout: entry.commandTimeout,
+  } as SaveEntry;
 }
