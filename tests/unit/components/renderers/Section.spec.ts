@@ -1,52 +1,52 @@
-import Chapter from "@/components/renderers/Chapter.vue";
+import Section from "@/components/renderers/Section.vue";
 import { Entry, OnSaveOutcome } from "@/models/Chapter";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 
-describe("Chapter", () => {
+describe("Section", () => {
   describe("View/Edit", () => {
-    it("renders the chapter when not in edit mode", async () => {
+    it("renders the section when not in edit mode", async () => {
       /* Given */
       const entry = {
-        type: "chapter",
+        type: "section",
         parameters: ["Hello world"],
       };
 
       /* When */
-      const wrapper = shallowMount(Chapter, { props: { entry } });
+      const wrapper = shallowMount(Section, { props: { entry } });
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("h2").text()).toEqual("Hello world");
+      expect(wrapper.find("h3").text()).toEqual("Hello world");
       expect(wrapper.find("input").exists()).toBeFalsy();
     });
 
     it("renders the input field when in edit mode", async () => {
       /* Given */
       const entry = {
-        type: "chapter",
+        type: "section",
         parameters: ["Hello world"],
         edit: true,
       };
 
       /* When */
-      const wrapper = shallowMount(Chapter, { props: { entry } });
+      const wrapper = shallowMount(Section, { props: { entry } });
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("h2").exists()).toBeFalsy();
+      expect(wrapper.find("h3").exists()).toBeFalsy();
       expect(wrapper.find("input").element.value).toEqual("Hello world");
     });
   });
 
   describe("onSave()", () => {
-    it("returns KeepEditing when the chapter is set to empty", async () => {
+    it("returns KeepEditing when the section is set to empty", async () => {
       /* Given */
       const entry = {
-        type: "chapter",
+        type: "section",
         parameters: ["Hello world"],
         edit: true,
       } as Entry;
-      const wrapper = shallowMount(Chapter, { props: { entry } });
+      const wrapper = shallowMount(Section, { props: { entry } });
       await flushPromises();
 
       /* When */
@@ -56,18 +56,18 @@ describe("Chapter", () => {
 
       /* Then */
       expect(outcome).toEqual({ outcome: OnSaveOutcome.KeepEditing });
-      expect(entry.error).toEqual("The chapter cannot be empty");
+      expect(entry.error).toEqual("The section cannot be empty");
       expect(entry.parameters).toEqual(["Hello world"]);
     });
 
-    it("returns NotChanged when the chapter is not changed", async () => {
+    it("returns NotChanged when the section is not changed", async () => {
       /* Given */
       const entry = {
-        type: "chapter",
+        type: "section",
         parameters: ["Hello world"],
         edit: true,
       } as Entry;
-      shallowMount(Chapter, { props: { entry } });
+      shallowMount(Section, { props: { entry } });
       await flushPromises();
 
       /* When */
@@ -78,14 +78,14 @@ describe("Chapter", () => {
       expect(entry.parameters).toEqual(["Hello world"]);
     });
 
-    it("returns Changed when the chapter is changed", async () => {
+    it("returns Changed when the section is changed", async () => {
       /* Given */
       const entry = {
-        type: "chapter",
+        type: "section",
         parameters: ["Hello world"],
         edit: true,
       } as Entry;
-      const wrapper = shallowMount(Chapter, { props: { entry } });
+      const wrapper = shallowMount(Section, { props: { entry } });
       await flushPromises();
 
       /* When */
