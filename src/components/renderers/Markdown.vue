@@ -55,13 +55,12 @@ export default class Markdown extends Vue {
   }
 
   set editMarkdown(value: string) {
-    const lines = value.split("\n");
-    this.edit.parameters = lines;
+    this.edit.parameters = value.split("\n");
   }
 
   get missingVariables(): string[] {
     const markdown = this.edit.parameters.join("\n");
-    const match = markdown.match(this.variableNameRegex()) || [];
+    const match = markdown.match(Markdown.variableNameRegex()) || [];
     return match.map((v) => v.substring(2, v.length - 1)).filter((v) => !this.edit.variables.includes(v));
   }
 
@@ -74,7 +73,7 @@ export default class Markdown extends Vue {
       return;
     }
 
-    const regex = this.variableNameRegex();
+    const regex = Markdown.variableNameRegex();
     if (!regex.test(`\${${variable}}`)) {
       this.entry.error = "Invalid variable name.  Only letters, numbers, underscore and dash are permitted";
       return;
@@ -128,7 +127,7 @@ export default class Markdown extends Vue {
     return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
   }
 
-  private variableNameRegex(): RegExp {
+  private static variableNameRegex(): RegExp {
     return /\${[A-Z0-9_-]+}/;
   }
 }

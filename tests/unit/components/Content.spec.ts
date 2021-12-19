@@ -296,7 +296,7 @@ describe("Content", () => {
 
       /* Then */
       expect(wrapper.find("label").text()).toEqual("NAME");
-      expect(wrapper.find("input").attributes("type")).toBeUndefined();
+      expect(wrapper.find("input").attributes("type")).toEqual("text");
     });
 
     it("displays a message indicating that this type is not yet supported", async () => {

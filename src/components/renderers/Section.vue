@@ -42,11 +42,15 @@ export default class Section extends Vue {
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
 
-    if (this.edit.parameters[0] !== this.entry.parameters[0]) {
+    if (this.hasChanged()) {
       return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
+  }
+
+  private hasChanged() {
+    return this.edit.parameters[0] !== this.entry.parameters[0];
   }
 
   private static getSectionFrom(parameters: string[]): string {
