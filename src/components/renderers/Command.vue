@@ -1,15 +1,15 @@
 <template>
   <div v-if="entry.edit === true">
-    <div role="working-directory">
-      <label>Working Directory</label>
+    <div role="working-directory" class="row">
+      <label>Working directory</label>
       <input type="text" v-model="edit.workingDirectory" role="working-directory" />
     </div>
-    <div role="command">
+    <div role="command" class="row">
       <label>Command</label>
       <textarea v-model="editCommand" placeholder="command" role="command" />
     </div>
-    <div role="variables">
-      <div class="header">Variables</div>
+    <div role="variables" class="row">
+      <label>Variables</label>
       <div v-for="(variable, index) in edit.variables" :key="variable" role="variable">
         <input @change="onUpdateVariable(variable, index, $event)" :value="variable" role="update-variable" />
         <button @click="onRemoveVariable(index)" role="remove-variable">Remove</button>
@@ -19,15 +19,15 @@
         <button @click="onAddVariable" role="add-variable">Add</button>
       </div>
     </div>
-    <div role="missing-variables">
-      <div class="header">Potential missing variables</div>
+    <div role="missing-variables" class="row">
+      <label>Potential missing variables</label>
       <div v-for="variable in missingVariables" :key="variable" role="missing-variable">
         <span>{{ variable }}</span>
         <button @click="onAddMissingVariable(variable)">Add</button>
       </div>
     </div>
-    <div role="environment-variables">
-      <div class="header">Environment Variables</div>
+    <div role="environment-variables" class="row">
+      <label>Environment Variables</label>
       <div v-for="(variable, index) in edit.environmentVariables" :key="variable" role="environment-variable">
         <input
           @change="onUpdateEnvironmentVariable(variable, index, $event)"
@@ -44,6 +44,10 @@
         />
         <button @click="onAddEnvironmentVariable" role="add-environment-variable">Add</button>
       </div>
+    </div>
+    <div role="expected-exit-value" class="row">
+      <label>Expected exit value</label>
+      <input type="text" v-model="edit.expectedExitValue" role="expected-exit-value" />
     </div>
   </div>
   <pre v-else>{{ command }}</pre>
@@ -235,6 +239,10 @@ pre {
   color: greenyellow;
 }
 
+div.row {
+  padding-top: 15px;
+}
+
 input[type="text"] {
   font-size: 1em;
   font-weight: bold;
@@ -259,5 +267,9 @@ textarea {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+label {
+  font-size: 1.2em;
 }
 </style>

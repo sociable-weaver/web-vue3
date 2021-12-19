@@ -1,8 +1,11 @@
 <template>
   <div v-if="entry.edit === true">
-    <textarea v-model="editMarkdown" placeholder="Markdown" />
-    <div role="variables">
-      <div class="header">Variables</div>
+    <div role="variables" class="row">
+      <label>Markdown</label>
+      <textarea v-model="editMarkdown" placeholder="Markdown" />
+    </div>
+    <div role="variables" class="row">
+      <label>Variables</label>
       <div v-for="(variable, index) in edit.variables" :key="variable" role="variable">
         <input @change="onUpdateVariable(variable, index, $event)" :value="variable" role="update-variable" />
         <button @click="onRemoveVariable(index)" role="remove-variable">Remove</button>
@@ -12,8 +15,8 @@
         <button @click="onAddVariable" role="add-variable">Add</button>
       </div>
     </div>
-    <div role="missing-variables">
-      <div class="header">Potential missing variables</div>
+    <div role="missing-variables" class="row">
+      <label>Potential missing variables</label>
       <div v-for="variable in missingVariables" :key="variable" role="missing-variable">
         <span>{{ variable }}</span>
         <button @click="onAddMissingVariable(variable)">Add</button>
@@ -142,6 +145,10 @@ export default class Markdown extends Vue {
   color: black;
 }
 
+div.row {
+  padding-top: 15px;
+}
+
 textarea {
   width: 100%;
   min-height: 400px;
@@ -152,7 +159,7 @@ textarea {
   color: #2c3e50;
 }
 
-div.header {
+label {
   font-size: 1.2em;
   padding-top: 10px;
 }
