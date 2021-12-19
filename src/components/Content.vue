@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-for="(entry, index) in chapter.entries" :key="entry.id" :id="entry.id">
+    <div v-for="(entry, index) in chapter.entries" :key="entry.id" :id="entry.id" class="entry">
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <Create v-else-if="entry.type === 'create'" :entry="entry" />
@@ -203,6 +203,7 @@ export default class Content extends Vue {
   }
 
   private onSave(entry: Entry): void {
+    entry.error = "";
     const result: OnSaveResult = entry.onSave();
     switch (result.outcome as OnSaveOutcome) {
       case OnSaveOutcome.Changed:
@@ -261,6 +262,10 @@ export default class Content extends Vue {
   border: 1px black solid;
   border-radius: 5px;
   width: 98%;
+}
+
+.entry {
+  padding-bottom: 10px;
 }
 
 div.error {

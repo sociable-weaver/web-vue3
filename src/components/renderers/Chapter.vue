@@ -24,6 +24,10 @@ export default class Chapter extends Vue {
     this.edit = createSaveEntry(this.entry);
   }
 
+  get chapter(): string {
+    return this.getChapterFrom(this.entry.parameters);
+  }
+
   get editChapter(): string {
     return this.getChapterFrom(this.edit.parameters);
   }
@@ -33,7 +37,6 @@ export default class Chapter extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    this.entry.error = "";
     if (this.edit.parameters[0].length === 0) {
       this.entry.error = "The chapter title cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
@@ -44,10 +47,6 @@ export default class Chapter extends Vue {
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
-  }
-
-  get chapter(): string {
-    return this.getChapterFrom(this.entry.parameters);
   }
 
   private getChapterFrom(parameters: string[]): string {
@@ -61,8 +60,8 @@ input {
   font-size: 1.5em;
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
   font-weight: bold;
   width: 99%;
   font-family: Avenir, Helvetica, Arial, sans-serif;

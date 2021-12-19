@@ -96,7 +96,6 @@ describe("Chapter", () => {
       /* Then */
       expect(outcome.outcome).toEqual(OnSaveOutcome.Changed);
       expect(outcome.entry?.parameters).toEqual(["Hallo Welt"]);
-      expect(entry.error).toEqual("");
       expect(entry.parameters).toEqual(["Hello world"]);
     });
   });
