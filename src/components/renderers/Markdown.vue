@@ -161,6 +161,5 @@ textarea {
 
 label {
   font-size: 1.2em;
-  padding-top: 10px;
 }
 </style>

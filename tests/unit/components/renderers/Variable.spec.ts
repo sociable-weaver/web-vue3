@@ -17,7 +17,7 @@ describe("Variable", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("label").text()).toEqual("PASSWORD");
+      expect(wrapper.find("label").text()).toEqual("Set variable PASSWORD");
       expect(wrapper.find("input").attributes("type")).toEqual("password");
     });
 
@@ -33,7 +33,7 @@ describe("Variable", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("label").text()).toEqual("PASSWORD");
+      expect(wrapper.find("label").text()).toEqual("Set variable PASSWORD");
       expect(wrapper.find("input").attributes("type")).toEqual("password");
     });
 
@@ -51,7 +51,7 @@ describe("Variable", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("label").text()).toEqual("NAME");
+      expect(wrapper.find("label").text()).toEqual("Set variable NAME");
       expect(wrapper.find("input").element.value).toEqual("Albert Attard");
       const expected = { name: "NAME", value: "Albert Attard" };
       expect(wrapper.emitted()["variableInitialised"]).toEqual([[expected]]);
@@ -65,7 +65,7 @@ describe("Variable", () => {
       const wrapper = shallowMount(Variable, { props: { entry } });
 
       /* When */
-      await wrapper.find("button").trigger("click");
+      await wrapper.find("input").trigger("keyup.enter");
       await flushPromises();
 
       /* Then */
@@ -79,7 +79,7 @@ describe("Variable", () => {
 
       /* When */
       await wrapper.find("input").setValue("Albert");
-      await wrapper.find("button[role=set-variable]").trigger("click");
+      await wrapper.find("input").trigger("keyup.enter");
       await flushPromises();
 
       /* Then */
@@ -94,9 +94,9 @@ describe("Variable", () => {
 
       /* When */
       await wrapper.find("input").setValue("Hallo Welt");
-      await wrapper.find("button").trigger("click");
+      await wrapper.find("input").trigger("keyup.enter");
       await wrapper.find("input").setValue("Hello world");
-      await wrapper.find("button").trigger("click");
+      await wrapper.find("input").trigger("keyup.enter");
       await flushPromises();
 
       /* Then */

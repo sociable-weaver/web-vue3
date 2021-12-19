@@ -295,7 +295,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("label").text()).toEqual("NAME");
+      expect(wrapper.find("label").text()).toEqual("Set variable NAME");
       expect(wrapper.find("input").attributes("type")).toEqual("text");
     });
 

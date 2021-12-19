@@ -1,26 +1,29 @@
 <template>
   <div v-if="entry.edit === true">
-    <div>
+    <div role="sensitive" class="row">
       <label>Sensitive</label>
       <input type="checkbox" v-model="edit.sensitive" />
-      <span class="tip">(Passwords or keys are considered as sensitive values)</span>
+      <div class="tip">Passwords or keys are considered as sensitive values</div>
     </div>
-    <div>
+    <div role="name" class="row">
       <label>Name</label>
       <input type="text" v-model="edit.name" role="name" />
     </div>
-    <div>
+    <div role="value" class="row">
       <label>Default value</label>
       <input type="password" v-if="edit.sensitive" v-model="edit.parameters[0]" role="value" />
       <input type="text" v-else v-model="edit.parameters[0]" role="value" />
     </div>
   </div>
   <div v-else>
-    <div>Variable</div>
-    <label>{{ name }}</label>
-    <input type="password" v-if="sensitive" v-model="value" role="value" />
-    <input type="text" v-else v-model="value" role="value" />
-    <button @click="onVariableSet" role="set-variable">Set</button>
+    <label
+      >Set variable <code>{{ name }}</code></label
+    >
+    <input type="password" v-if="sensitive" v-model="value" @keyup.enter="onVariableSet" role="value" />
+    <input type="text" v-else v-model="value" @keyup.enter="onVariableSet" role="value" />
+    <div class="tip">
+      Press enter to set the variable's value. This will be applied automatically to the rest of the content.
+    </div>
   </div>
 </template>
 
@@ -100,6 +103,10 @@ export default class Variable extends Vue {
 </script>
 
 <style scoped lang="scss">
+div.row {
+  padding-top: 15px;
+}
+
 input[type="text"],
 input[type="password"] {
   font-size: 1em;
@@ -111,8 +118,9 @@ input[type="password"] {
   margin-block-end: 0.83em;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  padding-top: 2px;
   margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 2px;
   width: 99%;
   color: #2c3e50;
 }
@@ -120,5 +128,9 @@ input[type="password"] {
 .tip {
   font-size: 0.8em;
   font-style: italic;
+}
+
+label {
+  font-size: 1.2em;
 }
 </style>
