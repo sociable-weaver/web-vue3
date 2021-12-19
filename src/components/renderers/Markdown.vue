@@ -5,7 +5,7 @@
       <div class="header">Variables</div>
       <div v-for="(variable, index) in edit.variables" :key="variable" role="variable">
         <input @change="onUpdateVariable(variable, index, $event)" :value="variable" role="update-variable" />
-        <button @click="onRemoveVariable(index)">Remove</button>
+        <button @click="onRemoveVariable(index)" role="remove-variable">Remove</button>
       </div>
       <div>
         <input v-model="newVariable" placeholder="Variable Name" role="new-variable" />

@@ -116,6 +116,27 @@ describe("Markdown", () => {
     });
   });
 
+  describe("onRemoveVariable()", () => {
+    it("removes the variable", async () => {
+      /* Given */
+      const entry = {
+        type: "markdown",
+        parameters: [],
+        variables: ["NAME"],
+        edit: true,
+      };
+      const wrapper = shallowMount(Markdown, { props: { entry } });
+      await flushPromises();
+
+      /* When */
+      await wrapper.find("button[role=remove-variable]").trigger("click");
+      await flushPromises();
+
+      /* Then */
+      expect(wrapper.find("div[role=variable] > input").exists()).toBeFalsy();
+    });
+  });
+
   describe("onSave()", () => {
     it("returns Changed when the markdown is changed", async () => {
       /* Given */
