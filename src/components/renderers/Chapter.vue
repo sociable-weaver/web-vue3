@@ -1,6 +1,6 @@
 <template>
   <div v-if="entry.edit === true">
-    <input v-model="editChapter" placeholder="Chapter title" />
+    <input v-model="editChapter" placeholder="Chapter" />
   </div>
   <h2 v-else>{{ chapter }}</h2>
 </template>
@@ -58,15 +58,15 @@ export default class Chapter extends Vue {
 <style scoped lang="scss">
 input {
   font-size: 1.5em;
+  font-weight: bold;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  font-weight: bold;
   width: 99%;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 

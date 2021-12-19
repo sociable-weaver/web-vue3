@@ -1,6 +1,6 @@
 <template>
   <div v-if="entry.edit === true">
-    <input v-model="editSection" placeholder="Section title" />
+    <input v-model="editSection" placeholder="Section" />
   </div>
   <h3 v-else>{{ section }}</h3>
 </template>
@@ -58,15 +58,15 @@ export default class Section extends Vue {
 <style scoped lang="scss">
 input {
   font-size: 1.17em;
+  font-weight: bold;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  font-weight: bold;
   width: 99%;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 
