@@ -50,7 +50,24 @@ describe("Markdown", () => {
 
       /* Then */
       expect((wrapper.find("div[role=variable] > input").element as HTMLInputElement).value).toEqual("TITLE");
-      expect(wrapper.find("div[role=missing-variable] > input").exists()).toBeFalsy();
+    });
+
+    it("does not show the missing variables section when no variables are missing", async () => {
+      /* Given */
+      const entry = {
+        type: "markdown",
+        parameters: ["## ${TITLE}"],
+        variables: ["TITLE"],
+        values: { TITLE: "Hello World!!" },
+        edit: true,
+      };
+
+      /* When */
+      const wrapper = shallowMount(Markdown, { props: { entry } });
+      await flushPromises();
+
+      /* Then */
+      expect(wrapper.find("div[role=missing-variable]").exists()).toBeFalsy();
     });
 
     it("lists the missing variables", async () => {
@@ -67,7 +84,6 @@ describe("Markdown", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("div[role=variable] > input").exists()).toBeFalsy();
       expect(wrapper.find("div[role=missing-variable] > span").text()).toEqual("TITLE");
     });
   });

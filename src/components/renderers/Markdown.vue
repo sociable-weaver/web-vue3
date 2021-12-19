@@ -15,7 +15,7 @@
         <button @click="onAddVariable" role="add-variable">Add</button>
       </div>
     </div>
-    <div role="missing-variables" class="row">
+    <div v-if="missingVariables.length > 0" role="missing-variables" class="row">
       <label>Potential missing variables</label>
       <div v-for="variable in missingVariables" :key="variable" role="missing-variable">
         <span>{{ variable }}</span>

@@ -49,6 +49,19 @@
       <label>Expected exit value</label>
       <input type="text" v-model="edit.expectedExitValue" role="expected-exit-value" />
     </div>
+    <div role="ignore-errors" class="row">
+      <label>Ignore errors</label>
+      <input type="checkbox" v-model="edit.ignoreErrors" role="ignore-errors" />
+      <div class="tip">
+        There are commands that may fails, such as deleting a resource that does not exists. Check this checkbox if you
+        like to ignore the errors and proceed.
+      </div>
+    </div>
+    <div role="dry-run" class="row">
+      <label>Dry run</label>
+      <input type="checkbox" v-model="edit.dryRun" role="dry-run" />
+      <div class="tip">Check to prevent commands from running</div>
+    </div>
   </div>
   <pre v-else>{{ command }}</pre>
 </template>
@@ -223,7 +236,16 @@ export default class Command extends Vue {
   }
 
   private hasChanged() {
-    return this.entry.parameters.join("\n") !== this.edit.parameters.join("\n");
+    return (
+      this.entry.workingDirectory !== this.edit.workingDirectory ||
+      this.entry.parameters.join("\n") !== this.edit.parameters.join("\n") ||
+      this.entry.variables.join("\n") !== this.edit.variables.join("\n") ||
+      this.entry.environmentVariables.join("\n") !== this.edit.environmentVariables.join("\n") ||
+      this.entry.ignoreErrors !== this.edit.ignoreErrors ||
+      this.entry.dryRun !== this.edit.dryRun ||
+      this.entry.expectedExitValue !== this.edit.expectedExitValue ||
+      this.entry.commandTimeout !== this.edit.commandTimeout
+    );
   }
 
   private static variableNameRegex(): RegExp {
@@ -267,6 +289,11 @@ textarea {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.tip {
+  font-size: 0.8em;
+  font-style: italic;
 }
 
 label {
