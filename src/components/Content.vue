@@ -13,6 +13,7 @@
       <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <Section v-else-if="entry.type === 'section'" :entry="entry" />
       <Subsection v-else-if="entry.type === 'subsection'" :entry="entry" />
+      <Todo v-else-if="entry.type === 'todo'" :entry="entry" />
       <Variable
         v-else-if="entry.type === 'variable'"
         :entry="entry"
@@ -56,6 +57,7 @@ import Markdown from "@/components/renderers/Markdown.vue";
 import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
+import Todo from "@/components/renderers/Todo.vue";
 import Variable from "@/components/renderers/Variable.vue";
 import {
   Chapter,
@@ -89,6 +91,7 @@ import { Options, Vue } from "vue-class-component";
     Replace,
     Section,
     Subsection,
+    Todo,
     Variable,
   },
   emits: ["variableUpdated", "variableInitialised"],

@@ -1,6 +1,6 @@
 <template>
   <div v-if="entry.edit === true">
-    <div role="variables" class="row">
+    <div role="markdown" class="row">
       <label>Markdown</label>
       <textarea v-model="editMarkdown" placeholder="Markdown" />
     </div>
