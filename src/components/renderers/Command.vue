@@ -3,6 +3,7 @@
     <div role="working-directory" class="row">
       <label>Working directory</label>
       <input type="text" v-model="edit.workingDirectory" role="working-directory" />
+      <div class="tip">The directory from the command will be running.</div>
     </div>
     <div role="command" class="row">
       <label>Command</label>
@@ -48,6 +49,21 @@
     <div role="expected-exit-value" class="row">
       <label>Expected exit value</label>
       <input type="text" v-model="edit.expectedExitValue" role="expected-exit-value" />
+      <div class="tip">
+        All commands return a value when they finish, known as the
+        <a href="https://en.wikipedia.org/wiki/Exit_status" target="_blank">exit value or exit status</a>. Generally,
+        <code>0</code>, means that the program finish successfully. Set this value to indicate the expected exit value.
+        In some examples, we may be expecting the command to fail, and finish with exit value <code>1</code>, for
+        example.
+      </div>
+    </div>
+    <div role="command-timeout" class="row">
+      <label>Command timeout <span class="unit">(in milliseconds)</span></label>
+      <input type="text" v-model="edit.commandTimeout" role="command-timeout" />
+      <div class="tip">
+        The command is terminated if it takes more than the set value. If no value is provided the command will be
+        terminated if it takes more than 5 seconds.
+      </div>
     </div>
     <div role="ignore-errors" class="row">
       <label>Ignore errors</label>
@@ -265,22 +281,6 @@ div.row {
   padding-top: 15px;
 }
 
-input[type="text"] {
-  font-size: 1em;
-  font-weight: bold;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  padding-top: 2px;
-  margin-top: 0;
-  width: 99%;
-  color: #2c3e50;
-}
-
 textarea {
   width: 99%;
   min-height: 200px;
@@ -294,6 +294,27 @@ textarea {
 .tip {
   font-size: 0.8em;
   font-style: italic;
+}
+
+input[type="text"] {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 2px;
+  width: 99%;
+  color: #2c3e50;
+}
+
+.unit {
+  font-size: 0.8em;
 }
 
 label {
