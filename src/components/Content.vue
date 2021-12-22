@@ -92,6 +92,7 @@ import { Options, Vue } from "vue-class-component";
 
 interface CreateEntry {
   type: string;
+  afterEntryWithId: string;
 }
 
 @Options({
@@ -221,7 +222,7 @@ export default class Content extends Vue {
   private onAddNext(event: Event, entry: Entry): void {
     const target = event.target as HTMLSelectElement;
     const type = target.value;
-    const create = { type };
+    const create = { type, afterEntryWithId: entry.id };
 
     this.disabled = true;
     entry.error = "";

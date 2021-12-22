@@ -4,6 +4,19 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 
 describe("Markdown", () => {
   describe("View/Edit", () => {
+    it("renders an empty entry", async () => {
+      /* Given */
+      const entry = {
+        type: "markdown",
+      };
+
+      /* When */
+      const wrapper = shallowMount(Markdown, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.text()).toContain("Lorem ipsum");
+    });
+
     it("converts markdown to HTML", async () => {
       /* Given */
       const entry = {

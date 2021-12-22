@@ -48,13 +48,13 @@ export default class Markdown extends Vue {
   }
 
   get html(): string {
-    const markdown = this.entry.parameters.join("\n");
+    const markdown = Markdown.getParametersAsSingleString(this.entry.parameters);
     const interpolated = interpolate(this.entry.variables, this.entry.values, markdown);
     return Marked.parse(interpolated);
   }
 
   get editMarkdown(): string {
-    return this.edit.parameters.join("\n");
+    return Markdown.getParametersAsSingleString(this.edit.parameters);
   }
 
   set editMarkdown(value: string) {
@@ -62,7 +62,7 @@ export default class Markdown extends Vue {
   }
 
   get missingVariables(): string[] {
-    const markdown = this.edit.parameters.join("\n");
+    const markdown = Markdown.getParametersAsSingleString(this.edit.parameters);
     const match = markdown.match(Markdown.variableNameRegex()) || [];
     return match.map((v) => v.substring(2, v.length - 1)).filter((v) => !this.edit.variables.includes(v));
   }
@@ -132,6 +132,24 @@ export default class Markdown extends Vue {
 
   private static variableNameRegex(): RegExp {
     return /\${[A-Z0-9_-]+}/;
+  }
+
+  private static getParametersAsSingleString(parameters: string[] | undefined): string {
+    if (!Array.isArray(parameters) || parameters.length == 0) {
+      return Markdown.defaultContent();
+    }
+
+    return parameters.join("\n");
+  }
+
+  private static defaultContent(): string {
+    return `_Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas velit urna, bibendum ut finibus id,
+            lacinia quis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+            himenaeos. Nunc sollicitudin turpis in purus consectetur faucibus. Integer magna arcu, tempus at diam
+            id, maximus dapibus sapien. Vestibulum quis lobortis erat. In porttitor commodo ante non aliquam. Cras
+            rhoncus pharetra ipsum in hendrerit. Nam ut justo aliquam, vehicula risus non, vestibulum nisl. Aenean
+            quis convallis metus, ut porta est. Nulla ullamcorper erat sit amet mi porttitor, et porta magna
+            blandit._`;
   }
 }
 </script>
