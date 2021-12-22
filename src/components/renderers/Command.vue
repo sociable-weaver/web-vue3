@@ -238,7 +238,7 @@ export default class Command extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    const command = join(this.entry.parameters).trim();
+    const command = join(this.edit.parameters).trim();
     if (command.length === 0) {
       this.entry.error = "The command cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
