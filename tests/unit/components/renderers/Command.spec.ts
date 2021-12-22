@@ -3,6 +3,19 @@ import { shallowMount } from "@vue/test-utils";
 
 describe("Command", () => {
   describe("View/Edit", () => {
+    it("displays the command for an empty entry", async () => {
+      /* Given */
+      const entry = {
+        type: "command",
+      };
+
+      /* When */
+      const wrapper = shallowMount(Command, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.find("pre").text()).toEqual("$ echo 'Hello world!!'");
+    });
+
     it("displays the command with working directory", async () => {
       /* Given */
       const entry = {

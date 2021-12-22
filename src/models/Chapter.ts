@@ -108,6 +108,14 @@ export function interpolate(variables: string[], values: { [name: string]: strin
   return interpolated;
 }
 
+export function join(parameters: string[] | undefined, defaultValue: () => string = () => ""): string {
+  if (!Array.isArray(parameters) || parameters.length == 0) {
+    return defaultValue();
+  }
+
+  return parameters.join("\n");
+}
+
 export function createSaveEntry(entry: Entry): SaveEntry {
   return {
     type: entry.type,

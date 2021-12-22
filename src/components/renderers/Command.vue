@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, interpolate, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import { createSaveEntry, Entry, interpolate, join, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -106,13 +106,13 @@ export default class Command extends Vue {
   get command(): string {
     const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
     const commandPromptSymbol = "$";
-    let command = `${workingDirectory}${commandPromptSymbol} ${this.entry.parameters.join("\n")}`;
+    let command = `${workingDirectory}${commandPromptSymbol} ${join(this.entry.parameters, Command.defaultCommand)}`;
 
     return interpolate(this.entry.variables, this.entry.values, command);
   }
 
   get editCommand(): string {
-    return this.edit.parameters.join("\n");
+    return join(this.edit.parameters, Command.defaultCommand);
   }
 
   set editCommand(value: string) {
@@ -120,7 +120,7 @@ export default class Command extends Vue {
   }
 
   get missingVariables(): string[] {
-    const command = this.edit.parameters.join("\n");
+    const command = join(this.edit.parameters);
     const match = command.match(Command.variableNameRegex()) || [];
     return match.map((v) => v.substring(2, v.length - 1)).filter((v) => !this.edit.variables.includes(v));
   }
@@ -238,7 +238,7 @@ export default class Command extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    const command = this.entry.parameters.join("\n").trim();
+    const command = join(this.entry.parameters).trim();
     if (command.length === 0) {
       this.entry.error = "The command cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
@@ -254,9 +254,9 @@ export default class Command extends Vue {
   private hasChanged() {
     return (
       this.entry.workingDirectory !== this.edit.workingDirectory ||
-      this.entry.parameters.join("\n") !== this.edit.parameters.join("\n") ||
-      this.entry.variables.join("\n") !== this.edit.variables.join("\n") ||
-      this.entry.environmentVariables.join("\n") !== this.edit.environmentVariables.join("\n") ||
+      join(this.entry.parameters) !== join(this.edit.parameters) ||
+      join(this.entry.variables) !== join(this.edit.variables) ||
+      join(this.entry.environmentVariables) !== join(this.edit.environmentVariables) ||
       this.entry.ignoreErrors !== this.edit.ignoreErrors ||
       this.entry.dryRun !== this.edit.dryRun ||
       this.entry.expectedExitValue !== this.edit.expectedExitValue ||
@@ -267,12 +267,18 @@ export default class Command extends Vue {
   private static variableNameRegex(): RegExp {
     return /\${[A-Z0-9_-]+}/;
   }
+
+  private static defaultCommand(): string {
+    return "echo 'Hello world!!'";
+  }
 }
 </script>
 
 <style scoped lang="scss">
 pre {
   padding: 5px;
+  border: 1px solid black;
+  border-radius: 2px;
   background-color: black;
   color: greenyellow;
 }

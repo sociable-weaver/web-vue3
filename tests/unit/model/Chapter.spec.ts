@@ -1,4 +1,4 @@
-import { createSaveEntry, doAllVariablesHaveValues, Entry, SaveEntry, setValue } from "@/models/Chapter";
+import { createSaveEntry, doAllVariablesHaveValues, Entry, join, SaveEntry, setValue } from "@/models/Chapter";
 
 describe("Entry", () => {
   describe("setValue()", () => {
@@ -146,6 +146,30 @@ describe("Entry", () => {
       expected.values["NAME"] = "Albert";
       expected.values["SURNAME"] = "Attard";
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe("join()", () => {
+    it("returns an empty string when given a null array", () => {
+      /* Given */
+      const entry = {} as Entry;
+
+      /* When */
+      const result = join(entry.parameters);
+
+      /* Then */
+      expect(result).toEqual("");
+    });
+
+    it("returns the default value when given a null array", () => {
+      /* Given */
+      const entry = {} as Entry;
+
+      /* When */
+      const result = join(entry.parameters, () => "Default value");
+
+      /* Then */
+      expect(result).toEqual("Default value");
     });
   });
 });

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, interpolate, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import { createSaveEntry, Entry, interpolate, join, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
 import { Marked } from "@ts-stack/markdown";
 import { Options, Vue } from "vue-class-component";
 
@@ -48,13 +48,13 @@ export default class Markdown extends Vue {
   }
 
   get html(): string {
-    const markdown = Markdown.getParametersAsSingleString(this.entry.parameters);
+    const markdown = join(this.entry.parameters, Markdown.defaultContent);
     const interpolated = interpolate(this.entry.variables, this.entry.values, markdown);
     return Marked.parse(interpolated);
   }
 
   get editMarkdown(): string {
-    return Markdown.getParametersAsSingleString(this.edit.parameters);
+    return join(this.edit.parameters, Markdown.defaultContent);
   }
 
   set editMarkdown(value: string) {
@@ -62,7 +62,7 @@ export default class Markdown extends Vue {
   }
 
   get missingVariables(): string[] {
-    const markdown = Markdown.getParametersAsSingleString(this.edit.parameters);
+    const markdown = join(this.edit.parameters, Markdown.defaultContent);
     const match = markdown.match(Markdown.variableNameRegex()) || [];
     return match.map((v) => v.substring(2, v.length - 1)).filter((v) => !this.edit.variables.includes(v));
   }
@@ -134,17 +134,9 @@ export default class Markdown extends Vue {
     return /\${[A-Z0-9_-]+}/;
   }
 
-  private static getParametersAsSingleString(parameters: string[] | undefined): string {
-    if (!Array.isArray(parameters) || parameters.length == 0) {
-      return Markdown.defaultContent();
-    }
-
-    return parameters.join("\n");
-  }
-
   private static defaultContent(): string {
-    return `_Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas velit urna, bibendum ut finibus id,
-            lacinia quis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+    return `_**Lorem ipsum** dolor sit amet, consectetur adipiscing elit. Maecenas velit urna, bibendum ut finibus
+            id, lacinia quis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
             himenaeos. Nunc sollicitudin turpis in purus consectetur faucibus. Integer magna arcu, tempus at diam
             id, maximus dapibus sapien. Vestibulum quis lobortis erat. In porttitor commodo ante non aliquam. Cras
             rhoncus pharetra ipsum in hendrerit. Nam ut justo aliquam, vehicula risus non, vestibulum nisl. Aenean
@@ -158,7 +150,7 @@ export default class Markdown extends Vue {
 .markdown >>> pre {
   padding: 5px;
   border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 2px;
   background-color: lightgrey;
   color: black;
 }
