@@ -163,6 +163,20 @@ export default class Markdown extends Vue {
   color: black;
 }
 
+.markdown >>> pre code {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.markdown >>> code {
+  padding: 2px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  background-color: lightgrey;
+  color: black;
+}
+
 div.row {
   padding-top: 15px;
 }
