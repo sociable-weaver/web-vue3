@@ -37,6 +37,23 @@
           <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
         </div>
         <div class="buttons editable" role="edit-buttons">
+          <select :disabled="disabled" @change="onAddNext($event, entry)">
+            <option disabled selected value="">Add next</option>
+            <option value="chapter">Chapter</option>
+            <option value="command">Command</option>
+            <option value="create">Create</option>
+            <option value="docker-tag-and-push">Docker Tag and Push</option>
+            <option value="download">Download</option>
+            <option value="git-apply-patch">Git Apply Patch</option>
+            <option value="git-commit-changes">Git Commit Changes</option>
+            <option value="git-tag-current Commit">Git Tag Current Commit</option>
+            <option value="markdown">Markdown</option>
+            <option value="replace">Replace</option>
+            <option value="section">Section</option>
+            <option value="subsection">Subsection</option>
+            <option value="todo">Todo</option>
+            <option value="variable">Variable</option>
+          </select>
           <button :disabled="disabled" @click="onEdit(entry)">Edit</button>
         </div>
       </div>
@@ -72,6 +89,10 @@ import {
 import { runEntry, RunnableEntry } from "@/services/RunEntryService";
 import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
+
+interface CreateEntry {
+  type: string;
+}
 
 @Options({
   name: "Content",
@@ -197,6 +218,37 @@ export default class Content extends Vue {
     };
   }
 
+  private onAddNext(event: Event, entry: Entry): void {
+    const target = event.target as HTMLSelectElement;
+    const type = target.value;
+    const create = { type };
+
+    this.disabled = true;
+    entry.error = "";
+
+    this.createEntry(create)
+      .then((created) => {
+        const index = this.chapter.entries.indexOf(entry);
+        this.chapter.entries.splice(index, 0, created);
+      })
+      .catch((e) => (entry.error = `Failed to create entry (${formatError(e)})`))
+      .finally(() => {
+        this.disabled = false;
+        target.value = "";
+      });
+  }
+
+  private createEntry(entry: CreateEntry): Promise<Entry> {
+    return apiClient
+      .post("/api/entry", entry, {
+        params: {
+          bookPath: this.chapter.bookPath,
+          chapterPath: this.chapter.chapterPath,
+        },
+      })
+      .then((response) => response.data);
+  }
+
   private onEdit(entry: Entry): void {
     entry.edit = true;
   }
@@ -220,10 +272,12 @@ export default class Content extends Vue {
   }
 
   private handleChanged(entry: Entry, saveEntry: SaveEntry): void {
+    this.disabled = true;
     this.saveEntry(saveEntry)
       .then((saved) => Object.assign(entry, saved))
       .then((updated) => (updated.edit = false))
-      .catch((e) => (entry.error = `Failed to save entry (${formatError(e)})`));
+      .catch((e) => (entry.error = `Failed to save entry (${formatError(e)})`))
+      .finally(() => (this.disabled = false));
   }
 
   private handleNotChanged(entry: Entry): void {
@@ -272,18 +326,21 @@ export default class Content extends Vue {
 }
 
 div.error {
+  border-radius: 2px;
   padding: 20px;
   background-color: orangered;
   color: white;
 }
 
 pre.output {
+  border-radius: 2px;
   padding: 20px;
   background-color: black;
   color: aliceblue;
 }
 
 pre.error {
+  border-radius: 2px;
   padding: 20px;
   background-color: orangered;
   color: white;
@@ -332,5 +389,18 @@ button.primary:disabled {
   background-color: #84a0b8;
   color: #5e5e5a;
   cursor: wait;
+}
+
+select {
+  background-color: #dddddd;
+  border: 1px solid #5e5e5a;
+  border-radius: 2px;
+  color: black;
+  margin: 0 5px 0 0;
+  padding: 2px 5px 1px 5px;
+  text-align: left;
+  vertical-align: top;
+  text-decoration: none;
+  cursor: pointer;
 }
 </style>

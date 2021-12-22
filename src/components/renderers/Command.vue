@@ -58,11 +58,11 @@
       </div>
     </div>
     <div role="command-timeout" class="row">
-      <label>Command timeout <span class="unit">(in milliseconds)</span></label>
+      <label>Command timeout <span class="unit">(in seconds)</span></label>
       <input type="text" v-model="edit.commandTimeout" role="command-timeout" />
       <div class="tip">
         The command is terminated if it takes more than the set value. If no value is provided the command will be
-        terminated if it takes more than 5 seconds.
+        terminated if it takes more than 5 seconds to complete.
       </div>
     </div>
     <div role="ignore-errors" class="row">
