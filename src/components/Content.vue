@@ -230,7 +230,7 @@ export default class Content extends Vue {
     this.createEntry(create)
       .then((created) => {
         const index = this.chapter.entries.indexOf(entry);
-        this.chapter.entries.splice(index, 0, created);
+        this.chapter.entries.splice(index + 1, 0, created);
       })
       .catch((e) => (entry.error = `Failed to create entry (${formatError(e)})`))
       .finally(() => {
