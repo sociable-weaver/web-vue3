@@ -79,11 +79,30 @@
       <div class="tip">Check to prevent commands from running</div>
     </div>
   </div>
-  <pre v-else>{{ command }}</pre>
+  <div v-else>
+    <div v-if="usesVariables" class="variables">
+      <div>This command is using the following variables:</div>
+      <ul>
+        <li v-for="variable in entry.variables" :key="variable">
+          <code>{{ variable }}</code>
+        </li>
+      </ul>
+    </div>
+    <pre>{{ command }}</pre>
+  </div>
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, interpolate, join, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import {
+  arrayContainsValues,
+  createSaveEntry,
+  Entry,
+  interpolate,
+  join,
+  OnSaveOutcome,
+  OnSaveResult,
+  SaveEntry,
+} from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -101,6 +120,10 @@ export default class Command extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
+  }
+
+  get usesVariables(): boolean {
+    return arrayContainsValues(this.entry.variables);
   }
 
   get command(): string {
@@ -275,6 +298,10 @@ export default class Command extends Vue {
 </script>
 
 <style scoped lang="scss">
+.variables ul {
+  margin-top: 0;
+}
+
 pre {
   padding: 5px;
   border: 1px solid black;

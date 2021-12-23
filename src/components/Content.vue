@@ -250,7 +250,7 @@ export default class Content extends Vue {
   }
 
   private onDelete(entry: Entry): void {
-    console.log("Coming soon...");
+    console.log("Deleting", entry);
   }
 
   private onAddNext(event: Event, entry: Entry): void {
