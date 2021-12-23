@@ -1,6 +1,13 @@
 <template>
   <div class="content">
-    <div v-for="(entry, index) in chapter.entries" :key="entry.id" :id="entry.id" class="entry">
+    <div
+      v-for="(entry, index) in chapter.entries"
+      :key="entry.id"
+      :id="entry.id"
+      class="entry"
+      @mouseenter="onMouseEnter(entry)"
+      @mouseleave="onMouseLeave(entry)"
+    >
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <Create v-else-if="entry.type === 'create'" :entry="entry" />
@@ -33,20 +40,29 @@
       </div>
       <div v-else class="buttons-bar" role="run-buttons">
         <div v-if="isRunnable(entry)" class="buttons runnable">
-          <button :disabled="disabled" @click="onRun(entry)" class="primary">Run</button>
-          <button :disabled="disabled" @click="onRunUntilHere(index)">Run Until Here</button>
+          <button :disabled="disabled" @click="onRun(entry)" class="primary" title="Run this command">Run</button>
+          <button
+            :disabled="disabled"
+            @click="onRunUntilHere(index)"
+            title="Run all commands from the beginning until this one"
+          >
+            Run until here
+          </button>
         </div>
-        <div class="buttons editable" role="edit-buttons">
-          <select :disabled="disabled" @change="onAddNext($event, entry)">
+        <div class="buttons editable" role="edit-buttons" v-if="entry.showEditControls">
+          <button :disabled="disabled" @click="onDelete(entry)" class="danger" title="Delete this entry">Delete</button>
+          <select :disabled="disabled" @change="onAddNext($event, entry)" title="Add a new enter right after this one">
             <option disabled selected value="">Add next</option>
             <option value="chapter">Chapter</option>
-            <option value="command">Command</option>
+            <optgroup label="Command">
+              <option value="command">Blank</option>
+              <option value="docker-tag-and-push">Docker Tag and Push</option>
+              <option value="download">Download</option>
+              <option value="git-apply-patch">Git Apply Patch</option>
+              <option value="git-commit-changes">Git Commit Changes</option>
+              <option value="git-tag-current Commit">Git Tag Current Commit</option>
+            </optgroup>
             <option value="create">Create</option>
-            <option value="docker-tag-and-push">Docker Tag and Push</option>
-            <option value="download">Download</option>
-            <option value="git-apply-patch">Git Apply Patch</option>
-            <option value="git-commit-changes">Git Commit Changes</option>
-            <option value="git-tag-current Commit">Git Tag Current Commit</option>
             <option value="markdown">Markdown</option>
             <option value="replace">Replace</option>
             <option value="section">Section</option>
@@ -54,7 +70,13 @@
             <option value="todo">Todo</option>
             <option value="variable">Variable</option>
           </select>
-          <button :disabled="disabled" @click="onEdit(entry)">Edit</button>
+          <button
+            :disabled="disabled"
+            @click="onEdit(entry)"
+            title="Show this entry in edit mode, from where you can change it"
+          >
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -134,6 +156,14 @@ export default class Content extends Vue {
       "replace",
     ];
     return runnable.find((type) => type === entry.type) !== undefined;
+  }
+
+  private onMouseEnter(entry: Entry): void {
+    entry.showEditControls = true;
+  }
+
+  private onMouseLeave(entry: Entry): void {
+    entry.showEditControls = false;
   }
 
   private onRun(entry: Entry): void {
@@ -219,6 +249,10 @@ export default class Content extends Vue {
     };
   }
 
+  private onDelete(entry: Entry): void {
+    console.log("Coming soon...");
+  }
+
   private onAddNext(event: Event, entry: Entry): void {
     const target = event.target as HTMLSelectElement;
     const type = target.value;
@@ -229,6 +263,7 @@ export default class Content extends Vue {
 
     this.createEntry(create)
       .then((created) => {
+        created.edit = true;
         const index = this.chapter.entries.indexOf(entry);
         this.chapter.entries.splice(index + 1, 0, created);
       })
@@ -323,7 +358,12 @@ export default class Content extends Vue {
 }
 
 .entry {
-  padding-bottom: 10px;
+  padding: 2px 2px 10px;
+}
+
+.entry:hover {
+  background-color: #c8e1ff;
+  filter: drop-shadow(5px 5px 5px #666666);
 }
 
 div.error {
@@ -345,6 +385,10 @@ pre.error {
   padding: 20px;
   background-color: orangered;
   color: white;
+}
+
+div.buttons-bar {
+  height: 22px;
 }
 
 div.buttons-bar::after {
@@ -388,6 +432,17 @@ button.primary {
 
 button.primary:disabled {
   background-color: #84a0b8;
+  color: #5e5e5a;
+  cursor: wait;
+}
+
+button.danger {
+  background-color: #cc3333;
+  color: white;
+}
+
+button.danger:disabled {
+  background-color: #e9aeae;
   color: #5e5e5a;
   cursor: wait;
 }

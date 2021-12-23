@@ -39,6 +39,7 @@ export interface Entry {
   sensitive: boolean;
   expectedExitValue: number;
   commandTimeout: number;
+  showEditControls: boolean;
   edit: boolean;
   failed: boolean;
   output: string;

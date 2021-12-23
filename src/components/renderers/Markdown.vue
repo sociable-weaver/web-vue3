@@ -135,13 +135,15 @@ export default class Markdown extends Vue {
   }
 
   private static defaultContent(): string {
-    return `_**Lorem ipsum** dolor sit amet, consectetur adipiscing elit. Maecenas velit urna, bibendum ut finibus
-            id, lacinia quis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-            himenaeos. Nunc sollicitudin turpis in purus consectetur faucibus. Integer magna arcu, tempus at diam
-            id, maximus dapibus sapien. Vestibulum quis lobortis erat. In porttitor commodo ante non aliquam. Cras
-            rhoncus pharetra ipsum in hendrerit. Nam ut justo aliquam, vehicula risus non, vestibulum nisl. Aenean
-            quis convallis metus, ut porta est. Nulla ullamcorper erat sit amet mi porttitor, et porta magna
-            blandit._`;
+    return (
+      "_**Lorem ipsum** dolor sit amet, consectetur adipiscing elit. Maecenas velit urna, bibendum ut finibus" +
+      "id, lacinia quis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos" +
+      "himenaeos. Nunc sollicitudin turpis in purus consectetur faucibus. Integer magna arcu, tempus at diam" +
+      "id, maximus dapibus sapien. Vestibulum quis lobortis erat. In porttitor commodo ante non aliquam. Cras" +
+      "rhoncus pharetra ipsum in hendrerit. Nam ut justo aliquam, vehicula risus non, vestibulum nisl. Aenean" +
+      "quis convallis metus, ut porta est. Nulla ullamcorper erat sit amet mi porttitor, et porta magna" +
+      "blandit._"
+    );
   }
 }
 </script>
@@ -167,6 +169,10 @@ export default class Markdown extends Vue {
   border-radius: 5px;
   background-color: lightgrey;
   color: black;
+}
+
+.markdown >>> a code {
+  color: -webkit-link;
 }
 
 div.row {

@@ -325,6 +325,7 @@ describe("Content", () => {
           {
             type: "chapter",
             parameters: ["Hello world"],
+            showEditControls: true,
           },
         ],
       };
