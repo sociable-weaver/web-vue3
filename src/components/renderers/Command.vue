@@ -48,7 +48,7 @@
     </div>
     <div role="expected-exit-value" class="row">
       <label>Expected exit value</label>
-      <input type="text" v-model="edit.expectedExitValue" role="expected-exit-value" />
+      <input type="text" v-model.number="edit.expectedExitValue" role="expected-exit-value" />
       <div class="tip">
         All commands return a value when they finish, known as the
         <a href="https://en.wikipedia.org/wiki/Exit_status" target="_blank">exit value or exit status</a>. Generally,
@@ -59,7 +59,7 @@
     </div>
     <div role="command-timeout" class="row">
       <label>Command timeout <span class="unit">(in seconds)</span></label>
-      <input type="text" v-model="edit.commandTimeout" role="command-timeout" />
+      <input type="text" v-model.number="edit.commandTimeout" role="command-timeout" />
       <div class="tip">
         The command is terminated if it takes more than the set value. If no value is provided the command will be
         terminated if it takes more than 5 seconds to complete.
@@ -120,6 +120,9 @@ export default class Command extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
+    if (!arrayContainsValues(this.edit.parameters)) {
+      this.edit.parameters = [Command.defaultCommand()];
+    }
   }
 
   get usesVariables(): boolean {
@@ -135,7 +138,7 @@ export default class Command extends Vue {
   }
 
   get editCommand(): string {
-    return join(this.edit.parameters, Command.defaultCommand);
+    return join(this.edit.parameters);
   }
 
   set editCommand(value: string) {
@@ -261,7 +264,7 @@ export default class Command extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    const command = join(this.edit.parameters).trim();
+    const command = this.editCommand.trim();
     if (command.length === 0) {
       this.entry.error = "The command cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;

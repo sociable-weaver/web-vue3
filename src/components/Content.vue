@@ -48,6 +48,7 @@
           >
             Run until here
           </button>
+          <button :disabled="disabled" @click="onClear(entry)" title="Clear the command output from here">Clear</button>
         </div>
         <div class="buttons editable" role="edit-buttons" v-if="entry.showEditControls">
           <button :disabled="disabled" @click="onDelete(entry)" class="danger" title="Delete this entry">Delete</button>
@@ -247,6 +248,11 @@ export default class Content extends Vue {
       expectedExitValue: entry.expectedExitValue,
       commandTimeout: entry.commandTimeout,
     };
+  }
+
+  private onClear(entry: Entry): void {
+    entry.output = "";
+    entry.error = "";
   }
 
   private onDelete(entry: Entry): void {
