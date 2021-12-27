@@ -55,17 +55,9 @@
           <select :disabled="disabled" @change="onAddNext($event, entry)" title="Add a new enter right after this one">
             <option disabled selected value="">Add next</option>
             <option value="chapter">Chapter</option>
-            <optgroup label="Command">
-              <option value="command">Blank</option>
-              <option value="docker-tag-and-push">Docker Tag and Push</option>
-              <option value="download">Download</option>
-              <option value="git-apply-patch">Git Apply Patch</option>
-              <option value="git-commit-changes">Git Commit Changes</option>
-              <option value="git-tag-current Commit">Git Tag Current Commit</option>
-            </optgroup>
-            <option value="create">Create</option>
+            <option value="command">Command</option>
+            <option value="git-apply-patch">Git Apply Patch</option>
             <option value="markdown">Markdown</option>
-            <option value="replace">Replace</option>
             <option value="section">Section</option>
             <option value="subsection">Subsection</option>
             <option value="todo">Todo</option>

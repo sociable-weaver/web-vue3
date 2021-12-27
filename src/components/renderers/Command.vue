@@ -7,6 +7,15 @@
     </div>
     <div role="command" class="row">
       <label>Command</label>
+      <div class="template">
+        <label>Template</label>
+        <select @change="onUseTemplate($event)" title="Select a template to simplify the creation of commands">
+          <option disabled selected value="">use template</option>
+          <option v-for="template in templates" :key="template.key" :value="template.key">
+            {{ template.name }}
+          </option>
+        </select>
+      </div>
       <textarea v-model="editCommand" placeholder="command" role="command" />
     </div>
     <div role="variables" class="row">
@@ -106,6 +115,12 @@ import {
 } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
+interface Template {
+  key: string;
+  name: string;
+  parameters: string[];
+}
+
 @Options({
   name: "Command",
   props: {
@@ -117,6 +132,7 @@ export default class Command extends Vue {
   private edit: SaveEntry = { parameters: [""] } as SaveEntry;
   private newVariable = "";
   private newEnvironmentVariable = "";
+  private templates: Template[] = Command.createTemplates();
 
   mounted(): void {
     this.entry.onSave = this.onSave;
@@ -144,6 +160,20 @@ export default class Command extends Vue {
 
   set editCommand(value: string) {
     this.edit.parameters = value.split("\n");
+  }
+
+  private onUseTemplate(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const key = target.value;
+
+    const template = this.templates.find((t) => t.key === key);
+    if (template === undefined) {
+      this.entry.error = "Cannot find template";
+    } else {
+      this.edit.parameters = template.parameters;
+    }
+
+    target.value = "";
   }
 
   get missingVariables(): string[] {
@@ -285,6 +315,17 @@ export default class Command extends Vue {
   private static defaultCommand(): string {
     return "echo 'Hello world!!'";
   }
+
+  private static createTemplates(): Template[] {
+    return [
+      { key: "echo", name: "echo 'Hello world!!'", parameters: ["echo 'Hello World!!'"] },
+      {
+        key: "git-tag",
+        name: "Git tag last commit",
+        parameters: ["git tag --annotate 'v1.0.0' --message 'Tag Message'"],
+      },
+    ];
+  }
 }
 </script>
 
@@ -343,5 +384,13 @@ input[type="text"] {
 
 label {
   font-size: 1.2em;
+  padding-right: 5px;
+}
+
+div.template {
+  float: right;
+  margin-left: auto;
+  margin-right: 10px;
+  display: inline-block;
 }
 </style>

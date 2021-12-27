@@ -13,7 +13,7 @@ import {
   hasChanged,
   OnSaveOutcome,
   OnSaveResult,
-  SaveEntry
+  SaveEntry,
 } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
