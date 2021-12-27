@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Entry } from "@/models/Chapter";
+import { Entry, join } from "@/models/Chapter";
 import { Diff2HtmlConfig, html } from "diff2html";
 import { Options, Vue } from "vue-class-component";
 
@@ -17,8 +17,17 @@ export default class GitApplyPatch extends Vue {
   private entry!: Entry;
 
   get patch(): string {
+    const patch = join(this.entry.parameters);
+    return patch.length === 0 ? GitApplyPatch.noPatchMessage() : GitApplyPatch.renderPatch(patch);
+  }
+
+  private static noPatchMessage(): string {
+    return "<div>No patch information is available</div>";
+  }
+
+  private static renderPatch(patch: string): string {
     const config = { drawFileList: false, fileContentToggle: false } as Diff2HtmlConfig;
-    return html(this.entry.parameters.join("\n"), config);
+    return html(patch, config);
   }
 }
 </script>
