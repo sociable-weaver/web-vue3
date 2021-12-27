@@ -27,7 +27,17 @@
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, interpolate, join, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import {
+  arrayContainsValues,
+  createSaveEntry,
+  Entry,
+  hasChanged,
+  interpolate,
+  join,
+  OnSaveOutcome,
+  OnSaveResult,
+  SaveEntry,
+} from "@/models/Chapter";
 import { Marked } from "@ts-stack/markdown";
 import { Options, Vue } from "vue-class-component";
 
@@ -45,6 +55,9 @@ export default class Markdown extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
+    if (!arrayContainsValues(this.entry.parameters)) {
+      this.entry.parameters = [Markdown.defaultContent()];
+    }
   }
 
   get html(): string {
@@ -54,7 +67,7 @@ export default class Markdown extends Vue {
   }
 
   get editMarkdown(): string {
-    return join(this.edit.parameters, Markdown.defaultContent);
+    return join(this.edit.parameters);
   }
 
   set editMarkdown(value: string) {
@@ -126,8 +139,19 @@ export default class Markdown extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    /* TODO: Check before saving!!  We are saving empty markdowns and even if the value is not changed. */
-    return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
+    this.entry.error = "";
+
+    const markdown = this.editMarkdown.trim();
+    if (markdown.length === 0) {
+      this.entry.error = "The markdown cannot be empty";
+      return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
+    }
+
+    if (hasChanged(this.entry, this.edit)) {
+      return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
+    }
+
+    return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 
   private static variableNameRegex(): RegExp {

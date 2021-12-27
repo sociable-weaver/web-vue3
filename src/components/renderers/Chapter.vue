@@ -6,7 +6,15 @@
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import {
+  arrayContainsValues,
+  createSaveEntry,
+  Entry,
+  hasChanged,
+  OnSaveOutcome,
+  OnSaveResult,
+  SaveEntry,
+} from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -42,19 +50,15 @@ export default class Chapter extends Vue {
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
 
-    if (this.hasChanged()) {
+    if (hasChanged(this.entry, this.edit)) {
       return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 
-  private hasChanged() {
-    return this.edit.parameters[0] !== this.entry.parameters[0];
-  }
-
   private static getChapterFrom(parameters: string[]): string {
-    return !Array.isArray(parameters) || parameters.length == 0 ? "" : parameters[0];
+    return arrayContainsValues(parameters) ? parameters[0] : "";
   }
 }
 </script>

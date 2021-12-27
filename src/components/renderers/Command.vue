@@ -97,6 +97,7 @@ import {
   arrayContainsValues,
   createSaveEntry,
   Entry,
+  hasChanged,
   interpolate,
   join,
   OnSaveOutcome,
@@ -270,24 +271,11 @@ export default class Command extends Vue {
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
 
-    if (this.hasChanged()) {
+    if (hasChanged(this.entry, this.edit)) {
       return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
-  }
-
-  private hasChanged() {
-    return (
-      this.entry.workingDirectory !== this.edit.workingDirectory ||
-      join(this.entry.parameters) !== join(this.edit.parameters) ||
-      join(this.entry.variables) !== join(this.edit.variables) ||
-      join(this.entry.environmentVariables) !== join(this.edit.environmentVariables) ||
-      this.entry.ignoreErrors !== this.edit.ignoreErrors ||
-      this.entry.dryRun !== this.edit.dryRun ||
-      this.entry.expectedExitValue !== this.edit.expectedExitValue ||
-      this.entry.commandTimeout !== this.edit.commandTimeout
-    );
   }
 
   private static variableNameRegex(): RegExp {

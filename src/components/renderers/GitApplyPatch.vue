@@ -1,9 +1,20 @@
 <template>
-  <div class="patch" v-html="patch" />
+  <div v-if="entry.edit === true">
+    <div role="working-directory" class="row">
+      <label>Working directory</label>
+      <input type="text" v-model="edit.workingDirectory" role="working-directory" />
+      <div class="tip">The directory from the patch will be applied.</div>
+    </div>
+    <div role="patch" class="row">
+      <label>Patch</label>
+      <textarea v-model="editPatch" placeholder="patch" role="patch" />
+    </div>
+  </div>
+  <div v-else class="patch" v-html="patch" />
 </template>
 
 <script lang="ts">
-import { Entry, join } from "@/models/Chapter";
+import { createSaveEntry, Entry, hasChanged, join, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
 import { Diff2HtmlConfig, html } from "diff2html";
 import { Options, Vue } from "vue-class-component";
 
@@ -15,6 +26,12 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class GitApplyPatch extends Vue {
   private entry!: Entry;
+  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
+
+  mounted(): void {
+    this.entry.onSave = this.onSave;
+    this.edit = createSaveEntry(this.entry);
+  }
 
   get patch(): string {
     const patch = join(this.entry.parameters);
@@ -29,10 +46,72 @@ export default class GitApplyPatch extends Vue {
     const config = { drawFileList: false, fileContentToggle: false } as Diff2HtmlConfig;
     return html(patch, config);
   }
+
+  get editPatch(): string {
+    return join(this.edit.parameters);
+  }
+
+  set editPatch(value: string) {
+    this.edit.parameters = value.split("\n");
+  }
+
+  private onSave(): OnSaveResult {
+    const patch = this.editPatch.trim();
+    if (patch.length === 0) {
+      this.entry.error = "The patch cannot be empty";
+      return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
+    }
+
+    if (hasChanged(this.entry, this.edit)) {
+      return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
+    }
+
+    return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
+  }
 }
 </script>
 
 <style scoped>
+div.row {
+  padding-top: 15px;
+}
+
+textarea {
+  width: 99%;
+  min-height: 200px;
+  font-family: monospace;
+  font-size: 1em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+
+.tip {
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+input[type="text"] {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 2px;
+  width: 99%;
+  color: #2c3e50;
+}
+
+label {
+  font-size: 1.2em;
+}
+
 .patch >>> .d2h-d-none {
   display: none;
 }

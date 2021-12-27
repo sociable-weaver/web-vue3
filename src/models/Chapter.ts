@@ -139,3 +139,16 @@ export function createSaveEntry(entry: Entry): SaveEntry {
     commandTimeout: entry.commandTimeout,
   } as SaveEntry;
 }
+
+export function hasChanged(entry: Entry, edit: SaveEntry): boolean {
+  return (
+    entry.workingDirectory !== edit.workingDirectory ||
+    join(entry.parameters) !== join(edit.parameters) ||
+    join(entry.variables) !== join(edit.variables) ||
+    join(entry.environmentVariables) !== join(edit.environmentVariables) ||
+    entry.ignoreErrors !== edit.ignoreErrors ||
+    entry.dryRun !== edit.dryRun ||
+    entry.expectedExitValue !== edit.expectedExitValue ||
+    entry.commandTimeout !== edit.commandTimeout
+  );
+}
