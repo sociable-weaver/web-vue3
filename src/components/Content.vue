@@ -364,6 +364,7 @@ export default class Content extends Vue {
 
 .entry {
   padding: 2px 2px 10px;
+  margin-bottom: 5px;
 }
 
 .entry:hover {
@@ -373,16 +374,18 @@ export default class Content extends Vue {
 
 div.error {
   border-radius: 2px;
-  padding: 20px;
+  border: 1px solid #5e5e5a;
+  padding: 5px;
   background-color: orangered;
   color: white;
 }
 
 pre.output {
   border-radius: 2px;
-  padding: 20px;
-  background-color: black;
-  color: aliceblue;
+  border: 1px solid #5e5e5a;
+  padding: 5px;
+  background-color: lightgray;
+  color: black;
 }
 
 pre.error {

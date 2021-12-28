@@ -341,7 +341,8 @@ export default class Command extends Vue {
 }
 
 div.command {
-  margin: 1em 0;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
 }
 
 div.workingDirectory {
@@ -352,6 +353,7 @@ div.workingDirectory {
 pre {
   padding: 5px;
   margin-top: 0;
+  margin-bottom: 0;
   border: 1px solid black;
   border-radius: 2px;
   background-color: black;
