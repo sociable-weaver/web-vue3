@@ -79,6 +79,7 @@ input {
 }
 
 h3 {
+  margin-top: 3em;
   padding: 1px;
 }
 </style>

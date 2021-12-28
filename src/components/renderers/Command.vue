@@ -11,9 +11,15 @@
         <label>Template</label>
         <select @change="onUseTemplate($event)" title="Select a template to simplify the creation of commands">
           <option disabled selected value="">use template</option>
-          <option v-for="template in templates" :key="template.key" :value="template.key">
-            {{ template.name }}
-          </option>
+          <optgroup v-for="key in Object.keys(templates)" :key="key" :label="key">
+            <option
+              v-for="template in templates[key]"
+              :key="key.concat('-').concat(template.name)"
+              :value="JSON.stringify(template.parameters)"
+            >
+              {{ template.name }}
+            </option>
+          </optgroup>
         </select>
       </div>
       <textarea v-model="editCommand" placeholder="command" role="command" />
@@ -121,10 +127,13 @@ import {
 import { Options, Vue } from "vue-class-component";
 
 interface Template {
-  key: string;
   name: string;
   parameters: string[];
 }
+
+type Templates = {
+  [key: string]: Template[];
+};
 
 @Options({
   name: "Command",
@@ -137,7 +146,7 @@ export default class Command extends Vue {
   private edit: SaveEntry = { parameters: [""] } as SaveEntry;
   private newVariable = "";
   private newEnvironmentVariable = "";
-  private templates: Template[] = Command.createTemplates();
+  private templates: Templates = Command.createTemplates();
 
   mounted(): void {
     this.entry.onSave = this.onSave;
@@ -170,15 +179,8 @@ export default class Command extends Vue {
 
   private onUseTemplate(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const key = target.value;
-
-    const template = this.templates.find((t) => t.key === key);
-    if (template === undefined) {
-      this.entry.error = "Cannot find template";
-    } else {
-      this.edit.parameters = template.parameters;
-    }
-
+    console.log("Value", target.value);
+    this.edit.parameters = JSON.parse(target.value) as string[];
     target.value = "";
   }
 
@@ -322,15 +324,46 @@ export default class Command extends Vue {
     return "echo 'Hello world!!'";
   }
 
-  private static createTemplates(): Template[] {
-    return [
-      { key: "echo", name: "echo 'Hello world!!'", parameters: ["echo 'Hello World!!'"] },
-      {
-        key: "git-tag",
-        name: "Git tag last commit",
-        parameters: ["git tag --annotate 'v1.0.0' --message 'Tag Message'"],
-      },
-    ];
+  private static createTemplates(): Templates {
+    return {
+      Echo: [{ name: "echo 'Hello world!!'", parameters: ["echo 'Hello world!!'"] }],
+      Git: [
+        {
+          name: "init",
+          parameters: ["git init --initial-branch=main"],
+        },
+        {
+          name: "config user.name",
+          parameters: ["git config user.name '${DEVELOPER_NAME}'"],
+        },
+        {
+          name: "config user.email",
+          parameters: ["git config user.email '${DEVELOPER_EMAIL}'"],
+        },
+        {
+          name: "add and commit",
+          parameters: ["git add .", "git commit --message 'Create gradle project'"],
+        },
+        {
+          name: "tag last commit",
+          parameters: ["git tag --annotate 'v1.0.0' --message 'Tag Message'"],
+        },
+        {
+          name: "list config",
+          parameters: ["git config --list "],
+        },
+      ],
+      Gradle: [
+        {
+          name: "init",
+          parameters: ["gradle init --type basic --dsl groovy --project-name hello-world"],
+        },
+        {
+          name: "list tasks",
+          parameters: ["./gradlew tasks"],
+        },
+      ],
+    };
   }
 }
 </script>
