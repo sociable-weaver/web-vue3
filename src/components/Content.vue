@@ -40,6 +40,9 @@
       </div>
       <div v-else class="buttons-bar" role="run-buttons">
         <div v-if="isRunnable(entry)" class="buttons runnable">
+          <button :disabled="disabled" @click="onCopy(entry)" class="copy" title="Copy this command to the clipboard">
+            Copy
+          </button>
           <button :disabled="disabled" @click="onRun(entry)" class="primary" title="Run this command">Run</button>
           <button
             :disabled="disabled"
@@ -157,6 +160,10 @@ export default class Content extends Vue {
 
   private onMouseLeave(entry: Entry): void {
     entry.showEditControls = false;
+  }
+
+  private onCopy(entry: Entry): void {
+    console.log("Copying command", entry);
   }
 
   private onRun(entry: Entry): void {
@@ -419,6 +426,18 @@ button {
 
 button:disabled {
   background-color: #c4c3bb;
+  color: #5e5e5a;
+  cursor: wait;
+}
+
+button.copy {
+  background-color: #42b983;
+  color: white;
+  margin-right: 10px;
+}
+
+button.copy:disabled {
+  background-color: #b4e2b4;
   color: #5e5e5a;
   cursor: wait;
 }

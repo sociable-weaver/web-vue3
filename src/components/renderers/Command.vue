@@ -97,7 +97,12 @@
         </li>
       </ul>
     </div>
-    <pre>{{ command }}</pre>
+    <div class="command">
+      <div v-if="workingDirectory" role="workingDirectory" class="workingDirectory">
+        Working from: <code>{{ workingDirectory }}</code>
+      </div>
+      <pre>{{ command }}</pre>
+    </div>
   </div>
 </template>
 
@@ -146,11 +151,12 @@ export default class Command extends Vue {
     return arrayContainsValues(this.entry.variables);
   }
 
-  get command(): string {
-    const workingDirectory = this.entry.workingDirectory ? `${this.entry.workingDirectory} ` : "";
-    const commandPromptSymbol = "$";
-    let command = `${workingDirectory}${commandPromptSymbol} ${join(this.entry.parameters, Command.defaultCommand)}`;
+  get workingDirectory(): string {
+    return this.entry.workingDirectory ? this.entry.workingDirectory : "";
+  }
 
+  get command(): string {
+    let command = join(this.entry.parameters, Command.defaultCommand);
     return interpolate(this.entry.variables, this.entry.values, command);
   }
 
@@ -334,8 +340,18 @@ export default class Command extends Vue {
   margin-top: 0;
 }
 
+div.command {
+  margin: 1em 0;
+}
+
+div.workingDirectory {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 pre {
   padding: 5px;
+  margin-top: 0;
   border: 1px solid black;
   border-radius: 2px;
   background-color: black;

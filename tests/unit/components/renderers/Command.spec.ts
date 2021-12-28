@@ -13,7 +13,8 @@ describe("Command", () => {
       const wrapper = shallowMount(Command, { props: { entry } });
 
       /* Then */
-      expect(wrapper.find("pre").text()).toEqual("$ echo 'Hello world!!'");
+      expect(wrapper.find("div[role=workingDirectory]").exists()).toEqual(false);
+      expect(wrapper.find("pre").text()).toEqual("echo 'Hello world!!'");
     });
 
     it("displays the command with working directory", async () => {
@@ -28,7 +29,8 @@ describe("Command", () => {
       const wrapper = shallowMount(Command, { props: { entry } });
 
       /* Then */
-      expect(wrapper.find("pre").text()).toEqual("hello-world $ java -jar hello-world.jar");
+      expect(wrapper.find("div[role=workingDirectory] > code").text()).toEqual("hello-world");
+      expect(wrapper.find("pre").text()).toEqual("java -jar hello-world.jar");
     });
 
     it("displays the command with variable values", async () => {
@@ -46,7 +48,7 @@ describe("Command", () => {
       const wrapper = shallowMount(Command, { props: { entry } });
 
       /* Then */
-      expect(wrapper.find("pre").text()).toEqual("$ echo Albert Albert");
+      expect(wrapper.find("pre").text()).toEqual("echo Albert Albert");
     });
 
     it("renders the single line command", async () => {
@@ -57,7 +59,7 @@ describe("Command", () => {
       const wrapper = shallowMount(Command, { props: { entry } });
 
       /* Then */
-      expect(wrapper.find("pre").text()).toEqual('$ echo "Albert Attard"');
+      expect(wrapper.find("pre").text()).toEqual('echo "Albert Attard"');
     });
 
     it("renders the multi-line command", async () => {
@@ -69,7 +71,7 @@ describe("Command", () => {
 
       /* Then */
       expect(wrapper.find("pre").text()).toEqual(
-        '$ curl \\\n  --location "https://somewhere.com/" \\\n  --output file.txt'
+        'curl \\\n  --location "https://somewhere.com/" \\\n  --output file.txt'
       );
     });
   });

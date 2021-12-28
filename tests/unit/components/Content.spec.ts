@@ -46,7 +46,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      expect(wrapper.find("pre").text()).toEqual("$ java -jar hello-world.jar");
+      expect(wrapper.find("pre").text()).toEqual("java -jar hello-world.jar");
     });
 
     it("displays the create with the working directory", async () => {
