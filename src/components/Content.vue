@@ -51,7 +51,9 @@
           >
             Run until here
           </button>
-          <button :disabled="disabled" @click="onClear(entry)" title="Clear the command output from here">Clear</button>
+          <button :disabled="disabled" @click="onClear(entry)" class="clear" title="Clear the command output from here">
+            Clear
+          </button>
         </div>
         <div class="buttons editable" role="edit-buttons" v-if="entry.showEditControls">
           <button :disabled="disabled" @click="onDelete(entry)" class="danger" title="Delete this entry">Delete</button>
@@ -269,6 +271,7 @@ export default class Content extends Vue {
     this.createEntry(create)
       .then((created) => {
         created.edit = true;
+        created.workingDirectory = entry.workingDirectory;
         const index = this.chapter.entries.indexOf(entry);
         this.chapter.entries.splice(index + 1, 0, created);
       })
@@ -386,13 +389,16 @@ pre.output {
   padding: 5px;
   background-color: lightgray;
   color: black;
+  white-space: pre-wrap;
 }
 
 pre.error {
   border-radius: 2px;
-  padding: 20px;
+  border: 1px solid #5e5e5a;
+  padding: 5px;
   background-color: orangered;
   color: white;
+  white-space: pre-wrap;
 }
 
 div.buttons-bar {
@@ -411,7 +417,7 @@ div.buttons {
 
 div.editable {
   float: right;
-  right: 0px;
+  right: 0;
 }
 
 button {
@@ -456,6 +462,10 @@ button.primary:disabled {
   cursor: wait;
 }
 
+button.clear {
+  margin-left: 10px;
+}
+
 button.danger {
   background-color: #cc3333;
   color: white;
@@ -478,5 +488,9 @@ select {
   vertical-align: top;
   text-decoration: none;
   cursor: pointer;
+}
+
+select:disabled {
+  cursor: wait;
 }
 </style>

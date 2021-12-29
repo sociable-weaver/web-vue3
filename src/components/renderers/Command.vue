@@ -342,7 +342,7 @@ export default class Command extends Vue {
         },
         {
           name: "add and commit",
-          parameters: ["git add .", "git commit --message 'Create gradle project'"],
+          parameters: ["git add .", "git commit --message 'Commit message'"],
         },
         {
           name: "tag last commit",
@@ -350,7 +350,7 @@ export default class Command extends Vue {
         },
         {
           name: "list config",
-          parameters: ["git config --list "],
+          parameters: ["git config --list"],
         },
       ],
       Gradle: [
@@ -359,8 +359,28 @@ export default class Command extends Vue {
           parameters: ["gradle init --type basic --dsl groovy --project-name hello-world"],
         },
         {
+          name: "set wrapper version",
+          parameters: ["./gradlew wrapper --gradle-version=7.3.3"],
+        },
+        {
           name: "list tasks",
           parameters: ["./gradlew tasks"],
+        },
+        {
+          name: "build",
+          parameters: ["./gradlew build"],
+        },
+        {
+          name: "run",
+          parameters: ["./gradlew run"],
+        },
+        {
+          name: "dependencies",
+          parameters: ["./gradlew dependencies --configuration runtimeClasspath"],
+        },
+        {
+          name: "dependency insight",
+          parameters: ["./gradlew dependencyInsight --dependency org.slf4j:slf4j-api --configuration runtimeClasspath"],
         },
       ],
     };

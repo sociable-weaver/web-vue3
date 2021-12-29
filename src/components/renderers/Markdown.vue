@@ -28,7 +28,6 @@
 
 <script lang="ts">
 import {
-  arrayContainsValues,
   createSaveEntry,
   Entry,
   hasChanged,
@@ -55,7 +54,7 @@ export default class Markdown extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
-    if (!arrayContainsValues(this.entry.parameters)) {
+    if (join(this.entry.parameters).trim().length === 0) {
       this.entry.parameters = [Markdown.defaultContent()];
     }
   }
@@ -179,6 +178,7 @@ export default class Markdown extends Vue {
   border-radius: 2px;
   background-color: lightgrey;
   color: black;
+  white-space: pre-wrap;
 }
 
 .markdown >>> pre code {
