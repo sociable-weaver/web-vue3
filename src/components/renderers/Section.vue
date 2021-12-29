@@ -7,9 +7,9 @@
 
 <script lang="ts">
 import {
-  arrayContainsValues,
   createSaveEntry,
   Entry,
+  getElement,
   hasChanged,
   OnSaveOutcome,
   OnSaveResult,
@@ -33,11 +33,11 @@ export default class Section extends Vue {
   }
 
   get section(): string {
-    return Section.getSectionFrom(this.entry.parameters);
+    return getElement(this.entry.parameters);
   }
 
   get editSection(): string {
-    return Section.getSectionFrom(this.edit.parameters);
+    return getElement(this.edit.parameters);
   }
 
   set editSection(value: string) {
@@ -45,7 +45,7 @@ export default class Section extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    if (this.edit.parameters[0].length === 0) {
+    if (getElement(this.edit.parameters).length === 0) {
       this.entry.error = "The section cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
@@ -55,10 +55,6 @@ export default class Section extends Vue {
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
-  }
-
-  private static getSectionFrom(parameters: string[]): string {
-    return arrayContainsValues(parameters) ? parameters[0] : "";
   }
 }
 </script>

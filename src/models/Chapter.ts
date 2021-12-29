@@ -121,6 +121,14 @@ export function join(parameters: string[] | undefined, defaultValue: () => strin
   return parameters.join("\n");
 }
 
+export function getElement(parameters: string[] | undefined, index = 0, defaultValue: () => string = () => ""): string {
+  if (!Array.isArray(parameters) || parameters.length <= index) {
+    return defaultValue();
+  }
+
+  return parameters[index];
+}
+
 export function createSaveEntry(entry: Entry): SaveEntry {
   return {
     type: entry.type,

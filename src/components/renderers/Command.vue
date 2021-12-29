@@ -363,6 +363,15 @@ export default class Command extends Vue {
           parameters: ["./gradlew wrapper --gradle-version=7.3.3"],
         },
         {
+          name: "create src",
+          parameters: [
+            "mkdir -p 'src/main/java'",
+            "mkdir -p 'src/main/resources'",
+            "mkdir -p 'src/test/java'",
+            "mkdir -p 'src/test/resources'",
+          ],
+        },
+        {
           name: "list tasks",
           parameters: ["./gradlew tasks"],
         },

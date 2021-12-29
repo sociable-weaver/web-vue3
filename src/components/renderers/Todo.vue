@@ -54,7 +54,7 @@ export default class Todo extends Vue {
 
 <style scoped>
 .todo {
-  background-color: #c8e1ff;
+  background-color: #ffb6ba;
   padding: 10px;
 }
 

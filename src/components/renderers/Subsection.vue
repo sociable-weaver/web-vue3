@@ -6,7 +6,15 @@
 </template>
 
 <script lang="ts">
-import { createSaveEntry, Entry, OnSaveOutcome, OnSaveResult, SaveEntry } from "@/models/Chapter";
+import {
+  createSaveEntry,
+  Entry,
+  getElement,
+  hasChanged,
+  OnSaveOutcome,
+  OnSaveResult,
+  SaveEntry,
+} from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -25,11 +33,11 @@ export default class Subsection extends Vue {
   }
 
   get subsection(): string {
-    return this.entry.parameters[0];
+    return getElement(this.entry.parameters);
   }
 
   get editSubsection(): string {
-    return Subsection.getSubsectionFrom(this.edit.parameters);
+    return getElement(this.edit.parameters);
   }
 
   set editSubsection(value: string) {
@@ -37,24 +45,16 @@ export default class Subsection extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    if (this.edit.parameters[0].length === 0) {
+    if (getElement(this.edit.parameters).length === 0) {
       this.entry.error = "The subsection cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
 
-    if (this.hasChanged()) {
+    if (hasChanged(this.entry, this.edit)) {
       return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
-  }
-
-  private hasChanged() {
-    return this.edit.parameters[0] !== this.entry.parameters[0];
-  }
-
-  private static getSubsectionFrom(parameters: string[]): string {
-    return !Array.isArray(parameters) || parameters.length == 0 ? "" : parameters[0];
   }
 }
 </script>
@@ -75,6 +75,7 @@ input {
 }
 
 h4 {
+  margin-top: 2em;
   padding: 1px;
 }
 </style>

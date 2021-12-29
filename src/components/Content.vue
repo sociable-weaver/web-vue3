@@ -59,7 +59,6 @@
           <button :disabled="disabled" @click="onDelete(entry)" class="danger" title="Delete this entry">Delete</button>
           <select :disabled="disabled" @change="onAddNext($event, entry)" title="Add a new enter right after this one">
             <option disabled selected value="">Add next</option>
-            <option value="chapter">Chapter</option>
             <option value="command">Command</option>
             <option value="git-apply-patch">Git Apply Patch</option>
             <option value="markdown">Markdown</option>
@@ -180,6 +179,7 @@ export default class Content extends Vue {
   }
 
   private onRunUntilHere(index: number): void {
+    this.disabled = true;
     this.runNext(0, index);
   }
 
@@ -225,10 +225,14 @@ export default class Content extends Vue {
             onComplete();
             break;
           default:
+            this.disabled = false;
             entry.failed = true;
         }
       })
-      .catch((e) => (entry.error = `Failed to run (${formatError(e)})`))
+      .catch((e) => {
+        this.disabled = false;
+        entry.error = `Failed to run (${formatError(e)})`;
+      })
       .finally(onFinally);
   }
 
