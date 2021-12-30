@@ -359,6 +359,10 @@ export default class Command extends Vue {
           parameters: ["gradle init --type basic --dsl groovy --project-name hello-world"],
         },
         {
+          name: "version",
+          parameters: ["./gradlew --version"],
+        },
+        {
           name: "set wrapper version",
           parameters: ["./gradlew wrapper --gradle-version=7.3.3"],
         },
