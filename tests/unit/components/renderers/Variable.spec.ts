@@ -137,6 +137,7 @@ describe("Variable", () => {
         name: "NAME",
         parameters: ["Albert Attard"],
         edit: true,
+        sensitive: false,
       } as Entry;
       shallowMount(Variable, { props: { entry } });
       await flushPromises();
