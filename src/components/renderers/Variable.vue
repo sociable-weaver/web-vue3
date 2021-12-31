@@ -52,6 +52,10 @@ export default class Variable extends Vue {
       const init = { name: this.entry.name, value: this.value };
       this.$emit("variableInitialised", init);
     }
+
+    if (this.edit.sensitive === undefined) {
+      this.edit.sensitive = true;
+    }
   }
 
   private get sensitive(): boolean {

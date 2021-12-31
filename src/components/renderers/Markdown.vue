@@ -199,6 +199,22 @@ export default class Markdown extends Vue {
   color: -webkit-link;
 }
 
+.markdown >>> blockquote {
+  font-style: italic;
+}
+
+.markdown >>> blockquote p {
+  quotes: initial;
+}
+
+.markdown >>> blockquote p::before {
+  content: open-quote;
+}
+
+.markdown >>> blockquote p::after {
+  content: close-quote;
+}
+
 div.row {
   padding-top: 15px;
 }

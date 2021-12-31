@@ -396,6 +396,7 @@ export default class Command extends Vue {
           parameters: ["./gradlew dependencyInsight --dependency org.slf4j:slf4j-api --configuration runtimeClasspath"],
         },
       ],
+      Docker: [{ name: "tag and push", parameters: ["docker tag source remote", "docker push remote"] }],
     };
   }
 }
