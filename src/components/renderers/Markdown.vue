@@ -222,7 +222,8 @@ div.row {
 textarea {
   width: 100%;
   min-height: 400px;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+    Courier New, monospace;
   font-size: 1em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

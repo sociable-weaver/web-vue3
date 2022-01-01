@@ -333,12 +333,8 @@ export default class Command extends Vue {
           parameters: ["git init --initial-branch=main"],
         },
         {
-          name: "config user.name",
-          parameters: ["git config user.name '${DEVELOPER_NAME}'"],
-        },
-        {
-          name: "config user.email",
-          parameters: ["git config user.email '${DEVELOPER_EMAIL}'"],
+          name: "config user",
+          parameters: ["git config user.name '${DEVELOPER_NAME}'", "git config user.email '${DEVELOPER_EMAIL}'"],
         },
         {
           name: "add and commit",
@@ -397,6 +393,7 @@ export default class Command extends Vue {
         },
       ],
       Docker: [{ name: "tag and push", parameters: ["docker tag source remote", "docker push remote"] }],
+      Hash: [{ name: "SHA-256", parameters: ["openssl dgst -sha256 'src/test/resources/fixtures/sample.txt'"] }],
     };
   }
 }

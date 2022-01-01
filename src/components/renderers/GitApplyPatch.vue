@@ -10,7 +10,12 @@
       <textarea v-model="editPatch" placeholder="patch" role="patch" />
     </div>
   </div>
-  <div v-else class="patch" v-html="patch" />
+  <div v-else>
+    <div v-if="workingDirectory" role="workingDirectory" class="workingDirectory">
+      Working from: <code>{{ workingDirectory }}</code>
+    </div>
+    <div class="patch" v-html="patch" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -53,6 +58,10 @@ export default class GitApplyPatch extends Vue {
 
   set editPatch(value: string) {
     this.edit.parameters = value.split("\n");
+  }
+
+  private get workingDirectory(): string {
+    return this.entry.workingDirectory ? this.entry.workingDirectory : "";
   }
 
   private onSave(): OnSaveResult {
