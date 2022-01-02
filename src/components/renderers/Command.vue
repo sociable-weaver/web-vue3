@@ -326,7 +326,11 @@ export default class Command extends Vue {
 
   private static createTemplates(): Templates {
     return {
-      Echo: [{ name: "echo 'Hello world!!'", parameters: ["echo 'Hello world!!'"] }],
+      Commands: [
+        { name: "echo 'Hello world!!'", parameters: ["echo 'Hello world!!'"] },
+        { name: "curl", parameters: ["curl --location 'link' --output 'path'"] },
+        { name: "SHA-256", parameters: ["openssl dgst -sha256 'src/test/resources/fixtures/sample.txt'"] },
+      ],
       Git: [
         {
           name: "init",
@@ -393,7 +397,6 @@ export default class Command extends Vue {
         },
       ],
       Docker: [{ name: "tag and push", parameters: ["docker tag source remote", "docker push remote"] }],
-      Hash: [{ name: "SHA-256", parameters: ["openssl dgst -sha256 'src/test/resources/fixtures/sample.txt'"] }],
     };
   }
 }

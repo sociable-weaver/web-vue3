@@ -72,31 +72,6 @@ describe("Content", () => {
       expect(wrapper.find("pre[class=content]").text()).toEqual("#!/usr/bin/java --source 17");
     });
 
-    it("displays the download with the working directory", async () => {
-      /* Given */
-      const chapter = {
-        entries: [
-          {
-            type: "download",
-            workingDirectory: "hello-world",
-            parameters: [
-              "https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar",
-              "hello-world-jar-demo.jar",
-            ],
-          },
-        ],
-      };
-
-      /* When */
-      const wrapper = mount(Content, { props: { chapter } });
-      await flushPromises();
-
-      /* Then */
-      expect(wrapper.find("pre").text()).toEqual(
-        "hello-world $ curl --location 'https://github.com/albertattard/programming--hello-world-jar-demo/releases/download/v1.0.0/hello-world-jar-demo.jar' --output 'hello-world-jar-demo.jar'"
-      );
-    });
-
     it("displays the git apply diff as HTML", async () => {
       /* Given */
       const chapter = {
