@@ -54,8 +54,8 @@
           <select :disabled="disabled" @change="onAddNext($event, entry)" title="Add a new enter right after this one">
             <option disabled selected value="">Add next</option>
             <option value="command">Command</option>
-            <option value="git-apply-patch">Git Apply Patch</option>
             <option value="markdown">Markdown</option>
+            <option value="git-apply-patch">Patch</option>
             <option value="section">Section</option>
             <option value="subsection">Subsection</option>
             <option value="todo">Todo</option>
@@ -67,6 +67,14 @@
             title="Show this entry in edit mode, from where you can change it"
           >
             Edit
+          </button>
+          <button
+            :disabled="disabled"
+            @click="onAddQuestion(entry)"
+            class="question"
+            title="Add a question to the content"
+          >
+            Ask a question
           </button>
         </div>
       </div>
@@ -283,6 +291,10 @@ export default class Content extends Vue {
     entry.edit = true;
   }
 
+  private onAddQuestion(entry: Entry): void {
+    console.log("Coming soon...");
+  }
+
   private onCancel(entry: Entry): void {
     entry.edit = false;
   }
@@ -387,6 +399,11 @@ pre.error {
   white-space: pre-wrap;
 }
 
+div.editable {
+  float: right;
+  right: 0;
+}
+
 div.buttons-bar {
   height: 22px;
 }
@@ -399,11 +416,6 @@ div.buttons-bar::after {
 
 div.buttons {
   display: inline;
-}
-
-div.editable {
-  float: right;
-  right: 0;
 }
 
 button {
@@ -449,15 +461,28 @@ button.primary:disabled {
 }
 
 button.clear {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 button.danger {
   background-color: #cc3333;
   color: white;
+  margin-right: 10px;
 }
 
 button.danger:disabled {
+  background-color: #e9aeae;
+  color: #5e5e5a;
+  cursor: wait;
+}
+
+button.question {
+  background-color: #2c3e50;
+  color: white;
+  margin-left: 5px;
+}
+
+button.question:disabled {
   background-color: #e9aeae;
   color: #5e5e5a;
   cursor: wait;
