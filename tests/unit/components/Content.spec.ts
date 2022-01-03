@@ -100,29 +100,6 @@ describe("Content", () => {
       expect(wrapper.find("strong").text()).toEqual("Hello world");
     });
 
-    it("displays the replace", async () => {
-      /* Given */
-      const chapter = {
-        entries: [
-          {
-            type: "replace",
-            workingDirectory: "hello-world",
-            parameters: ["HelloWorld", "#!/usr/bin/java --source 17"],
-          },
-        ],
-      };
-
-      /* When */
-      const wrapper = mount(Content, { props: { chapter } });
-      await flushPromises();
-
-      /* Then */
-      expect(wrapper.find("div[class=filePath]").text()).toEqual(
-        "Replace the file: hello-world/HelloWorld, with the following contents"
-      );
-      expect(wrapper.find("pre[class=content]").text()).toEqual("#!/usr/bin/java --source 17");
-    });
-
     it("displays the section", async () => {
       /* Given */
       const chapter = {

@@ -12,7 +12,6 @@
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <GitApplyPatch v-else-if="entry.type === 'git-apply-patch'" :entry="entry" />
       <Markdown v-else-if="entry.type === 'markdown'" :entry="entry" />
-      <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <Section v-else-if="entry.type === 'section'" :entry="entry" />
       <Subsection v-else-if="entry.type === 'subsection'" :entry="entry" />
       <Todo v-else-if="entry.type === 'todo'" :entry="entry" />
@@ -80,7 +79,6 @@ import ChapterRenderer from "@/components/renderers/Chapter.vue";
 import Command from "@/components/renderers/Command.vue";
 import GitApplyPatch from "@/components/renderers/GitApplyPatch.vue";
 import Markdown from "@/components/renderers/Markdown.vue";
-import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
 import Subsection from "@/components/renderers/Subsection.vue";
 import Todo from "@/components/renderers/Todo.vue";
@@ -114,7 +112,6 @@ interface CreateEntry {
     Command,
     GitApplyPatch,
     Markdown,
-    Replace,
     Section,
     Subsection,
     Todo,
