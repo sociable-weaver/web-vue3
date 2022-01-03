@@ -10,7 +10,6 @@
     >
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
-      <Create v-else-if="entry.type === 'create'" :entry="entry" />
       <GitApplyPatch v-else-if="entry.type === 'git-apply-patch'" :entry="entry" />
       <GitCommitChanges v-else-if="entry.type === 'git-commit-changes'" :entry="entry" />
       <GitTagCurrentCommit v-else-if="entry.type === 'git-tag-current-commit'" :entry="entry" />
@@ -81,7 +80,6 @@
 <script lang="ts">
 import ChapterRenderer from "@/components/renderers/Chapter.vue";
 import Command from "@/components/renderers/Command.vue";
-import Create from "@/components/renderers/Create.vue";
 import GitApplyPatch from "@/components/renderers/GitApplyPatch.vue";
 import GitCommitChanges from "@/components/renderers/GitCommitChanges.vue";
 import GitTagCurrentCommit from "@/components/renderers/GitTagCurrentCommit.vue";
@@ -118,7 +116,6 @@ interface CreateEntry {
   components: {
     ChapterRenderer,
     Command,
-    Create,
     GitApplyPatch,
     GitCommitChanges,
     GitTagCurrentCommit,
