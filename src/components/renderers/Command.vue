@@ -342,7 +342,16 @@ export default class Command extends Vue {
         },
         {
           name: "add and commit",
-          parameters: ["git add .", "git commit --message 'Commit message'"],
+          parameters: [
+            "git add .",
+            "git commit --message 'Commit message'",
+            "git tag --annotate 'v1.0.0' --message 'Tag Message'",
+            "git push --atomic origin main 'v1.0.0'",
+          ],
+        },
+        {
+          name: "push",
+          parameters: ["git push origin main"],
         },
         {
           name: "tag last commit",
