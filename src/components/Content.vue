@@ -11,7 +11,6 @@
       <ChapterRenderer v-if="entry.type === 'chapter'" :entry="entry" />
       <Command v-else-if="entry.type === 'command'" :entry="entry" />
       <GitApplyPatch v-else-if="entry.type === 'git-apply-patch'" :entry="entry" />
-      <GitTagCurrentCommit v-else-if="entry.type === 'git-tag-current-commit'" :entry="entry" />
       <Markdown v-else-if="entry.type === 'markdown'" :entry="entry" />
       <Replace v-else-if="entry.type === 'replace'" :entry="entry" />
       <Section v-else-if="entry.type === 'section'" :entry="entry" />
@@ -80,7 +79,6 @@
 import ChapterRenderer from "@/components/renderers/Chapter.vue";
 import Command from "@/components/renderers/Command.vue";
 import GitApplyPatch from "@/components/renderers/GitApplyPatch.vue";
-import GitTagCurrentCommit from "@/components/renderers/GitTagCurrentCommit.vue";
 import Markdown from "@/components/renderers/Markdown.vue";
 import Replace from "@/components/renderers/Replace.vue";
 import Section from "@/components/renderers/Section.vue";
@@ -115,7 +113,6 @@ interface CreateEntry {
     ChapterRenderer,
     Command,
     GitApplyPatch,
-    GitTagCurrentCommit,
     Markdown,
     Replace,
     Section,

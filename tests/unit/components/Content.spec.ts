@@ -81,28 +81,6 @@ describe("Content", () => {
       expect(wrapper.find("div[class=d2h-wrapper]").text()).toContain("public class HelloWorld {");
     });
 
-    it("displays the git tag current commit", async () => {
-      /* Given */
-      const chapter = {
-        entries: [
-          {
-            type: "git-tag-current-commit",
-            workingDirectory: "hello-world",
-            parameters: ["v2.0.0", "Start of Basic Java Application"],
-          },
-        ],
-      };
-
-      /* When */
-      const wrapper = mount(Content, { props: { chapter } });
-      await flushPromises();
-
-      /* Then */
-      expect(wrapper.find("pre").text()).toEqual(
-        "hello-world $ git tag --annotate 'v2.0.0' --message 'Start of Basic Java Application'"
-      );
-    });
-
     it("displays the markdown as HTML", async () => {
       /* Given */
       const chapter = {
