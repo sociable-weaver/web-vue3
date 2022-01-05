@@ -483,7 +483,7 @@ button.question {
 }
 
 button.question:disabled {
-  background-color: #e9aeae;
+  background-color: #c8e1ff;
   color: #5e5e5a;
   cursor: wait;
 }
