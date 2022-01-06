@@ -20,6 +20,7 @@ import {
   arrayContainsValues,
   createSaveEntry,
   Entry,
+  hasChanged,
   join,
   OnSaveOutcome,
   OnSaveResult,
@@ -75,7 +76,16 @@ export default class Question extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    this.entry.error = "";
+    const question = join(Question.getQuestionPart(this.edit.parameters));
+    if (question.length === 0) {
+      this.entry.error = "The question cannot be empty";
+      return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
+    }
+
+    if (hasChanged(this.entry, this.edit)) {
+      return { outcome: OnSaveOutcome.Changed, entry: this.edit } as OnSaveResult;
+    }
+
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 

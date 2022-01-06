@@ -100,6 +100,24 @@ describe("Content", () => {
       expect(wrapper.find("strong").text()).toEqual("Hello world");
     });
 
+    it("displays the question", async () => {
+      /* Given */
+      const chapter = {
+        entries: [
+          {
+            type: "question",
+          },
+        ],
+      };
+
+      /* When */
+      const wrapper = mount(Content, { props: { chapter } });
+      await flushPromises();
+
+      /* Then */
+      expect(wrapper.find("div[role=question]").text()).toEqual("What's on your mind?");
+    });
+
     it("displays the section", async () => {
       /* Given */
       const chapter = {
