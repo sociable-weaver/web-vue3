@@ -9,9 +9,9 @@
       <textarea v-model="editAnswer" placeholder="Answer (Markdown)" />
     </div>
   </div>
-  <div v-else>
-    <div role="question" class="question" v-html="question" />
-    <div role="answer" class="answer" v-html="answer" />
+  <div v-else class="q-and-a">
+    <div role="question" class="question markdown" v-html="question" />
+    <div role="answer" class="answer markdown" v-html="answer" />
   </div>
 </template>
 
@@ -32,6 +32,11 @@ import { Options, Vue } from "vue-class-component";
 const QUESTION_PART = "Question";
 const ANSWER_PART = "Answer";
 
+interface IndexAndLength {
+  index: number;
+  length: number;
+}
+
 @Options({
   name: "Question",
   props: {
@@ -45,6 +50,10 @@ export default class Question extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
+
+    if (!arrayContainsValues(this.edit.parameters)) {
+      this.edit.parameters = [];
+    }
   }
 
   get question(): string {
@@ -58,21 +67,19 @@ export default class Question extends Vue {
   }
 
   get editQuestion(): string {
-    const question = join(Question.getQuestionPart(this.edit.parameters));
-    return Marked.parse(question);
+    return join(Question.getQuestionPart(this.edit.parameters));
   }
 
   set editQuestion(value: string) {
-    console.log("Question", value);
+    Question.setQuestionPart(value, this.edit.parameters);
   }
 
   get editAnswer(): string {
-    const answer = join(Question.getAnswerPart(this.edit.parameters));
-    return Marked.parse(answer);
+    return join(Question.getAnswerPart(this.edit.parameters));
   }
 
   set editAnswer(value: string) {
-    console.log("Answer", value);
+    Question.setAnswerPart(value, this.edit.parameters);
   }
 
   private onSave(): OnSaveResult {
@@ -93,11 +100,39 @@ export default class Question extends Vue {
     return this.getPart(QUESTION_PART, Question.defaultIfNotSet(parameters));
   }
 
+  private static setQuestionPart(value: string, parameters: string[]): void {
+    this.setPart(QUESTION_PART, value.split("\n"), parameters);
+  }
+
   private static getAnswerPart(parameters: string[]): string[] {
     return this.getPart(ANSWER_PART, Question.defaultIfNotSet(parameters));
   }
 
+  private static setAnswerPart(value: string, parameters: string[]): void {
+    this.setPart(ANSWER_PART, value.split("\n"), parameters);
+  }
+
   private static getPart(name: string, parameters: string[]): string[] {
+    const indexAndLength = Question.findPart(name, parameters);
+    if (indexAndLength.index != -1) {
+      const contentIndex = indexAndLength.index + 1;
+      return parameters.slice(contentIndex, contentIndex + indexAndLength.length);
+    }
+
+    return [];
+  }
+
+  private static setPart(name: string, value: string[], parameters: string[]): void {
+    const indexAndLength = Question.findPart(name, parameters);
+    if (indexAndLength.index == -1) {
+      parameters.push(`${name}:${value.length}`, ...value);
+    } else {
+      const part = [`${name}:${value.length}`, ...value];
+      parameters.splice(indexAndLength.index, indexAndLength.length + 1, ...part);
+    }
+  }
+
+  private static findPart(name: string, parameters: string[]): IndexAndLength {
     let i = 0;
 
     while (i < parameters.length) {
@@ -105,13 +140,13 @@ export default class Question extends Vue {
       const parts = header.split(":");
       const length = parseInt(parts[1]);
       if (name === parts[0]) {
-        return parameters.slice(i + 1, i + 1 + length);
+        return { index: i, length };
       }
 
       i += length + 1;
     }
 
-    return [];
+    return { index: -1, length: -1 };
   }
 
   private static defaultIfNotSet(parameters: string[]): string[] {
@@ -125,6 +160,15 @@ export default class Question extends Vue {
 </script>
 
 <style scoped>
+.q-and-a {
+  border-left: #2c3e50 5px solid;
+  padding-left: 10px;
+}
+.question {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
 .markdown >>> pre {
   padding: 5px;
   border: 1px solid black;
