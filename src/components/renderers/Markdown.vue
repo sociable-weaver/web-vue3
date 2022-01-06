@@ -54,9 +54,6 @@ export default class Markdown extends Vue {
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
-    if (join(this.entry.parameters).trim().length === 0) {
-      this.entry.parameters = [Markdown.defaultContent()];
-    }
   }
 
   get html(): string {
