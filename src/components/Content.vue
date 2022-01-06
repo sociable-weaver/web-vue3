@@ -292,7 +292,7 @@ export default class Content extends Vue {
   }
 
   private onAddQuestion(entry: Entry): void {
-    console.log("Coming soon...");
+    console.log("Will add question after entry soon", entry);
   }
 
   private onCancel(entry: Entry): void {

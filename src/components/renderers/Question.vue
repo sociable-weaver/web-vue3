@@ -94,11 +94,11 @@ export default class Question extends Vue {
       const header = parameters[i];
       const parts = header.split(":");
       const length = parseInt(parts[1]);
-      if (name === parts[i]) {
+      if (name === parts[0]) {
         return parameters.slice(i + 1, i + 1 + length);
       }
 
-      i += length;
+      i += length + 1;
     }
 
     return [];
