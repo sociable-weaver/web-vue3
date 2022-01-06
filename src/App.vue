@@ -36,7 +36,6 @@ body {
   a {
     font-weight: bold;
     color: #c8e1ff;
-    height: 80px;
     padding-right: 50px;
 
     &.router-link-exact-active {
