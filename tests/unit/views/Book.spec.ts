@@ -1,10 +1,10 @@
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import Home from "@/views/Home.vue";
+import Home from "@/views/Book.vue";
 import { shallowMount } from "@vue/test-utils";
 import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 
-describe("Home", () => {
+describe("Book", () => {
   it("does not display the open component before the app component confirms that the app is running", () => {
     /* Given */
     const $route = { params: {} };
@@ -74,6 +74,6 @@ describe("Open", () => {
     /* Then */
     expect(wrapper.findComponent(Toc).exists()).toBe(true);
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Home", params: { bookPath, workPath } });
+    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath } });
   });
 });

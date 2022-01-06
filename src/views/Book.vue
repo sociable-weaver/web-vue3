@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="book">
     <MessageBar ref="messageBar" v-if="message !== null" :message="message" />
     <App ref="app" @app-is-running="onAppIsRunning" />
     <Open ref="open" @book-opened="onOpenBook" v-if="appIsRunning" :workspace="workspace" />
@@ -63,7 +63,7 @@ export default class Home extends Vue {
     this.workspace.bookPath = opened.bookPath;
     this.workspace.workPath = opened.workPath;
     this.$router.push({
-      name: "Home",
+      name: "Book",
       params: { bookPath: this.workspace.bookPath, workPath: this.workspace.workPath },
     });
     this.book = opened;
@@ -72,7 +72,7 @@ export default class Home extends Vue {
   private onChapterRead(read: Chapter): void {
     this.workspace.chapterPath = read.chapterPath;
     this.$router.push({
-      name: "Home",
+      name: "Book",
       params: {
         bookPath: this.workspace.bookPath,
         workPath: this.workspace.workPath,

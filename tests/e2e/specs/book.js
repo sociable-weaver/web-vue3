@@ -1,4 +1,4 @@
-describe("Home page", () => {
+describe("Book page", () => {
   it("renders the header", () => {
     cy.visit("/");
     cy.contains("h1", "Application is not running or cannot be reached by this page");

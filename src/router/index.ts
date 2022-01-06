@@ -1,11 +1,11 @@
-import Home from "@/views/Home.vue";
+import Book from "@/views/Book.vue";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/:bookPath?/:workPath?/:chapterPath?",
-    name: "Home",
-    component: Home,
+    name: "Book",
+    component: Book,
     props: true,
   },
   {
