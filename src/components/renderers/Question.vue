@@ -162,10 +162,12 @@ export default class Question extends Vue {
 <style scoped>
 .q-and-a {
   border-left: #2c3e50 5px solid;
-  padding-left: 10px;
+  padding: 1px 10px;
+  background-color: whitesmoke;
 }
+
 .question {
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-weight: bold;
 }
 
