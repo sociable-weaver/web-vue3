@@ -260,8 +260,23 @@ export default class Content extends Vue {
   private onAddNext(event: Event, entry: Entry): void {
     const target = event.target as HTMLSelectElement;
     const type = target.value;
-    const create = { type, afterEntryWithId: entry.id };
+    target.value = "";
 
+    const create = { type, afterEntryWithId: entry.id };
+    this.handleCreateEntry(create, entry);
+  }
+
+  private onEdit(entry: Entry): void {
+    entry.edit = true;
+  }
+
+  private onAddQuestion(entry: Entry): void {
+    console.log("Will add question after entry soon", entry);
+    const create = { type: "question", afterEntryWithId: entry.id };
+    this.handleCreateEntry(create, entry);
+  }
+
+  private handleCreateEntry(create: CreateEntry, entry: Entry): void {
     this.disabled = true;
     entry.error = "";
 
@@ -275,7 +290,6 @@ export default class Content extends Vue {
       .catch((e) => (entry.error = `Failed to create entry (${formatError(e)})`))
       .finally(() => {
         this.disabled = false;
-        target.value = "";
       });
   }
 
@@ -288,14 +302,6 @@ export default class Content extends Vue {
         },
       })
       .then((response) => response.data);
-  }
-
-  private onEdit(entry: Entry): void {
-    entry.edit = true;
-  }
-
-  private onAddQuestion(entry: Entry): void {
-    console.log("Will add question after entry soon", entry);
   }
 
   private onCancel(entry: Entry): void {
