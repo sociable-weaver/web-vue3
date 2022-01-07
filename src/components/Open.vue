@@ -6,25 +6,18 @@
         <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
         <label for="openLocal">Open from directory</label>
       </div>
-      <div class="input-row a">
-        <input
-          type="text"
-          id="openFromFolder"
-          v-model="bookPath"
-          :disabled="openFrom !== 'openLocal'"
-          placeholder="The path to the directory"
-        />
+      <div class="input-row a" v-if="openFrom === 'openLocal'">
+        <input type="text" id="openFromFolder" v-model="bookPath" placeholder="The path to the directory" />
       </div>
       <div class="input-row">
         <input type="radio" id="checkout" value="checkout" v-model="openFrom" />
         <label for="checkout">Checkout from an online Git repository, like GitHub or GitLab</label>
       </div>
-      <div class="input-row a">
+      <div class="input-row a" v-if="openFrom === 'checkout'">
         <input
           type="text"
           id="pathToRepository"
           v-model="pathToRepository"
-          :disabled="openFrom !== 'checkout'"
           placeholder="The HTTP/HTTPS Link to the Git repository"
         />
         <div class="tip">
@@ -33,12 +26,11 @@
           <a href="#" @click="tryItOut">Try it out</a>
         </div>
       </div>
-      <div class="input-row a">
+      <div class="input-row a" v-if="openFrom === 'checkout'">
         <input
           type="text"
           id="checkoutToFolder"
           v-model="bookPath"
-          :disabled="openFrom !== 'checkout'"
           placeholder="The path where you like to clone the Git repository"
         />
       </div>
@@ -46,12 +38,11 @@
         <input type="radio" id="createNew" value="createNew" v-model="openFrom" />
         <label for="createNew">New</label>
       </div>
-      <div class="input-row a">
+      <div class="input-row a" v-if="openFrom === 'createNew'">
         <input
           type="text"
           id="createNewFolder"
           v-model="bookPath"
-          :disabled="openFrom !== 'createNew'"
           placeholder="The path to the directory where you like to create the new book/blog"
         />
       </div>

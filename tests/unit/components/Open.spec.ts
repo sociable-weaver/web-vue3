@@ -16,10 +16,10 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=openFromFolder]").exists()).toBeTruthy();
+    expect(wrapper.find("input[id=pathToRepository]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
@@ -34,10 +34,10 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=openFromFolder]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=pathToRepository]").exists()).toBeTruthy();
+    expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeTruthy();
+    expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Checkout and Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
@@ -52,10 +52,10 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
+    expect(wrapper.find("input[id=openFromFolder]").exists()).toBeTruthy();
+    expect(wrapper.find("input[id=pathToRepository]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
@@ -70,10 +70,10 @@ describe("Open component", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("input[id=openFromFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toBeUndefined();
+    expect(wrapper.find("input[id=openFromFolder]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=pathToRepository]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
+    expect(wrapper.find("input[id=createNewFolder]").exists()).toBeTruthy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Create");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
