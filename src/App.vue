@@ -131,6 +131,24 @@
     cursor: wait;
   }
 
+  textarea {
+    width: 100%;
+    min-height: 300px;
+    font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+    Courier New, monospace;
+    font-size: 0.8em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+
+    box-shadow: 1px 1px 0 #DDDDDD;
+    background-image: -moz-linear-gradient(left, transparent, transparent 1385px, #fee8e9 0);
+    background-image: -webkit-linear-gradient(left , transparent, transparent 1385px, #fee8e9 0);
+
+    -webkit-background-size:  100% 50px;
+    background-size: 100% 50px;
+  }
+
   div.input-row {
     padding-top: 15px;
   }

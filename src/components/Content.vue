@@ -159,7 +159,7 @@ export default class Content extends Vue {
   }
 
   private onCopy(entry: Entry): void {
-    console.log("Copying command", entry);
+    entry.error = "This feature is not yet implements!!";
   }
 
   private onRun(entry: Entry): void {

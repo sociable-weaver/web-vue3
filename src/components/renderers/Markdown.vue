@@ -216,18 +216,8 @@ div.row {
   padding-top: 15px;
 }
 
-textarea {
-  width: 100%;
-  min-height: 400px;
-  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
-    Courier New, monospace;
-  font-size: 1em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
 label {
   font-size: 1.2em;
+  display: block;
 }
 </style>
