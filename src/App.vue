@@ -35,13 +35,19 @@
   }
 
   pre.runnable {
+    border: 1px solid black;
     background-color: black;
+    color: greenyellow;
   }
 
   pre.error {
     border: 1px solid #5e5e5a;
     background-color: orangered;
     color: white;
+  }
+
+  button {
+    font-size: 0.8em;
   }
 
   button.primary {
@@ -53,6 +59,10 @@
     background-color: #84a0b8;
     color: #5e5e5a;
     cursor: wait;
+  }
+
+  div.input-row {
+    padding-top: 15px;
   }
 
   .tip {

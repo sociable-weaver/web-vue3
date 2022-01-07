@@ -20,7 +20,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("button[class=open]").text()).toEqual("Open");
+    expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
@@ -30,7 +30,7 @@ describe("Open component", () => {
     const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* When */
-    wrapper.find("input[id=checkout]").trigger("click");
+    await wrapper.find("input[id=checkout]").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -38,7 +38,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toBeUndefined();
     expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("button[class=open]").text()).toEqual("Checkout and Open");
+    expect(wrapper.find("button[class=primary]").text()).toEqual("Checkout and Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
@@ -48,7 +48,7 @@ describe("Open component", () => {
     const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* When */
-    wrapper.find("input[id=openLocal]").trigger("click");
+    await wrapper.find("input[id=openLocal]").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -56,7 +56,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toEqual("");
-    expect(wrapper.find("button[class=open]").text()).toEqual("Open");
+    expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
@@ -66,7 +66,7 @@ describe("Open component", () => {
     const wrapper = shallowMount(Open, { props: { workspace } });
 
     /* When */
-    wrapper.find("input[id=createNew]").trigger("click");
+    await wrapper.find("input[id=createNew]").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -74,7 +74,7 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=pathToRepository]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=checkoutToFolder]").attributes().disabled).toEqual("");
     expect(wrapper.find("input[id=createNewFolder]").attributes().disabled).toBeUndefined();
-    expect(wrapper.find("button[class=open]").text()).toEqual("Create");
+    expect(wrapper.find("button[class=primary]").text()).toEqual("Create");
     expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
   });
 
@@ -101,11 +101,11 @@ describe("Open repository from local file system", () => {
     /* Given */
     const workspace = { bookPath: "", workPath: "work-directory" };
     const wrapper = shallowMount(Open, { props: { workspace } });
-    wrapper.find("input[id=openLocal]").trigger("click");
+    await wrapper.find("input[id=openLocal]").trigger("click");
     await flushPromises();
 
     /* When */
-    wrapper.find("button[class=open]").trigger("click");
+    await wrapper.find("button[class=primary]").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -119,11 +119,11 @@ describe("Open repository from local file system", () => {
     /* Given */
     const workspace = { bookPath: "path-to-book", workPath: "" };
     const wrapper = shallowMount(Open, { props: { workspace } });
-    wrapper.find("input[id=openLocal]").trigger("click");
+    await wrapper.find("input[id=openLocal]").trigger("click");
     await flushPromises();
 
     /* When */
-    wrapper.find("button[class=open]").trigger("click");
+    await wrapper.find("button[class=primary]").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -142,12 +142,12 @@ describe("Open repository from local file system", () => {
     await flushPromises();
 
     const bookPath = "path-to-book";
-    wrapper.find("input[id=openLocal]").trigger("click");
-    wrapper.find("input[id=openFromFolder]").setValue(bookPath);
+    await wrapper.find("input[id=openLocal]").trigger("click");
+    await wrapper.find("input[id=openFromFolder]").setValue(bookPath);
     await flushPromises();
 
     /* When */
-    await wrapper.find("button[class=open]").trigger("click");
+    await wrapper.find("button[class=primary]").trigger("click");
 
     /* Then */
     const expected = { ...bookSuccessfulResponse.data, bookPath, workPath };

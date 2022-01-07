@@ -42,6 +42,10 @@
       Kindly note that The Sociable Weaver Application is not running and thus you will not be able to try the above
       example. More information about how to start the Sociable Weaver Application can be found <a href="/">here</a>.
     </p>
+    <p>
+      Sociable Weaver also provides a customizable experience through the use of variables. Instead of simply executing
+      what you see, you can change parts of the examples using variables.
+    </p>
   </div>
 </template>
 

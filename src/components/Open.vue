@@ -1,47 +1,76 @@
 <template>
   <div class="open">
     <div class="openRepository">
-      <h2>Open repository</h2>
-      <div>
+      <h2>Book</h2>
+      <div class="input-row">
         <input type="radio" id="openLocal" value="openLocal" v-model="openFrom" />
-        <label for="openLocal">Open</label>
+        <label for="openLocal">Open from directory</label>
       </div>
-      <div>
-        <label for="openFromFolder">Open from folder</label>
-        <input type="text" id="openFromFolder" v-model="bookPath" :disabled="openFrom !== 'openLocal'" />
+      <div class="input-row a">
+        <input
+          type="text"
+          id="openFromFolder"
+          v-model="bookPath"
+          :disabled="openFrom !== 'openLocal'"
+          placeholder="The path to the directory"
+        />
       </div>
-      <div>
+      <div class="input-row">
         <input type="radio" id="checkout" value="checkout" v-model="openFrom" />
-        <label for="checkout">Checkout from an online git repository, like GitHub or GitLab</label>
+        <label for="checkout">Checkout from an online Git repository, like GitHub or GitLab</label>
       </div>
-      <div>
-        <label for="pathToRepository">Path to repository</label>
-        <input type="text" id="pathToRepository" v-model="pathToRepository" :disabled="openFrom !== 'checkout'" />
+      <div class="input-row a">
+        <input
+          type="text"
+          id="pathToRepository"
+          v-model="pathToRepository"
+          :disabled="openFrom !== 'checkout'"
+          placeholder="The HTTP/HTTPS Link to the Git repository"
+        />
+        <div class="tip">
+          Example: <code>https://github.com/albertattard/gradle-boot-camp</code>, which is a boot camp about
+          <a href="https://gradle.org/" target="_blank">Gradle</a> created with the Sociable Weaver platform.
+          <a href="#" @click="tryItOut">Try it out</a>
+        </div>
       </div>
-      <div>
-        <label for="checkoutToFolder">Checkout to folder</label>
-        <input type="text" id="checkoutToFolder" v-model="bookPath" :disabled="openFrom !== 'checkout'" />
+      <div class="input-row a">
+        <input
+          type="text"
+          id="checkoutToFolder"
+          v-model="bookPath"
+          :disabled="openFrom !== 'checkout'"
+          placeholder="The path where you like to clone the Git repository"
+        />
       </div>
-      <div>
+      <div class="input-row">
         <input type="radio" id="createNew" value="createNew" v-model="openFrom" />
         <label for="createNew">New</label>
       </div>
-      <div>
-        <label for="createNewFolder">Open from folder</label>
-        <input type="text" id="createNewFolder" v-model="bookPath" :disabled="openFrom !== 'createNew'" />
+      <div class="input-row a">
+        <input
+          type="text"
+          id="createNewFolder"
+          v-model="bookPath"
+          :disabled="openFrom !== 'createNew'"
+          placeholder="The path to the directory where you like to create the new book/blog"
+        />
       </div>
     </div>
     <div class="workspace">
       <h2>Workspace</h2>
-      <div>
-        <label for="workspace">Workspace</label>
-        <input type="text" id="workspace" v-model="workPath" />
+      <div class="input-row a">
+        <input
+          type="text"
+          id="workspace"
+          v-model="workPath"
+          placeholder="The path to the directory from where the examples will be executed"
+        />
       </div>
     </div>
-    <div class="buttons">
-      <button class="open" v-if="openFrom === 'openLocal'" @click="onOpenBook">Open</button>
-      <button class="open" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
-      <button class="open" v-if="openFrom === 'createNew'" @click="onCreateBook">Create</button>
+    <div class="input-row">
+      <button class="primary" v-if="openFrom === 'openLocal'" @click="onOpenBook">Open</button>
+      <button class="primary" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
+      <button class="primary" v-if="openFrom === 'createNew'" @click="onCreateBook">Create</button>
       <span class="actionMessage">{{ actionMessage }}</span>
     </div>
   </div>
@@ -89,6 +118,11 @@ export default class Open extends Vue {
         this.handleOpenBook();
       }
     });
+  }
+
+  private tryItOut() {
+    this.openFrom = "checkout";
+    this.pathToRepository = "https://github.com/albertattard/gradle-boot-camp";
   }
 
   private onCheckoutBook(): void {
@@ -150,6 +184,19 @@ export default class Open extends Vue {
 
 <style scoped lang="scss">
 input[type="text"] {
-  width: 400px;
+  font-size: 1em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  //margin-block-start: 0.83em;
+  //margin-block-end: 0.83em;
+  //margin-inline-start: 0;
+  //margin-inline-end: 0;
+  width: 80%;
+  padding-top: 2px;
+  color: #2c3e50;
+}
+
+.a {
+  margin: 0 23px;
 }
 </style>

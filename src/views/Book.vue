@@ -1,8 +1,8 @@
 <template>
   <div class="book">
     <MessageBar ref="messageBar" v-if="message !== null" :message="message" />
-    <App ref="app" @app-is-running="onAppIsRunning" />
-    <Open ref="open" @book-opened="onOpenBook" v-if="appIsRunning" :workspace="workspace" />
+    <App v-if="appIsRunning === false" ref="app" @app-is-running="onAppIsRunning" />
+    <Open v-if="appIsRunning" ref="open" @book-opened="onOpenBook" :workspace="workspace" />
     <Toc
       ref="toc"
       @chapter-read="onChapterRead"
