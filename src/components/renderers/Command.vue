@@ -107,7 +107,7 @@
       <div v-if="workingDirectory" role="workingDirectory" class="workingDirectory">
         Working from: <code>{{ workingDirectory }}</code>
       </div>
-      <pre>{{ command }}</pre>
+      <pre class="runnable">{{ command }}</pre>
     </div>
   </div>
 </template>

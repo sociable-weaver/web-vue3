@@ -41,7 +41,6 @@ export function runEntry(entry: RunnableEntry, handleMessage: (message: RunMessa
         connection.send("/api/command/run", {}, JSON.stringify(entry));
       });
     } catch (e) {
-      console.log("Failed to run command", e);
       reject(e);
     }
   });

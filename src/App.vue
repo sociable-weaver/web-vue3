@@ -33,6 +33,32 @@
     padding: 0;
     margin: 0;
   }
+
+  pre.runnable {
+    background-color: black;
+  }
+
+  pre.error {
+    border: 1px solid #5e5e5a;
+    background-color: orangered;
+    color: white;
+  }
+
+  button.primary {
+    background-color: #337ab7;
+    color: white;
+  }
+
+  button.primary:disabled {
+    background-color: #84a0b8;
+    color: #5e5e5a;
+    cursor: wait;
+  }
+
+  .tip {
+    font-size: 0.8em;
+    font-style: italic;
+  }
 }
 
 body {
