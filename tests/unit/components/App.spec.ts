@@ -18,7 +18,7 @@ describe("App", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.text()).toMatch("Application is running");
+    expect(wrapper.find("h2[role=state]").text()).toEqual("The Sociable Weaver Application is running");
     expect(wrapper.emitted()["appIsRunning"]).toEqual([[true]]);
   });
 
@@ -31,8 +31,10 @@ describe("App", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.text()).toMatch("Application is not running or cannot be reached by this page");
-    expect(wrapper.text()).toMatch("Getting started");
+    expect(wrapper.find("h2[role=state]").text()).toEqual(
+      "The Sociable Weaver Application is not running or cannot be reached by this page"
+    );
+    expect(wrapper.find("h2[role=help]").text()).toEqual("Getting started");
     expect(wrapper.emitted()["appIsRunning"]).toEqual([[false]]);
   });
 
@@ -45,7 +47,7 @@ describe("App", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.text()).toMatch("Application is running, but unhealthy");
+    expect(wrapper.find("h2[role=state]").text()).toMatch("The Sociable Weaver Application is running, but unhealthy");
     expect(wrapper.emitted()["appIsRunning"]).toEqual([[false]]);
   });
 });

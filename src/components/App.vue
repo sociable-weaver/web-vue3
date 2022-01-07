@@ -1,29 +1,49 @@
 <template>
   <div class="app">
-    <h1>{{ message }}</h1>
+    <h2 role="state">{{ message }}</h2>
     <div v-if="showHelp" class="help">
-      <h2>Getting started</h2>
+      <h2 role="help">Getting started</h2>
       <ol>
         <li>
-          Make sure that you have Java 17 installed. You can use
-          <a href="https://sdkman.io/install" target="_blank">SDKMAN</a> to install Java
+          <p>
+            Make sure that you have <a href="https://www.docker.com/" target="_blank">Docker</a> installed. You can
+            install Docker from <a href="https://docs.docker.com/get-docker/" target="_blank">here</a>.
+          </p>
         </li>
         <li>
-          Download the application:
-          <a
-            class="download-app"
-            href="https://github.com/sociable-weaver/app-java-boot/releases/download/v0.26/sw-app.jar"
-            >sw-app.jar</a
-          >
+          <p>
+            Run the
+            <a
+              href="https://hub.docker.com/repository/docker/albertattard/sociable-weaver-app-java-boot"
+              target="_blank"
+              >Sociable Weaver Application docker image</a
+            >
+            using the following command.
+          </p>
+          <pre>{{ dockerCommand }}</pre>
+          <p>
+            This will run the Sociable Weaver Application in a docker container. All commands that you will run through
+            the Sociable Weaver Application will not effect your computer as these are executed from within the Docker
+            container. If you like to run the Sociable Weaver Application directly on your computer, you can download
+            the latest version of the Java Application from
+            <a href="https://github.com/sociable-weaver/app-java-boot/releases" target="_blank">here</a>, and run that
+            from your computer (using <code>java -jar sw-app.jar</code>).
+            <a href="https://www.oracle.com/java/technologies/downloads/#java17" target="_blank">Java 17</a> is
+            required.
+          </p>
+          <p>
+            The docker command shown above makes use of two
+            <a href="https://docs.docker.com/storage/volumes/" target="_blank">volumes</a>. While these are optional, it
+            is recommended to share the <em>repositories</em> (books, blogs or tutorials) and the
+            <em>workspace</em> directories with your local machine so that you can follow on and see the change made
+            through your favourite IDE. Please update the volumes path accordingly.
+          </p>
         </li>
         <li>
-          Run the application using the following command
-          <pre>$ java -jar sw-app.jar</pre>
-          You can run the application from anywhere you like and you don't have to save it in a special folder.
-        </li>
-        <li>
-          Click <a class="try-app-again" href="#" @click="checkApplicationStatus()">here</a> to check if the application
-          has started correctly.
+          <p>
+            Click <a class="try-app-again" href="#" @click="checkApplicationStatus()">here</a> to check if the
+            application has started correctly.
+          </p>
         </li>
       </ol>
     </div>
@@ -74,25 +94,35 @@ export default class App extends Vue {
       .then((response) => response.status)
       .then((status) =>
         status === 200
-          ? { isRunning: true, message: "Application is running", showHelp: false }
-          : { isRunning: false, message: "Application is running, but unhealthy", showHelp: false }
+          ? { isRunning: true, message: "The Sociable Weaver Application is running", showHelp: false }
+          : {
+              isRunning: false,
+              message: "The Sociable Weaver Application is running, but unhealthy",
+              showHelp: false,
+            }
       )
       .catch((e) => {
         if (e?.message === "Network Error") {
           return {
             isRunning: false,
-            message: "Application is not running or cannot be reached by this page",
+            message: "The Sociable Weaver Application is not running or cannot be reached by this page",
             showHelp: true,
           };
         }
         throw e;
       });
   }
+
+  private get dockerCommand(): string {
+    return (
+      "docker run \\\n" +
+      "  --name 'sw-app-local' \\\n" +
+      "  --publish 8077:8077 \\\n" +
+      '  --volume "${HOME}/sw/repositories:/opt/repositories" \\\n' +
+      '  --volume "${HOME}/sw/workspace:/opt/workspace" \\\n' +
+      "  --rm \\\n" +
+      "  albertattard/sociable-weaver-app-java-boot:latest\n"
+    );
+  }
 }
 </script>
-
-<style scoped lang="scss">
-h1 {
-  margin: 40px 0 0;
-}
-</style>

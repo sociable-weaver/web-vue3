@@ -19,6 +19,20 @@
   h2 {
     margin: 40px 0 0;
   }
+
+  pre {
+    padding: 5px;
+    border: 1px solid #2c3e50;
+    border-radius: 5px;
+    background-color: lightgrey;
+    white-space: pre-wrap;
+  }
+
+  pre code {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 body {
