@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div>
     <div
       v-for="(entry, index) in chapter.entries"
       :key="entry.id"
@@ -35,7 +35,7 @@
       </div>
       <div v-else class="buttons-bar" role="run-buttons">
         <div v-if="isRunnable(entry)" class="buttons runnable">
-          <button :disabled="disabled" @click="onCopy(entry)" class="copy" title="Copy this command to the clipboard">
+          <button :disabled="disabled" @click="onCopy(entry)" class="green" title="Copy this command to the clipboard">
             Copy
           </button>
           <button :disabled="disabled" @click="onRun(entry)" class="primary" title="Run this command">Run</button>
@@ -46,6 +46,8 @@
           >
             Run until here
           </button>
+        </div>
+        <div v-if="entry.error || entry.output" class="buttons runnable">
           <button :disabled="disabled" @click="onClear(entry)" class="clear" title="Clear the command output from here">
             Clear
           </button>
@@ -72,7 +74,7 @@
           <button
             :disabled="disabled"
             @click="onAddQuestion(entry)"
-            class="question"
+            class="dark-blue"
             title="Add a question to the content"
           >
             Ask a question
@@ -254,7 +256,7 @@ export default class Content extends Vue {
   }
 
   private onDelete(entry: Entry): void {
-    console.log("Deleting", entry);
+    entry.error = "This feature is not yet implements!!";
   }
 
   private onAddNext(event: Event, entry: Entry): void {
@@ -370,7 +372,7 @@ export default class Content extends Vue {
 }
 
 .entry:hover {
-  background-color: #c8e1ff;
+  background-color: #d5e4f2;
   filter: drop-shadow(5px 5px 5px #666666);
 }
 
@@ -405,10 +407,6 @@ div.editable {
   right: 0;
 }
 
-div.buttons-bar {
-  height: 22px;
-}
-
 div.buttons-bar::after {
   content: "";
   clear: both;
@@ -419,90 +417,7 @@ div.buttons {
   display: inline;
 }
 
-button {
-  background-color: #dddddd;
-  border: 1px solid #5e5e5a;
-  border-radius: 2px;
-  color: black;
-  margin: 0 5px 0 0;
-  padding: 2px 5px 3px 5px;
-  text-align: center;
-  vertical-align: top;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #c4c3bb;
-  color: #5e5e5a;
-  cursor: wait;
-}
-
-button.copy {
-  background-color: #42b983;
-  color: white;
-  margin-right: 10px;
-}
-
-button.copy:disabled {
-  background-color: #b4e2b4;
-  color: #5e5e5a;
-  cursor: wait;
-}
-
-button.primary {
-  background-color: #337ab7;
-  color: white;
-}
-
-button.primary:disabled {
-  background-color: #84a0b8;
-  color: #5e5e5a;
-  cursor: wait;
-}
-
 button.clear {
   margin-left: 5px;
-}
-
-button.danger {
-  background-color: #cc3333;
-  color: white;
-  margin-right: 10px;
-}
-
-button.danger:disabled {
-  background-color: #e9aeae;
-  color: #5e5e5a;
-  cursor: wait;
-}
-
-button.question {
-  background-color: #2c3e50;
-  color: white;
-  margin-left: 5px;
-}
-
-button.question:disabled {
-  background-color: #c8e1ff;
-  color: #5e5e5a;
-  cursor: wait;
-}
-
-select {
-  background-color: #dddddd;
-  border: 1px solid #5e5e5a;
-  border-radius: 2px;
-  color: black;
-  margin: 0 5px 0 0;
-  padding: 2px 5px 1px 5px;
-  text-align: left;
-  vertical-align: top;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-select:disabled {
-  cursor: wait;
 }
 </style>

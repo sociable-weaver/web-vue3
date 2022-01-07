@@ -48,6 +48,22 @@
 
   button {
     font-size: 0.8em;
+    text-align: center;
+    background-color: #dddddd;
+    border: 1px solid #5e5e5a;
+    border-radius: 2px;
+    color: black;
+    margin: 0 5px 0 0;
+    padding: 2px 5px 3px 5px;
+    vertical-align: top;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: #c4c3bb;
+    color: #5e5e5a;
+    cursor: wait;
   }
 
   button.primary {
@@ -58,6 +74,60 @@
   button.primary:disabled {
     background-color: #84a0b8;
     color: #5e5e5a;
+    cursor: wait;
+  }
+
+  button.danger {
+    background-color: #cc3333;
+    color: white;
+    margin-right: 10px;
+  }
+
+  button.danger:disabled {
+    background-color: #e9aeae;
+    color: #5e5e5a;
+    cursor: wait;
+  }
+
+  button.green {
+    background-color: #42b983;
+    color: white;
+    margin-right: 10px;
+  }
+
+  button.green:disabled {
+    background-color: #b4e2b4;
+    color: #5e5e5a;
+    cursor: wait;
+  }
+
+  button.dark-blue {
+    background-color: #2c3e50;
+    color: white;
+    margin-left: 5px;
+  }
+
+  button.dark-blue:disabled {
+    background-color: #c8e1ff;
+    color: #5e5e5a;
+    cursor: wait;
+  }
+
+  select {
+    font-size: 0.8em;
+    background-color: #dddddd;
+    border: 1px solid #5e5e5a;
+    border-radius: 2px;
+    color: black;
+    margin: 0 5px 0 0;
+    padding: 2px 5px 1px 5px;
+    text-align: left;
+    vertical-align: top;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  select:disabled {
     cursor: wait;
   }
 
