@@ -35,7 +35,7 @@ describe("Toc component", () => {
     const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* When */
-    wrapper.find("h3").trigger("click");
+    await wrapper.find("h2").trigger("click");
     await flushPromises();
 
     /* Then */
@@ -43,7 +43,7 @@ describe("Toc component", () => {
     expect(wrapper.emitted()["chapterRead"]).toEqual([[expected]]);
   });
 
-  it("emits unsuccessful message event when the chapter is not found", async () => {
+  it("shows unsuccessful message when the chapter is not found", async () => {
     /* Given */
     mocked(apiClient.get).mockRejectedValue(chapterNotFoundResponse);
     mocked(formatError).mockReturnValue("Chapter not found");
@@ -52,12 +52,11 @@ describe("Toc component", () => {
     const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 
     /* When */
-    await wrapper.find("h3").trigger("click");
+    await wrapper.find("h2").trigger("click");
     await flushPromises();
 
     /* Then */
-    const errorMessage = "Failed to open chapter (Chapter not found)";
     expect(wrapper.emitted()["chapterRead"]).toBeUndefined();
-    expect(wrapper.emitted()["errorMessage"]).toEqual([[errorMessage]]);
+    expect(wrapper.find("pre[class=error]").text()).toEqual("Failed to open chapter (Chapter not found)");
   });
 });

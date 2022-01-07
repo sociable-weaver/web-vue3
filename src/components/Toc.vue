@@ -1,12 +1,14 @@
 <template>
   <div class="toc">
-    <h1>{{ book.title }}</h1>
-    <p>{{ book.description }}</p>
-    <h2>Chapters</h2>
-    <div v-for="chapter in book.chapters" :key="chapter.title">
-      <h3 @click="onReadChapter(chapter.path)">{{ chapter.title }}</h3>
-      <p>{{ chapter.description }}</p>
-    </div>
+    <h1 class="title">{{ book.title }}</h1>
+    <p class="description">{{ book.description }}</p>
+    <ol>
+      <li v-for="chapter in book.chapters" :key="chapter.title">
+        <h2 @click="onReadChapter(chapter.path)" class="chapter">{{ chapter.title }}</h2>
+        <p class="description">{{ chapter.description }}</p>
+        <pre class="error" v-if="chapter.error">{{ chapter.error }}</pre>
+      </li>
+    </ol>
   </div>
 </template>
 
@@ -18,7 +20,7 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Toc",
-  emits: ["chapterRead", "errorMessage"],
+  emits: ["chapterRead"],
   props: {
     book: Object,
     chapterPath: String,
@@ -42,7 +44,7 @@ export default class Toc extends Vue {
         this.$emit("chapterRead", chapter);
       })
       .catch((e) => {
-        this.$emit("errorMessage", `Failed to open chapter (${formatError(e)})`);
+        this.setError(chapterPath, `Failed to open chapter (${formatError(e)})`);
       });
   }
 
@@ -52,7 +54,28 @@ export default class Toc extends Vue {
       .then((response) => response.data)
       .then((json) => ({ ...json, bookPath, chapterPath } as Chapter));
   }
+
+  private setError(chapterPath: string, error: string | null): void {
+    const chapter = this.book.chapters.find((c) => c.path === chapterPath);
+    if (chapter !== undefined) {
+      chapter.error = error;
+    }
+  }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+h1.title {
+  margin-bottom: 1px;
+}
+
+h2.chapter {
+  color: #2c3e50;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+p.description {
+  margin-top: 0;
+}
+</style>

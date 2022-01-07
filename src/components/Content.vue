@@ -364,16 +364,8 @@ export default class Content extends Vue {
 </script>
 
 <style scoped lang="scss">
-.content {
-  margin: auto;
-  padding: 10px;
-  border: 1px black solid;
-  border-radius: 5px;
-  width: 98%;
-}
-
 .entry {
-  padding: 2px 2px 10px;
+  padding: 2px 10px;
   margin-bottom: 5px;
 }
 

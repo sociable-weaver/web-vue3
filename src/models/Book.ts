@@ -10,4 +10,5 @@ export interface Chapter {
   title: string;
   description: string;
   path: string;
+  error: string | null;
 }

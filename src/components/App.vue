@@ -16,33 +16,33 @@
             <a
               href="https://hub.docker.com/repository/docker/albertattard/sociable-weaver-app-java-boot"
               target="_blank"
-              >Sociable Weaver Application docker image</a
+              >Sociable Weaver Application Docker image</a
             >
             using the following command.
           </p>
           <pre>{{ dockerCommand }}</pre>
           <p>
-            This will run the Sociable Weaver Application in a docker container. All commands that you will run through
+            This will run the Sociable Weaver Application in a Docker container. All commands that you will run through
             the Sociable Weaver Application will not effect your computer as these are executed from within the Docker
             container. If you like to run the Sociable Weaver Application directly on your computer, you can download
             the latest version of the Java Application from
             <a href="https://github.com/sociable-weaver/app-java-boot/releases" target="_blank">here</a>, and run that
-            from your computer (using <code>java -jar sw-app.jar</code>).
+            from your computer (using <code>java -jar sw-app.jar</code> command).
             <a href="https://www.oracle.com/java/technologies/downloads/#java17" target="_blank">Java 17</a> is
             required.
           </p>
           <p>
-            The docker command shown above makes use of two
+            The Docker command shown above makes use of two
             <a href="https://docs.docker.com/storage/volumes/" target="_blank">volumes</a>. While these are optional, it
             is recommended to share the <em>repositories</em> (books, blogs or tutorials) and the
             <em>workspace</em> directories with your local machine so that you can follow on and see the change made
-            through your favourite IDE. Please update the volumes path accordingly.
+            through your favourite IDE. Please update the volumes' path accordingly.
           </p>
         </li>
         <li>
           <p>
             Click <a class="try-app-again" href="#" @click="checkApplicationStatus()">here</a> to check if the
-            application has started correctly.
+            application has started correctly and now reachable by this page.
           </p>
         </li>
       </ol>

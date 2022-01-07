@@ -1,19 +1,17 @@
 <template>
   <div class="book">
-    <MessageBar ref="messageBar" v-if="message !== null" :message="message" />
-    <App v-if="appIsRunning === false" ref="app" @app-is-running="onAppIsRunning" />
-    <Open v-if="appIsRunning" ref="open" @book-opened="onOpenBook" :workspace="workspace" />
+    <App v-if="showAppComponent()" ref="app" @app-is-running="onAppIsRunning" />
+    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" :workspace="workspace" />
     <Toc
       ref="toc"
       @chapter-read="onChapterRead"
-      @error-message="onErrorMessage"
-      v-if="book !== null"
+      v-if="showTocComponent()"
       :book="book"
       :chapterPath="workspace.chapterPath"
     />
     <Content
       ref="content"
-      v-if="chapter !== null"
+      v-if="showChapterComponent()"
       :chapter="chapter"
       @variable-updated="onVariableUpdated"
       @variable-initialised="onVariableUpdated"
@@ -24,7 +22,6 @@
 <script lang="ts">
 import App from "@/components/App.vue";
 import Content from "@/components/Content.vue";
-import MessageBar from "@/components/MessageBar.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
 import { Book } from "@/models/Book";
@@ -34,7 +31,6 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
   components: {
-    MessageBar,
     App,
     Open,
     Toc,
@@ -46,13 +42,28 @@ export default class Home extends Vue {
   private book: Book | null = null;
   private chapter: Chapter | null = null;
   private workspace: Workspace = { bookPath: "", workPath: "", chapterPath: "" };
-  private message: string | null = null;
 
   mounted(): void {
     /* TODO: What should we do if this is an array? */
     this.workspace.bookPath = (this.$route.params.bookPath as string) || "";
     this.workspace.workPath = (this.$route.params.workPath as string) || "";
     this.workspace.chapterPath = (this.$route.params.chapterPath as string) || "";
+  }
+
+  private showAppComponent(): boolean {
+    return !this.appIsRunning;
+  }
+
+  private showOpenComponent(): boolean {
+    return this.appIsRunning && this.book === null;
+  }
+
+  private showTocComponent(): boolean {
+    return this.appIsRunning && this.book !== null && this.chapter === null;
+  }
+
+  private showChapterComponent(): boolean {
+    return this.appIsRunning && this.chapter !== null;
   }
 
   private onAppIsRunning(state: boolean): void {
@@ -81,10 +92,6 @@ export default class Home extends Vue {
     });
     this.chapter = read;
     this.chapter.workPath = this.workspace.workPath;
-  }
-
-  private onErrorMessage(message: string): void {
-    this.message = message;
   }
 
   private onVariableUpdated(update: VariableUpdated): void {
