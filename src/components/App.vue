@@ -2,7 +2,7 @@
   <div class="app">
     <h2 role="state">{{ message }}</h2>
     <div v-if="showHelp" class="help">
-      <h2 role="help">Getting started</h2>
+      <h3 role="help">Getting started</h3>
       <ol>
         <li>
           <p>
