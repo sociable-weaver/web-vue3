@@ -40,10 +40,15 @@
     color: greenyellow;
   }
 
-  pre.error {
-    border: 1px solid #5e5e5a;
+  .error {
+    border: 1px solid black;
     background-color: orangered;
     color: white;
+  }
+
+  p.error {
+    padding: 5px;
+    border-radius: 5px;
   }
 
   button {

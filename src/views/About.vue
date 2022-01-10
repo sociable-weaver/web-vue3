@@ -34,14 +34,14 @@
       The same command shown before is presented as shown next. A <em>Run</em> button will be shown under the command,
       which you can click to run. The command output will be printed between the command and the <em>Run</em> button.
     </p>
+    <p v-if="isRunning === false" class="error">
+      Kindly note that The Sociable Weaver Application is not running and thus you will not be able to try the above
+      example. More information about how to start the Sociable Weaver Application can be found <a href="/web/#/">here</a>.
+    </p>
     <Command :entry="entry" />
     <pre v-if="entry.output" class="output" :class="{ error: entry.failed }">{{ entry.output }}</pre>
     <pre v-if="entry.error" class="error">{{ entry.error }}</pre>
     <button :disabled="disabled" @click="onRun()" class="primary" title="Run this command">Run</button>
-    <p v-if="isRunning === false">
-      Kindly note that The Sociable Weaver Application is not running and thus you will not be able to try the above
-      example. More information about how to start the Sociable Weaver Application can be found <a href="/web/#/">here</a>.
-    </p>
     <p>
       Sociable Weaver also provides a customizable experience through the use of variables. Instead of simply executing
       what you see, you can change parts of the examples using variables.
