@@ -7,7 +7,7 @@
         <li>
           <p>
             Make sure that you have <a href="https://www.docker.com/" target="_blank">Docker</a> installed. You can
-            install Docker from <a href="https://docs.docker.com/get-docker/" target="_blank">here</a>.
+            download Docker from <a href="https://docs.docker.com/get-docker/" target="_blank">here</a>.
           </p>
         </li>
         <li>
@@ -17,8 +17,7 @@
               href="https://hub.docker.com/repository/docker/albertattard/sociable-weaver-app-java-boot"
               target="_blank"
               >Sociable Weaver Application Docker image</a
-            >
-            using the following command.
+            >.
           </p>
           <pre>{{ dockerCommand }}</pre>
           <p>
