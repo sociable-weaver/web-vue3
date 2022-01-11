@@ -98,8 +98,9 @@
     <div v-if="usesVariables" class="variables">
       <div>This command is using the following variables:</div>
       <ul>
-        <li v-for="variable in entry.variables" :key="variable">
-          <code>{{ variable }}</code>
+        <li v-for="vv in variablesAndValues" :key="vv.variable">
+          <code>{{ vv.variable }}</code> (<span v-if="vv.value">value: <code>{{ vv.value }}</code></span>
+          <span v-else class="error">Variable value not set!!</span>)
         </li>
       </ul>
     </div>
@@ -135,6 +136,11 @@ type Templates = {
   [key: string]: Template[];
 };
 
+interface VariableValue {
+  variable: string;
+  value: string | null;
+}
+
 @Options({
   name: "Command",
   props: {
@@ -156,24 +162,34 @@ export default class Command extends Vue {
     }
   }
 
-  get usesVariables(): boolean {
+  private get usesVariables(): boolean {
     return arrayContainsValues(this.entry.variables);
   }
 
-  get workingDirectory(): string {
+  private get variablesAndValues(): VariableValue[] {
+    return arrayContainsValues(this.entry.variables)
+      ? this.entry.variables.map((variable) => ({ variable, value: this.entry.values[variable] } as VariableValue))
+      : [];
+  }
+
+  private getValue(variable: string): string {
+    return this.entry.values[variable] || "";
+  }
+
+  private get workingDirectory(): string {
     return this.entry.workingDirectory ? this.entry.workingDirectory : "";
   }
 
-  get command(): string {
+  private get command(): string {
     let command = join(this.entry.parameters, Command.defaultCommand);
     return interpolate(this.entry.variables, this.entry.values, command);
   }
 
-  get editCommand(): string {
+  private get editCommand(): string {
     return join(this.edit.parameters);
   }
 
-  set editCommand(value: string) {
+  private set editCommand(value: string) {
     this.edit.parameters = value.split("\n");
   }
 
@@ -183,7 +199,7 @@ export default class Command extends Vue {
     target.value = "";
   }
 
-  get missingVariables(): string[] {
+  private get missingVariables(): string[] {
     const command = join(this.edit.parameters);
     const match = command.match(Command.variableNameRegex()) || [];
     return match.map((v) => v.substring(2, v.length - 1)).filter((v) => !this.edit.variables.includes(v));
