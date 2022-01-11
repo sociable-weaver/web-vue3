@@ -26,7 +26,7 @@
     <p>
       If you like to try this out, you will have to copy the example and then run it on your computer. Sociable Weaver
       takes this to the next level. It provides you with an option where you can run the command directly from your
-      browser. This command is simply sent to the Sociable Weaver Application running as either a docker container on
+      browser. This command is simply sent to the Sociable Weaver Application running as either a Docker container on
       your computer or as a Java application. The Sociable Weaver Application will run the command, capture the output
       and then send the result back to the browser.
     </p>

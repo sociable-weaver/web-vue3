@@ -34,7 +34,6 @@ describe("App", () => {
     expect(wrapper.find("h2[role=state]").text()).toEqual(
       "The Sociable Weaver Application is not running or cannot be reached by this page"
     );
-    expect(wrapper.find("h3[role=help]").text()).toEqual("Getting started");
     expect(wrapper.emitted()["appIsRunning"]).toEqual([[false]]);
   });
 
