@@ -179,7 +179,6 @@ export default class Command extends Vue {
 
   private onUseTemplate(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    console.log("Value", target.value);
     this.edit.parameters = JSON.parse(target.value) as string[];
     target.value = "";
   }

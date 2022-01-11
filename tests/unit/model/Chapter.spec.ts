@@ -1,4 +1,12 @@
-import { createSaveEntry, doAllVariablesHaveValues, Entry, join, SaveEntry, setValue } from "@/models/Chapter";
+import {
+  createSaveEntry,
+  doAllVariablesHaveValues,
+  Entry,
+  interpolate,
+  join,
+  SaveEntry,
+  setValue,
+} from "@/models/Chapter";
 
 describe("Entry", () => {
   describe("setValue()", () => {
@@ -171,5 +179,46 @@ describe("Entry", () => {
       /* Then */
       expect(result).toEqual("Default value");
     });
+  });
+});
+
+describe("Variables interpolation", () => {
+  it("interpolates single variable", () => {
+    /* Given */
+    const variables = ["NAME"];
+    const values = { NAME: "Albert" };
+    const text = "My name is ${NAME}";
+
+    /* When */
+    const result = interpolate(variables, values, text);
+
+    /* Then */
+    expect(result).toEqual("My name is Albert");
+  });
+
+  it("interpolates multiple instances of the same variable", () => {
+    /* Given */
+    const variables = ["NAME"];
+    const values = { NAME: "Moto" };
+    const text = "My name is ${NAME} ${NAME}";
+
+    /* When */
+    const result = interpolate(variables, values, text);
+
+    /* Then */
+    expect(result).toEqual("My name is Moto Moto");
+  });
+
+  it("interpolates multiple variables", () => {
+    /* Given */
+    const variables = ["NAME", "SURNAME"];
+    const values = { NAME: "Albert", SURNAME: "Attard" };
+    const text = "My name is ${NAME} ${SURNAME}";
+
+    /* When */
+    const result = interpolate(variables, values, text);
+
+    /* Then */
+    expect(result).toEqual("My name is Albert Attard");
   });
 });

@@ -31,7 +31,7 @@ describe("Markdown", () => {
       expect(wrapper.find("h2").text()).toEqual("Hello world");
     });
 
-    it("interpolates variables", async () => {
+    it("interpolates single variable", async () => {
       /* Given */
       const entry = {
         type: "markdown",
@@ -45,6 +45,39 @@ describe("Markdown", () => {
 
       /* Then */
       expect(wrapper.find("h2").text()).toEqual("Hello World!!");
+    });
+
+    it("interpolates multiple instances of the same variable", async () => {
+      /* Given */
+      const entry = {
+        type: "markdown",
+        parameters: ["## ${TITLE}", "${TITLE}"],
+        variables: ["TITLE"],
+        values: { TITLE: "Hello World!!" },
+      };
+
+      /* When */
+      const wrapper = shallowMount(Markdown, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.find("h2").text()).toEqual("Hello World!!");
+      expect(wrapper.find("p").text()).toEqual("Hello World!!");
+    });
+
+    it("interpolates multiple variables", async () => {
+      /* Given */
+      const entry = {
+        type: "markdown",
+        parameters: ["## ${NAME} ${SURNAME}"],
+        variables: ["NAME", "SURNAME"],
+        values: { NAME: "Albert", SURNAME: "Attard" },
+      };
+
+      /* When */
+      const wrapper = shallowMount(Markdown, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.find("h2").text()).toEqual("Albert Attard");
     });
 
     it("lists the variables", async () => {

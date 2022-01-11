@@ -256,7 +256,32 @@ export default class Content extends Vue {
   }
 
   private onDelete(entry: Entry): void {
-    entry.error = "This feature is not yet implements!!";
+    this.disabled = true;
+    entry.error = "";
+
+    this.deleteEntry(entry.id)
+      .then(() => {
+        const index = this.chapter.entries.indexOf(entry);
+        if (index == -1) {
+          entry.error = "Entry was deleted from the chapter file but cannot update the UI";
+        } else {
+          this.chapter.entries.splice(index, 1);
+        }
+      })
+      .catch((e) => (entry.error = `Failed to delete entry (${formatError(e)})`))
+      .finally(() => (this.disabled = false));
+  }
+
+  private deleteEntry(entryId: string): Promise<Entry> {
+    return apiClient
+      .delete("/api/entry", {
+        params: {
+          bookPath: this.chapter.bookPath,
+          chapterPath: this.chapter.chapterPath,
+          entryId: entryId,
+        },
+      })
+      .then((response) => response.data);
   }
 
   private onAddNext(event: Event, entry: Entry): void {
@@ -273,7 +298,6 @@ export default class Content extends Vue {
   }
 
   private onAddQuestion(entry: Entry): void {
-    console.log("Will add question after entry soon", entry);
     const create = { type: "question", afterEntryWithId: entry.id };
     this.handleCreateEntry(create, entry);
   }
@@ -290,9 +314,7 @@ export default class Content extends Vue {
         this.chapter.entries.splice(index + 1, 0, created);
       })
       .catch((e) => (entry.error = `Failed to create entry (${formatError(e)})`))
-      .finally(() => {
-        this.disabled = false;
-      });
+      .finally(() => (this.disabled = false));
   }
 
   private createEntry(entry: CreateEntry): Promise<Entry> {
@@ -372,7 +394,8 @@ export default class Content extends Vue {
 }
 
 .entry:hover {
-  background-color: #d5e4f2;
+  border-radius: 2px;
+  background-color: whitesmoke;
   filter: drop-shadow(5px 5px 5px #666666);
 }
 
@@ -407,6 +430,9 @@ div.editable {
   right: 0;
 }
 
+div.buttons-bar {
+  height: 30px;
+}
 div.buttons-bar::after {
   content: "";
   clear: both;

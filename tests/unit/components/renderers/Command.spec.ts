@@ -37,11 +37,25 @@ describe("Command", () => {
       /* Given */
       const entry = {
         type: "command",
+        parameters: ["echo ${NAME}"],
+        variables: ["NAME"],
+        values: { NAME: "Albert" },
+      };
+
+      /* When */
+      const wrapper = shallowMount(Command, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.find("pre").text()).toEqual("echo Albert");
+    });
+
+    it("interpolates multiple instances of the same variable", async () => {
+      /* Given */
+      const entry = {
+        type: "command",
         parameters: ["echo ${NAME} ${NAME}"],
         variables: ["NAME"],
-        values: {
-          NAME: "Albert",
-        },
+        values: { NAME: "Albert" },
       };
 
       /* When */
@@ -49,6 +63,22 @@ describe("Command", () => {
 
       /* Then */
       expect(wrapper.find("pre").text()).toEqual("echo Albert Albert");
+    });
+
+    it("interpolates multiple variables", async () => {
+      /* Given */
+      const entry = {
+        type: "command",
+        parameters: ["echo ${NAME} ${SURNAME}"],
+        variables: ["NAME", "SURNAME"],
+        values: { NAME: "Albert", SURNAME: "Attard" },
+      };
+
+      /* When */
+      const wrapper = shallowMount(Command, { props: { entry } });
+
+      /* Then */
+      expect(wrapper.find("pre").text()).toEqual("echo Albert Attard");
     });
 
     it("renders the single line command", async () => {

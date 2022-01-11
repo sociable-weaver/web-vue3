@@ -71,7 +71,6 @@ export default class Breadcrumbs extends Vue {
   private get next(): string {
     const title = this.chapterTitle;
     const index = this.book.chapters.findIndex((c) => c.title === title);
-    console.log("Index", index);
 
     if (index == -1 || index >= this.book.chapters.length - 1) {
       return "";
