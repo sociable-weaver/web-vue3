@@ -9,18 +9,22 @@
       :book="book"
       :chapterPath="workspace.chapterPath"
     />
-    <Content
-      ref="content"
-      v-if="showChapterComponent()"
-      :chapter="chapter"
-      @variable-updated="onVariableUpdated"
-      @variable-initialised="onVariableUpdated"
-    />
+    <div v-if="showChapterComponent()">
+      <Breadcrumbs :book="book" :chapter="chapter" />
+      <Content
+        ref="content"
+        :chapter="chapter"
+        @variable-updated="onVariableUpdated"
+        @variable-initialised="onVariableUpdated"
+      />
+      <Breadcrumbs :book="book" :chapter="chapter" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import App from "@/components/App.vue";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Content from "@/components/Content.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
@@ -32,6 +36,7 @@ import { Options, Vue } from "vue-class-component";
 @Options({
   components: {
     App,
+    Breadcrumbs,
     Open,
     Toc,
     Content,
@@ -43,8 +48,7 @@ export default class Home extends Vue {
   private chapter: Chapter | null = null;
   private workspace: Workspace = { bookPath: "", workPath: "", chapterPath: "" };
 
-  mounted(): void {
-    /* TODO: What should we do if this is an array? */
+  updated(): void {
     this.workspace.bookPath = (this.$route.params.bookPath as string) || "";
     this.workspace.workPath = (this.$route.params.workPath as string) || "";
     this.workspace.chapterPath = (this.$route.params.chapterPath as string) || "";
@@ -59,11 +63,11 @@ export default class Home extends Vue {
   }
 
   private showTocComponent(): boolean {
-    return this.appIsRunning && this.book !== null && this.chapter === null;
+    return this.appIsRunning && this.book !== null && this.workspace.chapterPath === "";
   }
 
   private showChapterComponent(): boolean {
-    return this.appIsRunning && this.chapter !== null;
+    return this.appIsRunning && this.chapter !== null && this.workspace.chapterPath !== "";
   }
 
   private onAppIsRunning(state: boolean): void {

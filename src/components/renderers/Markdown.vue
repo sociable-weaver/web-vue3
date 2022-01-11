@@ -184,18 +184,6 @@ export default class Markdown extends Vue {
   margin: 0;
 }
 
-.markdown >>> code {
-  padding: 2px;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
-  background-color: lightgrey;
-  color: black;
-}
-
-.markdown >>> a code {
-  color: -webkit-link;
-}
-
 .markdown >>> blockquote {
   font-style: italic;
 }

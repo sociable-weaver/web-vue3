@@ -36,7 +36,8 @@
     </p>
     <p v-if="isRunning === false" class="error">
       Kindly note that The Sociable Weaver Application is not running and thus you will not be able to try the above
-      example. More information about how to start the Sociable Weaver Application can be found <a href="/web/#/">here</a>.
+      example. More information about how to start the Sociable Weaver Application can be found
+      <a href="/web/#/">here</a>.
     </p>
     <Command :entry="entry" />
     <pre v-if="entry.output" class="output" :class="{ error: entry.failed }">{{ entry.output }}</pre>
@@ -134,7 +135,7 @@ export default class About extends Vue {
       type: this.entry.type,
       id: this.entry.id,
       name: this.entry.name,
-      workPath: "/opt/workspace",
+      workPath: ".",
       workingDirectory: this.entry.workingDirectory,
       parameters: Object.assign([], this.entry.parameters),
       variables: Object.assign([], this.entry.variables),
