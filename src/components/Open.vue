@@ -68,31 +68,19 @@
 </template>
 
 <script lang="ts">
-import { Workspace } from "@/models/Workspace";
+import { Book } from "@/models/Book";
 import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
-
-interface Book {
-  title: string;
-  description: string;
-  chapters: Chapter[];
-}
-
-interface Chapter {
-  title: string;
-  description: string;
-  path: string;
-}
 
 @Options({
   name: "Open",
   emits: ["bookOpened"],
   props: {
-    workspace: Object,
+    book: Object,
   },
 })
 export default class Open extends Vue {
-  private workspace!: Workspace;
+  private book!: Book;
 
   private pathToRepository = "";
   private openFrom = "openLocal";
@@ -102,8 +90,8 @@ export default class Open extends Vue {
 
   mounted(): void {
     this.$nextTick(() => {
-      this.bookPath = this.workspace.bookPath;
-      this.workPath = this.workspace.workPath;
+      this.bookPath = this.book.bookPath;
+      this.workPath = this.book.workPath;
 
       if (this.isBookPathSet() && this.isWorkPathSet()) {
         this.handleOpenBook();
@@ -160,14 +148,14 @@ export default class Open extends Vue {
   }
 
   private isBookPathSet(): boolean {
-    return this.isNonBlank(this.bookPath);
+    return Open.isNonBlank(this.bookPath);
   }
 
   private isWorkPathSet(): boolean {
-    return this.isNonBlank(this.workPath);
+    return Open.isNonBlank(this.workPath);
   }
 
-  private isNonBlank(text: string): boolean {
+  private static isNonBlank(text: string): boolean {
     return text.trim().length > 0;
   }
 }

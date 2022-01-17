@@ -4,6 +4,7 @@ export interface Book {
   chapters: Chapter[];
   bookPath: string;
   workPath: string;
+  chapterPath: string;
 }
 
 export interface Chapter {

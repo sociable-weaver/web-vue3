@@ -1,6 +1,6 @@
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import Home from "@/views/Book.vue";
+import BookView from "@/views/Book.vue";
 import { shallowMount } from "@vue/test-utils";
 import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
 
@@ -8,7 +8,7 @@ describe("Book", () => {
   it("does not display the open component before the app component confirms that the app is running", () => {
     /* Given */
     const $route = { params: {} };
-    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
 
     /* When */
     /* The application status is not yet checked */
@@ -22,7 +22,7 @@ describe("App", () => {
   it("displays the open component when application is running", async () => {
     /* Given */
     const $route = { params: {} };
-    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
@@ -34,7 +34,7 @@ describe("App", () => {
   it("does not display the open component when application is not running", async () => {
     /* Given */
     const $route = { params: {} };
-    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
 
     /* When */
     await wrapper.vm.$refs.app.$emit("appIsRunning", false);
@@ -48,7 +48,7 @@ describe("Open", () => {
   it("does not display the table of content before a book is opened", async () => {
     /* Given */
     const $route = { params: {} };
-    const wrapper = shallowMount(Home, { global: { mocks: { $route } } });
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */
@@ -64,7 +64,7 @@ describe("Open", () => {
     const workPath = "path-to-workspace";
     const $route = { params: { bookPath, workPath } };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Home, { global: { mocks: { $route, $router } } });
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route, $router } } });
     await wrapper.vm.$refs.app.$emit("appIsRunning", true);
 
     /* When */

@@ -99,7 +99,9 @@
       <div>This command is using the following variables:</div>
       <ul>
         <li v-for="vv in variablesAndValues" :key="vv.variable">
-          <code>{{ vv.variable }}</code> (<span v-if="vv.value">value: <code>{{ vv.value }}</code></span>
+          <code>{{ vv.variable }}</code> (<span v-if="vv.value"
+            >value: <code>{{ vv.value }}</code></span
+          >
           <span v-else class="error">Variable value not set!!</span>)
         </li>
       </ul>

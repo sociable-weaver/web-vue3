@@ -9,10 +9,10 @@ jest.mock("@/services/ServiceApi");
 describe("Open component", () => {
   it("starts with the open local option selected", async () => {
     /* Given */
-    const workspace = { bookPath: "", workPath: "" };
+    const book = { bookPath: "", workPath: "" };
 
     /* When */
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const wrapper = shallowMount(Open, { props: { book } });
     await flushPromises();
 
     /* Then */
@@ -26,8 +26,8 @@ describe("Open component", () => {
 
   it("displays the checkout input when the checkout option is checked", async () => {
     /* Given */
-    const workspace = { bookPath: "", workPath: "" };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { book } });
 
     /* When */
     await wrapper.find("input[id=checkout]").trigger("click");
@@ -44,8 +44,8 @@ describe("Open component", () => {
 
   it("displays the open local input when the open local option is checked", async () => {
     /* Given */
-    const workspace = { bookPath: "", workPath: "" };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { book } });
 
     /* When */
     await wrapper.find("input[id=openLocal]").trigger("click");
@@ -62,8 +62,8 @@ describe("Open component", () => {
 
   it("displays the create new input when the create new is option checked", async () => {
     /* Given */
-    const workspace = { bookPath: "", workPath: "" };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { book } });
 
     /* When */
     await wrapper.find("input[id=createNew]").trigger("click");
@@ -83,10 +83,10 @@ describe("Open component", () => {
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
     const bookPath = "path-to-book";
     const workPath = "work-directory";
-    const workspace = { bookPath, workPath };
+    const book = { bookPath, workPath };
 
     /* When */
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const wrapper = shallowMount(Open, { props: { book } });
     await flushPromises();
 
     /* Then */
@@ -99,8 +99,8 @@ describe("Open component", () => {
 describe("Open repository from local file system", () => {
   it("displays an error when trying to open local without providing a book path", async () => {
     /* Given */
-    const workspace = { bookPath: "", workPath: "work-directory" };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "", workPath: "work-directory" };
+    const wrapper = shallowMount(Open, { props: { book } });
     await wrapper.find("input[id=openLocal]").trigger("click");
     await flushPromises();
 
@@ -117,8 +117,8 @@ describe("Open repository from local file system", () => {
 
   it("displays an error when trying to open local without providing a work path", async () => {
     /* Given */
-    const workspace = { bookPath: "path-to-book", workPath: "" };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "path-to-book", workPath: "" };
+    const wrapper = shallowMount(Open, { props: { book } });
     await wrapper.find("input[id=openLocal]").trigger("click");
     await flushPromises();
 
@@ -137,8 +137,8 @@ describe("Open repository from local file system", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
     const workPath = "work-directory";
-    const workspace = { bookPath: "", workPath };
-    const wrapper = shallowMount(Open, { props: { workspace } });
+    const book = { bookPath: "", workPath };
+    const wrapper = shallowMount(Open, { props: { book } });
     await flushPromises();
 
     const bookPath = "path-to-book";

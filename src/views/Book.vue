@@ -1,13 +1,13 @@
 <template>
   <div class="book">
     <App v-if="showAppComponent()" ref="app" @app-is-running="onAppIsRunning" />
-    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" :workspace="workspace" />
+    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" :book="book" />
     <Toc
       ref="toc"
       @chapter-read="onChapterRead"
       v-if="showTocComponent()"
       :book="book"
-      :chapterPath="workspace.chapterPath"
+      :chapterPath="book.chapterPath"
     />
     <div v-if="showChapterComponent()">
       <Breadcrumbs :book="book" :chapter="chapter" />
@@ -30,7 +30,6 @@ import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
 import { Book } from "@/models/Book";
 import { Chapter, setValue, VariableUpdated } from "@/models/Chapter";
-import { Workspace } from "@/models/Workspace";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -42,16 +41,15 @@ import { Options, Vue } from "vue-class-component";
     Content,
   },
 })
-export default class Home extends Vue {
+export default class BookView extends Vue {
   private appIsRunning = false;
-  private book: Book | null = null;
+  private book: Book = { title: "", description: "", chapters: [], bookPath: "", workPath: "", chapterPath: "" };
   private chapter: Chapter | null = null;
-  private workspace: Workspace = { bookPath: "", workPath: "", chapterPath: "" };
 
   updated(): void {
-    this.workspace.bookPath = (this.$route.params.bookPath as string) || "";
-    this.workspace.workPath = (this.$route.params.workPath as string) || "";
-    this.workspace.chapterPath = (this.$route.params.chapterPath as string) || "";
+    this.book.bookPath = (this.$route.params.bookPath as string) || "";
+    this.book.workPath = (this.$route.params.workPath as string) || "";
+    this.book.chapterPath = (this.$route.params.chapterPath as string) || "";
   }
 
   private showAppComponent(): boolean {
@@ -59,15 +57,15 @@ export default class Home extends Vue {
   }
 
   private showOpenComponent(): boolean {
-    return this.appIsRunning && this.book === null;
+    return this.appIsRunning && this.book.title === "";
   }
 
   private showTocComponent(): boolean {
-    return this.appIsRunning && this.book !== null && this.workspace.chapterPath === "";
+    return this.appIsRunning && this.book.title !== "" && this.book.chapterPath === "";
   }
 
   private showChapterComponent(): boolean {
-    return this.appIsRunning && this.chapter !== null && this.workspace.chapterPath !== "";
+    return this.appIsRunning && this.chapter !== null && this.book.chapterPath !== "";
   }
 
   private onAppIsRunning(state: boolean): void {
@@ -75,27 +73,25 @@ export default class Home extends Vue {
   }
 
   private onOpenBook(opened: Book): void {
-    this.workspace.bookPath = opened.bookPath;
-    this.workspace.workPath = opened.workPath;
+    this.book = opened;
     this.$router.push({
       name: "Book",
-      params: { bookPath: this.workspace.bookPath, workPath: this.workspace.workPath },
+      params: { bookPath: this.book.bookPath, workPath: this.book.workPath },
     });
-    this.book = opened;
   }
 
   private onChapterRead(read: Chapter): void {
-    this.workspace.chapterPath = read.chapterPath;
+    this.book.chapterPath = read.chapterPath;
+    this.chapter = read;
+    this.chapter.workPath = this.book.workPath;
     this.$router.push({
       name: "Book",
       params: {
-        bookPath: this.workspace.bookPath,
-        workPath: this.workspace.workPath,
-        chapterPath: this.workspace.chapterPath,
+        bookPath: this.book.bookPath,
+        workPath: this.book.workPath,
+        chapterPath: read.chapterPath,
       },
     });
-    this.chapter = read;
-    this.chapter.workPath = this.workspace.workPath;
   }
 
   private onVariableUpdated(update: VariableUpdated): void {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div
       v-for="(entry, index) in chapter.entries"
       :key="entry.id"
@@ -393,11 +393,11 @@ export default class Content extends Vue {
   margin-bottom: 5px;
 }
 
-.entry:hover {
-  border-radius: 2px;
-  background-color: whitesmoke;
-  filter: drop-shadow(5px 5px 5px #666666);
-}
+//.entry:hover {
+//  border-radius: 2px;
+//  background-color: whitesmoke;
+//  filter: drop-shadow(5px 5px 5px #666666);
+//}
 
 div.error {
   border-radius: 2px;
