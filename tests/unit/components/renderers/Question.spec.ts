@@ -1,5 +1,5 @@
 import Question from "@/components/renderers/Question.vue";
-import { shallowMount } from "@vue/test-utils";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 
 describe("Question", () => {
   describe("View/Edit", () => {
@@ -11,6 +11,7 @@ describe("Question", () => {
 
       /* When */
       const wrapper = shallowMount(Question, { props: { entry } });
+      await flushPromises();
 
       /* Then */
       expect(wrapper.find("div[role=question]").text()).toEqual("What's on your mind?");
@@ -32,6 +33,7 @@ describe("Question", () => {
 
       /* When */
       const wrapper = shallowMount(Question, { props: { entry } });
+      await flushPromises();
 
       /* Then */
       expect(wrapper.find("div[role=question]").text()).toEqual("What is this test doing?");

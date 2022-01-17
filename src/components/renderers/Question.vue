@@ -22,6 +22,7 @@ import {
   Entry,
   hasChanged,
   join,
+  MultipartParameters,
   OnSaveOutcome,
   OnSaveResult,
   SaveEntry,
@@ -32,11 +33,6 @@ import { Options, Vue } from "vue-class-component";
 const QUESTION_PART = "Question";
 const ANSWER_PART = "Answer";
 
-interface IndexAndLength {
-  index: number;
-  length: number;
-}
-
 @Options({
   name: "Question",
   props: {
@@ -45,45 +41,52 @@ interface IndexAndLength {
 })
 export default class Question extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { parameters: Question.defaultQuestion() } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
+
+  private readQa: MultipartParameters = new MultipartParameters(Question.defaultQuestion());
+  private editQa: MultipartParameters = new MultipartParameters([]);
 
   mounted(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
 
-    if (!arrayContainsValues(this.edit.parameters)) {
+    if (arrayContainsValues(this.edit.parameters)) {
+      this.readQa = new MultipartParameters(this.entry.parameters);
+    } else {
       this.edit.parameters = [];
     }
+
+    this.editQa = new MultipartParameters(this.edit.parameters);
   }
 
   get question(): string {
-    const question = join(Question.getQuestionPart(this.entry.parameters));
+    const question = join(Question.getQuestionPart(this.readQa));
     return Marked.parse(question);
   }
 
   get answer(): string {
-    const answer = join(Question.getAnswerPart(this.entry.parameters));
+    const answer = join(Question.getAnswerPart(this.readQa));
     return Marked.parse(answer);
   }
 
   get editQuestion(): string {
-    return join(Question.getQuestionPart(this.edit.parameters));
+    return join(Question.getQuestionPart(this.editQa));
   }
 
   set editQuestion(value: string) {
-    Question.setQuestionPart(value, this.edit.parameters);
+    this.setQuestionPart(value);
   }
 
   get editAnswer(): string {
-    return join(Question.getAnswerPart(this.edit.parameters));
+    return join(Question.getAnswerPart(this.editQa));
   }
 
   set editAnswer(value: string) {
-    Question.setAnswerPart(value, this.edit.parameters);
+    this.setAnswerPart(value);
   }
 
   private onSave(): OnSaveResult {
-    const question = join(Question.getQuestionPart(this.edit.parameters));
+    const question = join(Question.getQuestionPart(this.editQa));
     if (question.length === 0) {
       this.entry.error = "The question cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
@@ -96,61 +99,20 @@ export default class Question extends Vue {
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 
-  private static getQuestionPart(parameters: string[]): string[] {
-    return this.getPart(QUESTION_PART, Question.defaultIfNotSet(parameters));
+  private static getQuestionPart(parameters: MultipartParameters): string[] {
+    return parameters.getPart(QUESTION_PART);
   }
 
-  private static setQuestionPart(value: string, parameters: string[]): void {
-    this.setPart(QUESTION_PART, value.split("\n"), parameters);
+  private setQuestionPart(value: string): void {
+    this.editQa.setPart(QUESTION_PART, value.split("\n"));
   }
 
-  private static getAnswerPart(parameters: string[]): string[] {
-    return this.getPart(ANSWER_PART, Question.defaultIfNotSet(parameters));
+  private static getAnswerPart(parameters: MultipartParameters): string[] {
+    return parameters.getPart(ANSWER_PART);
   }
 
-  private static setAnswerPart(value: string, parameters: string[]): void {
-    this.setPart(ANSWER_PART, value.split("\n"), parameters);
-  }
-
-  private static getPart(name: string, parameters: string[]): string[] {
-    const indexAndLength = Question.findPart(name, parameters);
-    if (indexAndLength.index != -1) {
-      const contentIndex = indexAndLength.index + 1;
-      return parameters.slice(contentIndex, contentIndex + indexAndLength.length);
-    }
-
-    return [];
-  }
-
-  private static setPart(name: string, value: string[], parameters: string[]): void {
-    const indexAndLength = Question.findPart(name, parameters);
-    if (indexAndLength.index == -1) {
-      parameters.push(`${name}:${value.length}`, ...value);
-    } else {
-      const part = [`${name}:${value.length}`, ...value];
-      parameters.splice(indexAndLength.index, indexAndLength.length + 1, ...part);
-    }
-  }
-
-  private static findPart(name: string, parameters: string[]): IndexAndLength {
-    let i = 0;
-
-    while (i < parameters.length) {
-      const header = parameters[i];
-      const parts = header.split(":");
-      const length = parseInt(parts[1]);
-      if (name === parts[0]) {
-        return { index: i, length };
-      }
-
-      i += length + 1;
-    }
-
-    return { index: -1, length: -1 };
-  }
-
-  private static defaultIfNotSet(parameters: string[]): string[] {
-    return arrayContainsValues(parameters) ? parameters : Question.defaultQuestion();
+  private setAnswerPart(value: string): void {
+    this.editQa.setPart(ANSWER_PART, value.split("\n"));
   }
 
   private static defaultQuestion(): string[] {
