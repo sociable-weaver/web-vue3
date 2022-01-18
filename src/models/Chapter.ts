@@ -72,49 +72,41 @@ export interface IndexAndLength {
   length: number;
 }
 
-export class MultipartParameters {
-  private readonly parameters: string[];
-
-  constructor(parameters: string[]) {
-    this.parameters = parameters;
+export function getPart(name: string, parameters: string[]): string[] {
+  const indexAndLength = findPart(name, parameters);
+  if (indexAndLength.index != -1) {
+    const contentIndex = indexAndLength.index + 1;
+    return parameters.slice(contentIndex, contentIndex + indexAndLength.length);
   }
 
-  public getPart(name: string): string[] {
-    const indexAndLength = this.findPart(name);
-    if (indexAndLength.index != -1) {
-      const contentIndex = indexAndLength.index + 1;
-      return this.parameters.slice(contentIndex, contentIndex + indexAndLength.length);
+  return [];
+}
+
+export function setPart(name: string, value: string[], parameters: string[]): void {
+  const indexAndLength = findPart(name, parameters);
+  if (indexAndLength.index == -1) {
+    parameters.push(`${name}:${value.length}`, ...value);
+  } else {
+    const part = [`${name}:${value.length}`, ...value];
+    parameters.splice(indexAndLength.index, indexAndLength.length + 1, ...part);
+  }
+}
+
+function findPart(name: string, parameters: string[]): IndexAndLength {
+  let i = 0;
+
+  while (i < parameters.length) {
+    const header = parameters[i];
+    const parts = header.split(":");
+    const length = parseInt(parts[1]);
+    if (name === parts[0]) {
+      return { index: i, length };
     }
 
-    return [];
+    i += length + 1;
   }
 
-  public setPart(name: string, value: string[]): void {
-    const indexAndLength = this.findPart(name);
-    if (indexAndLength.index == -1) {
-      this.parameters.push(`${name}:${value.length}`, ...value);
-    } else {
-      const part = [`${name}:${value.length}`, ...value];
-      this.parameters.splice(indexAndLength.index, indexAndLength.length + 1, ...part);
-    }
-  }
-
-  private findPart(name: string): IndexAndLength {
-    let i = 0;
-
-    while (i < this.parameters.length) {
-      const header = this.parameters[i];
-      const parts = header.split(":");
-      const length = parseInt(parts[1]);
-      if (name === parts[0]) {
-        return { index: i, length };
-      }
-
-      i += length + 1;
-    }
-
-    return { index: -1, length: -1 };
-  }
+  return { index: -1, length: -1 };
 }
 
 export function setValue(entry: Entry, update: VariableInitialised): void {
@@ -161,6 +153,17 @@ export function interpolate(variables: string[], values: { [name: string]: strin
 
 export function arrayContainsValues(parameters: string[] | undefined): boolean {
   return parameters != undefined && Array.isArray(parameters) && parameters.length > 0;
+}
+
+export function getDefaultIfNotArrayOrEmpty(
+  parameters: string[] | undefined,
+  defaultValue: () => string[] = () => []
+): string[] {
+  if (!Array.isArray(parameters) || parameters.length == 0) {
+    return defaultValue();
+  }
+
+  return parameters;
 }
 
 export function join(parameters: string[] | undefined, defaultValue: () => string = () => ""): string {

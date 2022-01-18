@@ -166,7 +166,7 @@ export default class Content extends Vue {
     this.disabled = true;
 
     const onComplete = () => {
-      /**/
+      /* Do nothing */
     };
     const onFinally = () => (this.disabled = false);
 
@@ -194,7 +194,7 @@ export default class Content extends Vue {
 
     const onComplete = () => this.runNext(index + 1, until);
     const onFinally = () => {
-      /**/
+      /* Do nothing */
     };
 
     this.run(entry, onComplete, onFinally);

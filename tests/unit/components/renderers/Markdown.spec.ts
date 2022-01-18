@@ -3,7 +3,7 @@ import { Entry, OnSaveOutcome } from "@/models/Chapter";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 
 describe("Markdown", () => {
-  describe("View/Edit", () => {
+  describe("View", () => {
     it("renders an empty entry", async () => {
       /* Given */
       const entry = {
@@ -79,7 +79,9 @@ describe("Markdown", () => {
       /* Then */
       expect(wrapper.find("h2").text()).toEqual("Albert Attard");
     });
+  });
 
+  describe("Edit", () => {
     it("lists the variables", async () => {
       /* Given */
       const entry = {

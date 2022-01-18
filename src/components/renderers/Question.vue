@@ -17,15 +17,16 @@
 
 <script lang="ts">
 import {
-  arrayContainsValues,
   createSaveEntry,
   Entry,
+  getDefaultIfNotArrayOrEmpty,
+  getPart,
   hasChanged,
   join,
-  MultipartParameters,
   OnSaveOutcome,
   OnSaveResult,
   SaveEntry,
+  setPart,
 } from "@/models/Chapter";
 import { Marked } from "@ts-stack/markdown";
 import { Options, Vue } from "vue-class-component";
@@ -43,34 +44,27 @@ export default class Question extends Vue {
   private entry!: Entry;
   private edit: SaveEntry = {} as SaveEntry;
 
-  private readQa: MultipartParameters = new MultipartParameters(Question.defaultQuestion());
-  private editQa: MultipartParameters = new MultipartParameters([]);
-
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
-
-    if (arrayContainsValues(this.edit.parameters)) {
-      this.readQa = new MultipartParameters(this.entry.parameters);
-    } else {
-      this.edit.parameters = [];
-    }
-
-    this.editQa = new MultipartParameters(this.edit.parameters);
   }
 
   get question(): string {
-    const question = join(Question.getQuestionPart(this.readQa));
+    const question = join(
+      Question.getQuestionPart(getDefaultIfNotArrayOrEmpty(this.entry.parameters, Question.defaultQuestion))
+    );
     return Marked.parse(question);
   }
 
   get answer(): string {
-    const answer = join(Question.getAnswerPart(this.readQa));
+    const answer = join(
+      Question.getAnswerPart(getDefaultIfNotArrayOrEmpty(this.entry.parameters, Question.defaultQuestion))
+    );
     return Marked.parse(answer);
   }
 
   get editQuestion(): string {
-    return join(Question.getQuestionPart(this.editQa));
+    return join(Question.getQuestionPart(this.edit.parameters));
   }
 
   set editQuestion(value: string) {
@@ -78,7 +72,7 @@ export default class Question extends Vue {
   }
 
   get editAnswer(): string {
-    return join(Question.getAnswerPart(this.editQa));
+    return join(Question.getAnswerPart(this.edit.parameters));
   }
 
   set editAnswer(value: string) {
@@ -86,7 +80,7 @@ export default class Question extends Vue {
   }
 
   private onSave(): OnSaveResult {
-    const question = join(Question.getQuestionPart(this.editQa));
+    const question = join(Question.getQuestionPart(this.edit.parameters));
     if (question.length === 0) {
       this.entry.error = "The question cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
@@ -99,20 +93,20 @@ export default class Question extends Vue {
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
   }
 
-  private static getQuestionPart(parameters: MultipartParameters): string[] {
-    return parameters.getPart(QUESTION_PART);
+  private static getQuestionPart(parameters: string[]): string[] {
+    return getPart(QUESTION_PART, parameters);
   }
 
   private setQuestionPart(value: string): void {
-    this.editQa.setPart(QUESTION_PART, value.split("\n"));
+    setPart(QUESTION_PART, value.split("\n"), this.edit.parameters);
   }
 
-  private static getAnswerPart(parameters: MultipartParameters): string[] {
-    return parameters.getPart(ANSWER_PART);
+  private static getAnswerPart(parameters: string[]): string[] {
+    return getPart(ANSWER_PART, parameters);
   }
 
   private setAnswerPart(value: string): void {
-    this.editQa.setPart(ANSWER_PART, value.split("\n"));
+    setPart(ANSWER_PART, value.split("\n"), this.edit.parameters);
   }
 
   private static defaultQuestion(): string[] {

@@ -2,10 +2,11 @@ import {
   createSaveEntry,
   doAllVariablesHaveValues,
   Entry,
+  getPart,
   interpolate,
   join,
-  MultipartParameters,
   SaveEntry,
+  setPart,
   setValue,
 } from "@/models/Chapter";
 
@@ -244,11 +245,11 @@ describe("Variables interpolation", () => {
 describe("Multipart Parameters", () => {
   it("returns empty array if name is not found", () => {
     /* Given */
-    const multipart = new MultipartParameters([]);
+    const parameters: string[] = [];
     const name = "SOMETHING";
 
     /* When */
-    const result = multipart.getPart(name);
+    const result = getPart(name, parameters);
 
     /* Then */
     expect(result).toEqual([]);
@@ -258,10 +259,9 @@ describe("Multipart Parameters", () => {
     /* Given */
     const name = "SOMETHING";
     const parameters = ["OTHER-1:1", "x", `${name}:2`, "A", "B", "OTHER-2:1", "y"];
-    const multipart = new MultipartParameters(parameters);
 
     /* When */
-    const result = multipart.getPart(name);
+    const result = getPart(name, parameters);
 
     /* Then */
     expect(result).toEqual(["A", "B"]);
@@ -271,10 +271,9 @@ describe("Multipart Parameters", () => {
     /* Given */
     const name = "SOMETHING";
     const parameters = ["OTHER:1", "x"];
-    const multipart = new MultipartParameters(parameters);
 
     /* When */
-    multipart.setPart(name, ["A", "B"]);
+    setPart(name, ["A", "B"], parameters);
 
     /* Then */
     expect(parameters).toEqual(["OTHER:1", "x", `${name}:2`, "A", "B"]);
@@ -284,10 +283,9 @@ describe("Multipart Parameters", () => {
     /* Given */
     const name = "SOMETHING";
     const parameters = ["OTHER:1", "x", `${name}:5`, "a", "b", "c", "d", "e"];
-    const multipart = new MultipartParameters(parameters);
 
     /* When */
-    multipart.setPart(name, ["A", "B"]);
+    setPart(name, ["A", "B"], parameters);
 
     /* Then */
     expect(parameters).toEqual(["OTHER:1", "x", `${name}:2`, "A", "B"]);
@@ -297,10 +295,9 @@ describe("Multipart Parameters", () => {
     /* Given */
     const name = "SOMETHING";
     const parameters = ["OTHER:1", "x", `${name}:1`, "a"];
-    const multipart = new MultipartParameters(parameters);
 
     /* When */
-    multipart.setPart(name, ["A", "B"]);
+    setPart(name, ["A", "B"], parameters);
 
     /* Then */
     expect(parameters).toEqual(["OTHER:1", "x", `${name}:2`, "A", "B"]);
