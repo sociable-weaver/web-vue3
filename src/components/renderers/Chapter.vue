@@ -10,12 +10,17 @@ import {
   createSaveEntry,
   Entry,
   getElement,
+  getPart,
   hasChanged,
   OnSaveOutcome,
   OnSaveResult,
   SaveEntry,
+  setPart,
 } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
+
+const TITLE_PART = "Title";
+const DESCRIPTION_PART = "Description";
 
 @Options({
   name: "Chapter",
@@ -33,19 +38,21 @@ export default class Chapter extends Vue {
   }
 
   get chapter(): string {
-    return getElement(this.entry.parameters);
+    return getElement(Chapter.getTitlePart(this.entry.parameters));
   }
 
   get editChapter(): string {
-    return getElement(this.edit.parameters);
+    return getElement(Chapter.getTitlePart(this.entry.parameters));
   }
 
   set editChapter(value: string) {
-    this.edit.parameters = [value];
+    this.setTitlePart(value);
   }
 
   private onSave(): OnSaveResult {
-    if (getElement(this.edit.parameters).length === 0) {
+    const title = Chapter.getTitlePart(this.edit.parameters);
+    console.log("Title", title);
+    if (title.length === 0 || title[0].length === 0) {
       this.entry.error = "The chapter cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;
     }
@@ -55,6 +62,14 @@ export default class Chapter extends Vue {
     }
 
     return { outcome: OnSaveOutcome.NotChanged } as OnSaveResult;
+  }
+
+  private static getTitlePart(parameters: string[]): string[] {
+    return getPart(TITLE_PART, parameters);
+  }
+
+  private setTitlePart(value: string): void {
+    setPart(TITLE_PART, [value], this.edit.parameters);
   }
 }
 </script>

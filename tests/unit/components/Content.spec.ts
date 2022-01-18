@@ -17,7 +17,7 @@ describe("Content", () => {
         entries: [
           {
             type: "chapter",
-            parameters: ["Hello world"],
+            parameters: ["Title:1", "Hello world"],
           },
         ],
       };

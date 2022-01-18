@@ -8,7 +8,7 @@ describe("Chapter", () => {
       /* Given */
       const entry = {
         type: "chapter",
-        parameters: ["Hello world"],
+        parameters: ["Title:1", "Hello world"],
       };
 
       /* When */
@@ -24,7 +24,7 @@ describe("Chapter", () => {
       /* Given */
       const entry = {
         type: "chapter",
-        parameters: ["Hello world"],
+        parameters: ["Title:1", "Hello world"],
         edit: true,
       };
 
@@ -43,7 +43,7 @@ describe("Chapter", () => {
       /* Given */
       const entry = {
         type: "chapter",
-        parameters: ["Hello world"],
+        parameters: ["Title:1", "Hello world"],
         edit: true,
       } as Entry;
       const wrapper = shallowMount(Chapter, { props: { entry } });
@@ -57,14 +57,14 @@ describe("Chapter", () => {
       /* Then */
       expect(outcome).toEqual({ outcome: OnSaveOutcome.KeepEditing });
       expect(entry.error).toEqual("The chapter cannot be empty");
-      expect(entry.parameters).toEqual(["Hello world"]);
+      expect(entry.parameters).toEqual(["Title:1", "Hello world"]);
     });
 
     it("returns NotChanged when the chapter is not changed", async () => {
       /* Given */
       const entry = {
         type: "chapter",
-        parameters: ["Hello world"],
+        parameters: ["Title:1", "Hello world"],
         edit: true,
       } as Entry;
       shallowMount(Chapter, { props: { entry } });
@@ -75,14 +75,14 @@ describe("Chapter", () => {
 
       /* Then */
       expect(outcome).toEqual({ outcome: OnSaveOutcome.NotChanged });
-      expect(entry.parameters).toEqual(["Hello world"]);
+      expect(entry.parameters).toEqual(["Title:1", "Hello world"]);
     });
 
     it("returns Changed when the chapter is changed", async () => {
       /* Given */
       const entry = {
         type: "chapter",
-        parameters: ["Hello world"],
+        parameters: ["Title:1", "Hello world"],
         edit: true,
       } as Entry;
       const wrapper = shallowMount(Chapter, { props: { entry } });
@@ -95,8 +95,8 @@ describe("Chapter", () => {
 
       /* Then */
       expect(outcome.outcome).toEqual(OnSaveOutcome.Changed);
-      expect(outcome.entry?.parameters).toEqual(["Hallo Welt"]);
-      expect(entry.parameters).toEqual(["Hello world"]);
+      expect(outcome.entry?.parameters).toEqual(["Title:1", "Hallo Welt"]);
+      expect(entry.parameters).toEqual(["Title:1", "Hello world"]);
     });
   });
 });
