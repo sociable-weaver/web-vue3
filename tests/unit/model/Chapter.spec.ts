@@ -109,6 +109,23 @@ describe("Entry", () => {
   });
 
   describe("createSaveEntry()", () => {
+    it("returns an empty entry", () => {
+      /* Given */
+      const entry = {} as Entry;
+
+      /* When */
+      const result = createSaveEntry(entry);
+
+      /* Then */
+      const expected = {
+        parameters: [],
+        variables: [],
+        environmentVariables: [],
+        values: {},
+      };
+      expect(result).toEqual(expected);
+    });
+
     it("copies all values", () => {
       /* Given */
       const entry = {

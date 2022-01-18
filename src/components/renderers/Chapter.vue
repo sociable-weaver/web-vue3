@@ -25,7 +25,7 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Chapter extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
 
   mounted(): void {
     this.entry.onSave = this.onSave;
