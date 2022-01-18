@@ -40,10 +40,10 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Variable extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { name: "", parameters: [""], sensitive: true } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
   private value = "";
 
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
 

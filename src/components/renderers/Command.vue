@@ -151,17 +151,14 @@ interface VariableValue {
 })
 export default class Command extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
   private newVariable = "";
   private newEnvironmentVariable = "";
   private templates: Templates = Command.createTemplates();
 
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
-    if (!arrayContainsValues(this.edit.parameters)) {
-      this.edit.parameters = [Command.defaultCommand()];
-    }
   }
 
   private get usesVariables(): boolean {

@@ -25,9 +25,9 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Subsection extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
 
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
   }

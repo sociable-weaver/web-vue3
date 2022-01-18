@@ -27,7 +27,7 @@ export default class Chapter extends Vue {
   private entry!: Entry;
   private edit: SaveEntry = {} as SaveEntry;
 
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
   }

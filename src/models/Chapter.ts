@@ -5,7 +5,7 @@ export interface Chapter {
   workPath: string;
 }
 
-/* The application is only expecting the following and it will fail if we provide more.
+/* The application is only expecting the following, and it will fail if we provide more.
     That's why we are stripping down properties that are not needed by the application. */
 export interface SaveEntry {
   type: string;

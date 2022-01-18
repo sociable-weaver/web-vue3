@@ -48,10 +48,10 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class Markdown extends Vue {
   private entry!: Entry;
-  private edit: SaveEntry = { parameters: [""] } as SaveEntry;
+  private edit: SaveEntry = {} as SaveEntry;
   private newVariable = "";
 
-  mounted(): void {
+  created(): void {
     this.entry.onSave = this.onSave;
     this.edit = createSaveEntry(this.entry);
   }
