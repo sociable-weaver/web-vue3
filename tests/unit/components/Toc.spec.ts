@@ -30,7 +30,7 @@ describe("Toc component", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(chapterSuccessfulResponse);
     const bookPath = "path-to-book";
-    const book = { ...bookSuccessfulResponse.data, bookPath };
+    const book = bookSuccessfulResponse.data;
     const chapterPath = "";
     const wrapper = shallowMount(Toc, { props: { book, chapterPath } });
 

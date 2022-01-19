@@ -11,8 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Book } from "@/models/Book";
-import { Chapter } from "@/models/Chapter";
+import { Book, Chapter, getPart, join } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -48,13 +47,13 @@ export default class Breadcrumbs extends Vue {
 
   private get previous(): string {
     const title = this.chapterTitle;
-    const index = this.book.chapters.findIndex((c) => c.title === title);
+    const index = this.book.chapters.findIndex((c) => Breadcrumbs.title(c) === title);
 
     if (index < 1) {
       return "";
     }
 
-    return this.book.chapters[index - 1].title;
+    return Breadcrumbs.title(this.book.chapters[index - 1]);
   }
 
   private get previousPath(): string {
@@ -70,13 +69,13 @@ export default class Breadcrumbs extends Vue {
 
   private get next(): string {
     const title = this.chapterTitle;
-    const index = this.book.chapters.findIndex((c) => c.title === title);
+    const index = this.book.chapters.findIndex((c) => Breadcrumbs.title(c) === title);
 
     if (index == -1 || index >= this.book.chapters.length - 1) {
       return "";
     }
 
-    return this.book.chapters[index + 1].title;
+    return Breadcrumbs.title(this.book.chapters[index + 1]);
   }
 
   private get nextPath(): string {
@@ -88,6 +87,16 @@ export default class Breadcrumbs extends Vue {
       name: "Book",
       params: { bookPath: this.chapter.bookPath, workPath: this.chapter.workPath, chapterPath: "" },
     });
+  }
+
+  /* TODO: move to a common place */
+  private static title(chapter: Chapter): string {
+    const entry = chapter.entries.find((e) => e.type === "chapter");
+    if (entry === undefined) {
+      return "Missing chapter entry";
+    }
+
+    return join(getPart("Title", entry.parameters));
   }
 }
 </script>

@@ -1,23 +1,21 @@
 <template>
   <div class="book">
     <App v-if="showAppComponent()" ref="app" @app-is-running="onAppIsRunning" />
-    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" :book="book" />
-    <Toc
-      ref="toc"
-      @chapter-read="onChapterRead"
-      v-if="showTocComponent()"
-      :book="book"
-      :chapterPath="book.chapterPath"
-    />
+    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" />
+    <Toc v-if="showTocComponent()" ref="toc" @chapter-read="onChapterRead" :book="book" />
     <div v-if="showChapterComponent()">
+      <!--
       <Breadcrumbs :book="book" :chapter="chapter" />
+      -->
       <Content
         ref="content"
-        :chapter="chapter"
+        :chapter="readChapter()"
         @variable-updated="onVariableUpdated"
         @variable-initialised="onVariableUpdated"
       />
-      <Breadcrumbs :book="book" :chapter="chapter" />
+      <!--
+        <Breadcrumbs :book="book" :chapter="chapter" />
+      -->
     </div>
   </div>
 </template>
@@ -28,8 +26,8 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Content from "@/components/Content.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import { Book } from "@/models/Book";
-import { Chapter, setValue, VariableUpdated } from "@/models/Chapter";
+import { Book, Chapter, emptyBook, VariableUpdated } from "@/models/Chapter";
+import { isNonBlank } from "@/models/Common";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -43,61 +41,55 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BookView extends Vue {
   private appIsRunning = false;
-  private book: Book = { title: "", description: "", chapters: [], bookPath: "", workPath: "", chapterPath: "" };
-  private chapter: Chapter | null = null;
-
-  updated(): void {
-    this.book.bookPath = (this.$route.params.bookPath as string) || "";
-    this.book.workPath = (this.$route.params.workPath as string) || "";
-    this.book.chapterPath = (this.$route.params.chapterPath as string) || "";
-  }
+  private book: Book = emptyBook();
 
   private showAppComponent(): boolean {
     return !this.appIsRunning;
   }
 
   private showOpenComponent(): boolean {
-    return this.appIsRunning && this.book.title === "";
+    return this.appIsRunning && !this.book.opened;
   }
 
   private showTocComponent(): boolean {
-    return this.appIsRunning && this.book.title !== "" && this.book.chapterPath === "";
+    return this.appIsRunning && this.book.opened && !isNonBlank(this.book.chapterPath);
   }
 
   private showChapterComponent(): boolean {
-    return this.appIsRunning && this.chapter !== null && this.book.chapterPath !== "";
+    return this.appIsRunning && this.book.opened && isNonBlank(this.book.chapterPath);
   }
 
-  private onAppIsRunning(state: boolean): void {
-    this.appIsRunning = state;
+  private readChapter(): Chapter {
+    const chapterPath = this.book.chapterPath;
+    return this.book.chapters.find((chapter) => chapter.chapterPath === chapterPath) as Chapter;
   }
 
-  private onOpenBook(opened: Book): void {
-    this.book = opened;
-    this.$router.push({
-      name: "Book",
-      params: { bookPath: this.book.bookPath, workPath: this.book.workPath },
-    });
+  private onAppIsRunning(appIsRunning: boolean): void {
+    this.appIsRunning = appIsRunning;
+  }
+
+  private onOpenBook(book: Book): void {
+    this.book = book;
   }
 
   private onChapterRead(read: Chapter): void {
-    this.book.chapterPath = read.chapterPath;
-    this.chapter = read;
-    this.chapter.workPath = this.book.workPath;
-    this.$router.push({
-      name: "Book",
-      params: {
-        bookPath: this.book.bookPath,
-        workPath: this.book.workPath,
-        chapterPath: read.chapterPath,
-      },
-    });
+    // this.book.chapterPath = read.chapterPath;
+    // this.chapter = read;
+    // this.chapter.workPath = this.book.workPath;
+    // this.$router.push({
+    //   name: "Book",
+    //   params: {
+    //     bookPath: this.book.bookPath,
+    //     workPath: this.book.workPath,
+    //     chapterPath: read.chapterPath,
+    //   },
+    // });
   }
 
   private onVariableUpdated(update: VariableUpdated): void {
-    this.chapter?.entries.forEach((entry) => {
-      setValue(entry, update);
-    });
+    // this.chapter?.entries.forEach((entry) => {
+    //   setValue(entry, update);
+    // });
   }
 }
 </script>

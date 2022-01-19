@@ -68,20 +68,15 @@
 </template>
 
 <script lang="ts">
-import { Book } from "@/models/Book";
+import { Book } from "@/models/Chapter";
 import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Open",
   emits: ["bookOpened"],
-  props: {
-    book: Object,
-  },
 })
 export default class Open extends Vue {
-  private book!: Book;
-
   private pathToRepository = "";
   private openFrom = "openLocal";
   private actionMessage = "";
@@ -90,8 +85,8 @@ export default class Open extends Vue {
 
   mounted(): void {
     this.$nextTick(() => {
-      this.bookPath = this.book.bookPath;
-      this.workPath = this.book.workPath;
+      this.bookPath = Open.asString(this.$route.params.bookPath);
+      this.workPath = Open.asString(this.$route.params.workPath);
 
       if (this.isBookPathSet() && this.isWorkPathSet()) {
         this.handleOpenBook();
@@ -132,12 +127,19 @@ export default class Open extends Vue {
           ...book,
           bookPath: bookPath,
           workPath: workPath,
+          opened: true,
         };
+        this.updatePath(bookPath, workPath);
         this.$emit("bookOpened", workbook);
       })
-      .catch((e) => {
-        this.actionMessage = `Failed to open working book (${formatError(e)})`;
-      });
+      .catch((e) => (this.actionMessage = `Failed to open working book (${formatError(e)})`));
+  }
+
+  private updatePath(bookPath: string, workPath: string) {
+    this.$router.push({
+      name: "Book",
+      params: { bookPath, workPath },
+    });
   }
 
   private openBook(bookPath: string): Promise<Book> {
@@ -155,8 +157,19 @@ export default class Open extends Vue {
     return Open.isNonBlank(this.workPath);
   }
 
-  private static isNonBlank(text: string): boolean {
-    return text.trim().length > 0;
+  /* TODO: move to a common place */
+  private static isNonBlank(text: string | undefined): boolean {
+    return text !== undefined && text.trim().length > 0;
+  }
+
+  /* TODO: move to a common place */
+  private static asString(param: undefined | string | string[]): string {
+    if (param === undefined || param === "undefined") {
+      return "";
+    }
+
+    /* TODO: need to handle the string[] */
+    return param as string;
   }
 }
 </script>

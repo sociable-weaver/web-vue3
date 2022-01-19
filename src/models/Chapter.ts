@@ -1,8 +1,22 @@
-export interface Chapter {
-  entries: Entry[];
-  chapterPath: string;
+export interface HasError {
+  error: string | null;
+}
+
+export interface Book extends HasError {
+  title: string;
+  description: string;
   bookPath: string;
   workPath: string;
+  chapterPath: string;
+  chapters: Chapter[];
+  opened: boolean;
+}
+
+export interface Chapter extends HasError {
+  workPath: string;
+  bookPath: string;
+  chapterPath: string;
+  entries: Entry[];
 }
 
 /* The application is only expecting the following, and it will fail if we provide more.
@@ -24,7 +38,7 @@ export interface SaveEntry {
   commandTimeout: number;
 }
 
-export interface Entry {
+export interface Entry extends HasError {
   type: string;
   id: string;
   name: string;
@@ -43,7 +57,6 @@ export interface Entry {
   edit: boolean;
   failed: boolean;
   output: string;
-  error: string;
   onSave: () => OnSaveResult;
 }
 
@@ -116,6 +129,19 @@ export function setValue(entry: Entry, update: VariableInitialised): void {
     }
     entry.values[update.name] = update.value;
   }
+}
+
+export function emptyBook(): Book {
+  return {
+    title: "",
+    description: "",
+    bookPath: "",
+    workPath: "",
+    chapterPath: "",
+    chapters: [] as Chapter[],
+    error: "",
+    opened: false,
+  };
 }
 
 export function doAllVariablesHaveValues(entry: Entry): boolean {
