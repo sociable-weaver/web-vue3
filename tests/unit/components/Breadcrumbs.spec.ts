@@ -15,7 +15,7 @@ describe("Breadcrumbs component", () => {
 
     /* Then */
     expect(wrapper.find("li[role=toc]").exists()).toBeTruthy();
-    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`/#/${bookPath}/${workPath}`);
+    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`#/${bookPath}/${workPath}`);
     expect(wrapper.find("li[role=previous]").exists()).toBeFalsy();
     expect(wrapper.find("li[role=next]").exists()).toBeFalsy();
   });
@@ -32,11 +32,11 @@ describe("Breadcrumbs component", () => {
 
     /* Then */
     expect(wrapper.find("li[role=toc]").exists()).toBeTruthy();
-    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`/#/${bookPath}/${workPath}`);
+    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`#/${bookPath}/${workPath}`);
     expect(wrapper.find("li[role=previous]").exists()).toBeFalsy();
     expect(wrapper.find("li[role=next]").exists()).toBeTruthy();
     expect(wrapper.find("li[role=next] > a").attributes("href")).toEqual(
-      `/#/${bookPath}/${workPath}/${chapterIndex + 1}`
+      `#/${bookPath}/${workPath}/${chapterIndex + 1}`
     );
   });
 
@@ -52,10 +52,10 @@ describe("Breadcrumbs component", () => {
 
     /* Then */
     expect(wrapper.find("li[role=toc]").exists()).toBeTruthy();
-    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`/#/${bookPath}/${workPath}`);
+    expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`#/${bookPath}/${workPath}`);
     expect(wrapper.find("li[role=previous]").exists()).toBeTruthy();
     expect(wrapper.find("li[role=previous] > a").attributes("href")).toEqual(
-      `/#/${bookPath}/${workPath}/${chapterIndex - 1}`
+      `#/${bookPath}/${workPath}/${chapterIndex - 1}`
     );
     expect(wrapper.find("li[role=next]").exists()).toBeFalsy();
   });
