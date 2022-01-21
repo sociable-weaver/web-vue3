@@ -13,17 +13,22 @@ describe("Content", () => {
   describe("Rendering", () => {
     it("displays the chapter", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Title:1", "Hello world"],
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Title:1", "Hello world"],
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -31,18 +36,22 @@ describe("Content", () => {
     });
 
     it("displays the command without working directory", async () => {
-      /* Given */
-      const chapter = {
-        entries: [
+      /* Given */ const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "command",
-            parameters: ["java -jar hello-world.jar"],
+            entries: [
+              {
+                type: "command",
+                parameters: ["java -jar hello-world.jar"],
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -51,30 +60,35 @@ describe("Content", () => {
 
     it("displays the git apply diff as HTML", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "git-apply-patch",
-            workingDirectory: "hello-world",
-            parameters: [
-              "diff --git a/HelloWorld.java b/HelloWorld.java",
-              "index cc78ded..cd36a67 100755",
-              "--- a/HelloWorld.java",
-              "+++ b/HelloWorld.java",
-              "@@ -1,5 +1,3 @@",
-              "-#!/usr/bin/java --source 17",
-              "-",
-              " public class HelloWorld {",
-              "     public static void main(final String[] args) {",
-              '         System.out.println("Hello World!!");',
-              "",
+            entries: [
+              {
+                type: "git-apply-patch",
+                workingDirectory: "hello-world",
+                parameters: [
+                  "diff --git a/HelloWorld.java b/HelloWorld.java",
+                  "index cc78ded..cd36a67 100755",
+                  "--- a/HelloWorld.java",
+                  "+++ b/HelloWorld.java",
+                  "@@ -1,5 +1,3 @@",
+                  "-#!/usr/bin/java --source 17",
+                  "-",
+                  " public class HelloWorld {",
+                  "     public static void main(final String[] args) {",
+                  '         System.out.println("Hello World!!");',
+                  "",
+                ],
+              },
             ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -83,17 +97,22 @@ describe("Content", () => {
 
     it("displays the markdown as HTML", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "markdown",
-            parameters: ["**Hello world**"],
+            entries: [
+              {
+                type: "markdown",
+                parameters: ["**Hello world**"],
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -102,16 +121,21 @@ describe("Content", () => {
 
     it("displays the question", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "question",
+            entries: [
+              {
+                type: "question",
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -120,17 +144,22 @@ describe("Content", () => {
 
     it("displays the section", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "section",
-            parameters: ["Hello world"],
+            entries: [
+              {
+                type: "section",
+                parameters: ["Hello world"],
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -139,17 +168,22 @@ describe("Content", () => {
 
     it("displays the subsection", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "subsection",
-            parameters: ["Hello world"],
+            entries: [
+              {
+                type: "subsection",
+                parameters: ["Hello world"],
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -158,18 +192,23 @@ describe("Content", () => {
 
     it("displays the non-sensitive variable input", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "variable",
-            name: "NAME",
-            sensitive: false,
+            entries: [
+              {
+                type: "variable",
+                name: "NAME",
+                sensitive: false,
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -180,10 +219,13 @@ describe("Content", () => {
     it("displays a message indicating that this type is not yet supported", async () => {
       /* Given */
       const type = "unsupported-type";
-      const chapter = { entries: [{ type }] };
+      const book = {
+        chapterIndex: 0,
+        chapters: [{ entries: [{ type }] }],
+      };
 
       /* When */
-      const wrapper = mount(Content, { props: { chapter } });
+      const wrapper = mount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -198,18 +240,23 @@ describe("Content", () => {
 
     it("displays the edit buttons when viewing the entry", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            showEditControls: true,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                showEditControls: true,
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -219,18 +266,23 @@ describe("Content", () => {
 
     it("displays the save buttons when editing the entry", async () => {
       /* Given */
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            edit: true,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                edit: true,
+              },
+            ],
           },
         ],
       };
 
       /* When */
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* Then */
@@ -243,17 +295,22 @@ describe("Content", () => {
       const onSave = jest.fn();
       onSave.mockReturnValueOnce({ outcome: OnSaveOutcome.KeepEditing });
 
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            edit: true,
-            onSave,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                edit: true,
+                onSave,
+              },
+            ],
           },
         ],
       };
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* When */
@@ -261,7 +318,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      expect(chapter.entries[0].edit).toEqual(true);
+      expect(book.chapters[0].entries[0].edit).toEqual(true);
       expect(apiClient.put).not.toHaveBeenCalled();
     });
 
@@ -270,17 +327,22 @@ describe("Content", () => {
       const onSave = jest.fn();
       onSave.mockReturnValueOnce({ outcome: OnSaveOutcome.NotChanged });
 
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            edit: true,
-            onSave,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                edit: true,
+                onSave,
+              },
+            ],
           },
         ],
       };
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* When */
@@ -288,7 +350,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      expect(chapter.entries[0].edit).toEqual(false);
+      expect(book.chapters[0].entries[0].edit).toEqual(false);
       expect(apiClient.put).not.toHaveBeenCalled();
     });
 
@@ -301,17 +363,22 @@ describe("Content", () => {
       });
       mocked(apiClient.put).mockResolvedValueOnce(saveEntrySuccessfulResponse);
 
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            edit: true,
-            onSave,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                edit: true,
+                onSave,
+              },
+            ],
           },
         ],
       };
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* When */
@@ -319,7 +386,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      const entry = chapter.entries[0];
+      const entry = book.chapters[0].entries[0];
       expect(entry.edit).toEqual(false);
       /* Make sure that the entry now looks like the one returned, which may be different from the one submitted.  
           After, saving, the application will read the entry back and will return this to the frontend.  Later on 
@@ -338,18 +405,23 @@ describe("Content", () => {
       mocked(apiClient.put).mockRejectedValue(networkError);
       mocked(formatError).mockReturnValue(networkError.message);
 
-      const chapter = {
-        entries: [
+      const book = {
+        chapterIndex: 0,
+        chapters: [
           {
-            type: "chapter",
-            parameters: ["Hello world"],
-            edit: true,
-            error: "",
-            onSave,
+            entries: [
+              {
+                type: "chapter",
+                parameters: ["Hello world"],
+                edit: true,
+                error: "",
+                onSave,
+              },
+            ],
           },
         ],
       };
-      const wrapper = shallowMount(Content, { props: { chapter } });
+      const wrapper = shallowMount(Content, { props: { book } });
       await flushPromises();
 
       /* When */
@@ -357,7 +429,7 @@ describe("Content", () => {
       await flushPromises();
 
       /* Then */
-      const entry = chapter.entries[0];
+      const entry = book.chapters[0].entries[0];
       expect(entry.edit).toEqual(true);
       expect(entry.parameters).toEqual(["Hello world"]);
       expect(entry.error).toEqual(`Failed to save entry (${networkError.message})`);

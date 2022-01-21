@@ -96,6 +96,7 @@ import Subsection from "@/components/renderers/Subsection.vue";
 import Todo from "@/components/renderers/Todo.vue";
 import Variable from "@/components/renderers/Variable.vue";
 import {
+  Book,
   Chapter,
   doAllVariablesHaveValues,
   Entry,
@@ -117,7 +118,7 @@ interface CreateEntry {
 @Options({
   name: "Content",
   props: {
-    chapter: Object,
+    book: Object,
   },
   components: {
     ChapterRenderer,
@@ -133,7 +134,7 @@ interface CreateEntry {
   emits: ["variableUpdated", "variableInitialised"],
 })
 export default class Content extends Vue {
-  private chapter!: Chapter;
+  private book!: Book;
   private disabled = false;
 
   private isRunnable(entry: Entry): boolean {
@@ -148,6 +149,11 @@ export default class Content extends Vue {
       "replace",
     ];
     return runnable.find((type) => type === entry.type) !== undefined;
+  }
+
+  private get chapter(): Chapter {
+    const chapterIndex = this.book.chapterIndex;
+    return this.book.chapters[chapterIndex];
   }
 
   private onMouseEnter(entry: Entry): void {
@@ -236,7 +242,7 @@ export default class Content extends Vue {
       type: entry.type,
       id: entry.id,
       name: entry.name,
-      workPath: this.chapter.workPath,
+      workPath: this.book.workPath,
       workingDirectory: entry.workingDirectory,
       parameters: Object.assign([], entry.parameters),
       variables: Object.assign([], entry.variables),
@@ -276,7 +282,7 @@ export default class Content extends Vue {
     return apiClient
       .delete("/api/entry", {
         params: {
-          bookPath: this.chapter.bookPath,
+          bookPath: this.book.bookPath,
           chapterPath: this.chapter.chapterPath,
           entryId: entryId,
         },
@@ -321,7 +327,7 @@ export default class Content extends Vue {
     return apiClient
       .post("/api/entry", entry, {
         params: {
-          bookPath: this.chapter.bookPath,
+          bookPath: this.book.bookPath,
           chapterPath: this.chapter.chapterPath,
         },
       })
@@ -363,7 +369,7 @@ export default class Content extends Vue {
     return apiClient
       .put("/api/entry", entry, {
         params: {
-          bookPath: this.chapter.bookPath,
+          bookPath: this.book.bookPath,
           chapterPath: this.chapter.chapterPath,
         },
       })

@@ -7,7 +7,7 @@
       <Breadcrumbs :book="book" />
       <Content
         ref="content"
-        :chapter="readChapter()"
+        :book="book"
         @variable-updated="onVariableUpdated"
         @variable-initialised="onVariableUpdated"
       />
@@ -22,7 +22,7 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Content from "@/components/Content.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import { Book, Chapter, emptyBook, setValue, VariableUpdated } from "@/models/Chapter";
+import { Book, emptyBook, setValue, VariableUpdated } from "@/models/Chapter";
 import { asNumber, asString } from "@/models/Common";
 import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
@@ -69,11 +69,6 @@ export default class BookView extends Vue {
 
   private showChapterComponent(): boolean {
     return this.appIsRunning && this.book.opened && this.book.chapterIndex !== -1;
-  }
-
-  private readChapter(): Chapter {
-    const chapterIndex = this.book.chapterIndex;
-    return this.book.chapters[chapterIndex];
   }
 
   private onAppIsRunning(appIsRunning: boolean): void {

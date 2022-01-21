@@ -5,7 +5,6 @@ import {
   getPart,
   interpolate,
   join,
-  SaveEntry,
   setPart,
   setValue,
 } from "@/models/Chapter";
@@ -122,7 +121,6 @@ describe("Entry", () => {
         parameters: [],
         variables: [],
         environmentVariables: [],
-        values: {},
       };
       expect(result).toEqual(expected);
     });
@@ -161,17 +159,12 @@ describe("Entry", () => {
         parameters: ["param-1", "param-2"],
         variables: ["var-1", "var-2"],
         environmentVariables: ["env-1", "env-2"],
-        values: {},
         ignoreErrors: true,
-        pushChanges: true,
         dryRun: true,
         sensitive: true,
         expectedExitValue: 1,
         commandTimeout: 600,
-      } as SaveEntry;
-      /* TODO: How can I inline these? */
-      expected.values["NAME"] = "Albert";
-      expected.values["SURNAME"] = "Attard";
+      };
       expect(result).toEqual(expected);
     });
   });

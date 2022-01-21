@@ -16,8 +16,6 @@ export interface Book extends HasError {
 }
 
 export interface Chapter extends HasError {
-  workPath: string;
-  bookPath: string;
   chapterPath: string;
   entries: Entry[];
 }
@@ -32,9 +30,7 @@ export interface SaveEntry {
   parameters: string[];
   variables: string[];
   environmentVariables: string[];
-  values: { [name: string]: string };
   ignoreErrors: boolean;
-  pushChanges: boolean;
   dryRun: boolean;
   sensitive: boolean;
   expectedExitValue: number;
@@ -221,9 +217,7 @@ export function createSaveEntry(entry: Entry): SaveEntry {
     parameters: Object.assign([], entry.parameters),
     variables: Object.assign([], entry.variables),
     environmentVariables: Object.assign([], entry.environmentVariables),
-    values: Object.assign({}, entry.values),
     ignoreErrors: entry.ignoreErrors,
-    pushChanges: entry.pushChanges,
     dryRun: entry.dryRun,
     sensitive: entry.sensitive,
     expectedExitValue: entry.expectedExitValue,
