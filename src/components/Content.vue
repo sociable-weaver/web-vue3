@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div>
     <div
       v-for="(entry, index) in chapter.entries"
       :key="entry.id"
