@@ -1,21 +1,17 @@
 <template>
   <div class="book">
     <App v-if="showAppComponent()" ref="app" @app-is-running="onAppIsRunning" />
-    <Open v-if="showOpenComponent()" ref="open" @book-opened="onOpenBook" />
-    <Toc v-if="showTocComponent()" ref="toc" @chapter-read="onChapterRead" :book="book" />
+    <Open v-if="showOpenComponent()" ref="open" :book="book" />
+    <Toc v-if="showTocComponent()" ref="toc" :book="book" />
     <div v-if="showChapterComponent()">
-      <!--
-      <Breadcrumbs :book="book" :chapter="chapter" />
-      -->
+      <Breadcrumbs :book="book" />
       <Content
         ref="content"
         :chapter="readChapter()"
         @variable-updated="onVariableUpdated"
         @variable-initialised="onVariableUpdated"
       />
-      <!--
-        <Breadcrumbs :book="book" :chapter="chapter" />
-      -->
+      <Breadcrumbs :book="book" />
     </div>
   </div>
 </template>
@@ -26,8 +22,9 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Content from "@/components/Content.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import { Book, Chapter, emptyBook, VariableUpdated } from "@/models/Chapter";
-import { isNonBlank } from "@/models/Common";
+import { Book, Chapter, emptyBook, setValue, VariableUpdated } from "@/models/Chapter";
+import { asNumber, asString } from "@/models/Common";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -43,6 +40,28 @@ export default class BookView extends Vue {
   private appIsRunning = false;
   private book: Book = emptyBook();
 
+  updated(): void {
+    const bookPath = asString(this.$route.params.bookPath);
+    const workPath = asString(this.$route.params.workPath);
+    const chapterIndex = asNumber(this.$route.params.chapterIndex);
+    const entryId = asString(this.$route.params.entryId);
+
+    console.log("Updated", `'${bookPath}'`, `'${workPath}'`, `'${chapterIndex}'`, `'${entryId}'`);
+
+    if (this.book.bookPath !== bookPath) {
+      console.log("handleOpenBook");
+      this.handleOpenBook(bookPath, workPath);
+    } else if (this.book.chapterIndex !== chapterIndex) {
+      console.log("handleReadChapter");
+      this.handleReadChapter(chapterIndex);
+    } else if (this.book.entryId !== entryId) {
+      console.log("handleReadEntry");
+      this.handleReadEntry(entryId);
+    } else {
+      console.log("Book", this.book);
+    }
+  }
+
   private showAppComponent(): boolean {
     return !this.appIsRunning;
   }
@@ -52,44 +71,61 @@ export default class BookView extends Vue {
   }
 
   private showTocComponent(): boolean {
-    return this.appIsRunning && this.book.opened && !isNonBlank(this.book.chapterPath);
+    return this.appIsRunning && this.book.opened && this.book.chapterIndex === -1;
   }
 
   private showChapterComponent(): boolean {
-    return this.appIsRunning && this.book.opened && isNonBlank(this.book.chapterPath);
+    return this.appIsRunning && this.book.opened && this.book.chapterIndex !== -1;
   }
 
   private readChapter(): Chapter {
-    const chapterPath = this.book.chapterPath;
-    return this.book.chapters.find((chapter) => chapter.chapterPath === chapterPath) as Chapter;
+    const chapterIndex = this.book.chapterIndex;
+    return this.book.chapters[chapterIndex];
   }
 
   private onAppIsRunning(appIsRunning: boolean): void {
     this.appIsRunning = appIsRunning;
   }
 
-  private onOpenBook(book: Book): void {
-    this.book = book;
-  }
-
-  private onChapterRead(read: Chapter): void {
-    // this.book.chapterPath = read.chapterPath;
-    // this.chapter = read;
-    // this.chapter.workPath = this.book.workPath;
-    // this.$router.push({
-    //   name: "Book",
-    //   params: {
-    //     bookPath: this.book.bookPath,
-    //     workPath: this.book.workPath,
-    //     chapterPath: read.chapterPath,
-    //   },
-    // });
-  }
-
   private onVariableUpdated(update: VariableUpdated): void {
-    // this.chapter?.entries.forEach((entry) => {
-    //   setValue(entry, update);
-    // });
+    this.book.chapters.forEach((chapter) => {
+      chapter.entries.forEach((entry) => setValue(entry, update));
+    });
+  }
+
+  private handleOpenBook(bookPath: string, workPath: string): void {
+    this.openBook(bookPath)
+      .then((book) => {
+        this.book = {
+          ...book,
+          bookPath: bookPath,
+          workPath: workPath,
+          chapterIndex: -1,
+          entryId: "",
+          opened: true,
+        };
+      })
+      .catch((e) => {
+        this.book = emptyBook();
+        this.book.bookPath = bookPath;
+        this.book.workPath = workPath;
+        this.book.error = `Failed to open working book (${formatError(e)})`;
+      });
+  }
+
+  private openBook(bookPath: string): Promise<Book> {
+    return apiClient
+      .get("/api/book", { params: { bookPath } })
+      .then((response) => response.data)
+      .then((json) => json as Book);
+  }
+
+  private handleReadChapter(chapterIndex: number) {
+    this.book.chapterIndex = chapterIndex;
+  }
+
+  private handleReadEntry(entryId: string) {
+    this.book.entryId = entryId;
   }
 }
 </script>

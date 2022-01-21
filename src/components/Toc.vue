@@ -3,8 +3,8 @@
     <h1 class="title">{{ book.title }}</h1>
     <p class="description">{{ book.description }}</p>
     <ol>
-      <li v-for="chapter in book.chapters" :key="chapter.title">
-        <h2 @click="onReadChapter(chapter.chapterPath)" class="chapter">{{ title(chapter) }}</h2>
+      <li v-for="(chapter, index) in book.chapters" :key="chapter.chapterPath">
+        <h2 @click="onReadChapter(index)" class="chapter">{{ title(chapter) }}</h2>
         <p class="description" v-html="description(chapter)" />
       </li>
     </ol>
@@ -25,13 +25,13 @@ import { Options, Vue } from "vue-class-component";
 export default class Toc extends Vue {
   private book!: Book;
 
-  private onReadChapter(chapterPath: string): void {
+  private onReadChapter(chapterIndex: number): void {
     this.$router.push({
       name: "Book",
       params: {
         bookPath: this.book.bookPath,
         workPath: this.book.workPath,
-        chapterPath: chapterPath,
+        chapterIndex: chapterIndex,
       },
     });
   }

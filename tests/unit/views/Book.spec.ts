@@ -1,13 +1,24 @@
 import App from "@/components/App.vue";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Content from "@/components/Content.vue";
 import Open from "@/components/Open.vue";
 import Toc from "@/components/Toc.vue";
-import { Book, emptyBook } from "@/models/Chapter";
+import { apiClient, formatError } from "@/services/ServiceApi";
 import BookView from "@/views/Book.vue";
-import { shallowMount, VueWrapper } from "@vue/test-utils";
+import { flushPromises, shallowMount, VueWrapper } from "@vue/test-utils";
+import { mocked } from "ts-jest/utils";
 import { ComponentPublicInstance, VNodeProps } from "vue";
+import bookResponse from "../../fixtures/Book";
+import networkError from "../../fixtures/NetworkError";
+import resetAllMocks = jest.resetAllMocks;
+
+jest.mock("@/services/ServiceApi");
 
 describe("Book view", () => {
+  beforeEach(() => {
+    resetAllMocks();
+  });
+
   it("displays only the app component before the app component confirms that the app is running", () => {
     /* Given */
     const $route = { params: {} };
@@ -45,23 +56,56 @@ describe("Book view", () => {
     assertThatOnlyOpenIsVisible(wrapper);
   });
 
-  it("displays only the table of content when book is opened and no chapter is selected", async () => {
+  it("fetches the book when the path is provided and then show the open component when it fails", async () => {
     /* Given */
-    // const bookPath = "path-to-book";
+    mocked(apiClient.get).mockRejectedValueOnce(networkError);
+    mocked(formatError).mockReturnValue(networkError.message);
+    const bookPath = "path-to-book";
     const workPath = "path-to-workspace";
-    const book = { ...emptyBook(), workPath, opened: true } as Book;
-    const $route = { params: { bookPath: "", workPath: "", chapterPath: "" } };
-    // const $router = { push: jest.fn() };
-    const wrapper = shallowMount(BookView, { global: { mocks: { $route /*, $router*/ } } });
+    const $route = { params: { bookPath, workPath } };
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await appIsRunningEventEmitted(wrapper);
 
     /* When */
-    await bookIsOpened(wrapper, book);
+    /* Book is fetched */
+    await flushPromises();
+
+    /* Then */
+    assertThatOnlyOpenIsVisible(wrapper);
+  });
+
+  it("fetches the book when the path is provided and then show the toc component when it succeeds", async () => {
+    /* Given */
+    mocked(apiClient.get).mockResolvedValueOnce(bookResponse);
+    const bookPath = "path-to-book";
+    const workPath = "path-to-workspace";
+    const $route = { params: { bookPath, workPath } };
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
+    await appIsRunningEventEmitted(wrapper);
+
+    /* When */
+    /* Book is fetched */
+    await flushPromises();
 
     /* Then */
     assertThatOnlyTocIsVisible(wrapper);
-    // expect($router.push).toHaveBeenCalledTimes(1);
-    // expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath, chapterPath: "" } });
+  });
+
+  it("displays table chapter with a chapter is selected", async () => {
+    /* Given */
+    mocked(apiClient.get).mockResolvedValueOnce(bookResponse);
+    const bookPath = "path-to-book";
+    const workPath = "path-to-workspace";
+    const chapterIndex = 0;
+    const $route = { params: { bookPath, workPath, chapterIndex } };
+    const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
+    await appIsRunningEventEmitted(wrapper);
+
+    /* When */
+    await flushPromises();
+
+    /* Then */
+    assertThatOnlyContentIsVisible(wrapper);
   });
 });
 
@@ -77,16 +121,6 @@ async function appIsRunningEventEmitted(
 }
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
-async function bookIsOpened(
-  wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
-    Record<string, any>,
-  book: Book
-) {
-  const open = wrapper.findComponent(Open);
-  await open.vm.$emit("bookOpened", book);
-}
-
-/* eslint @typescript-eslint/no-explicit-any: "off" */
 /* eslint @typescript-eslint/ban-types: "off" */
 function assertThatOnlyAppIsVisible(
   wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
@@ -95,6 +129,7 @@ function assertThatOnlyAppIsVisible(
   expect(wrapper.findComponent(App).exists()).toBeTruthy();
   expect(wrapper.findComponent(Open).exists()).toBeFalsy();
   expect(wrapper.findComponent(Toc).exists()).toBeFalsy();
+  expect(wrapper.findComponent(Breadcrumbs).exists()).toBeFalsy();
   expect(wrapper.findComponent(Content).exists()).toBeFalsy();
 }
 
@@ -107,6 +142,7 @@ function assertThatOnlyOpenIsVisible(
   expect(wrapper.findComponent(App).exists()).toBeFalsy();
   expect(wrapper.findComponent(Open).exists()).toBeTruthy();
   expect(wrapper.findComponent(Toc).exists()).toBeFalsy();
+  expect(wrapper.findComponent(Breadcrumbs).exists()).toBeFalsy();
   expect(wrapper.findComponent(Content).exists()).toBeFalsy();
 }
 
@@ -119,5 +155,19 @@ function assertThatOnlyTocIsVisible(
   expect(wrapper.findComponent(App).exists()).toBeFalsy();
   expect(wrapper.findComponent(Open).exists()).toBeFalsy();
   expect(wrapper.findComponent(Toc).exists()).toBeTruthy();
+  expect(wrapper.findComponent(Breadcrumbs).exists()).toBeFalsy();
   expect(wrapper.findComponent(Content).exists()).toBeFalsy();
+}
+
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+/* eslint @typescript-eslint/ban-types: "off" */
+function assertThatOnlyContentIsVisible(
+  wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
+    Record<string, any>
+) {
+  expect(wrapper.findComponent(App).exists()).toBeFalsy();
+  expect(wrapper.findComponent(Open).exists()).toBeFalsy();
+  expect(wrapper.findComponent(Toc).exists()).toBeFalsy();
+  expect(wrapper.findComponent(Breadcrumbs).exists()).toBeTruthy();
+  expect(wrapper.findComponent(Content).exists()).toBeTruthy();
 }

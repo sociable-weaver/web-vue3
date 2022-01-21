@@ -3,7 +3,7 @@ import { apiClient } from "@/services/ServiceApi";
 import { flushPromises, shallowMount, VueWrapper } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
 import { ComponentPublicInstance, VNodeProps } from "vue";
-import bookSuccessfulResponse from "../../fixtures/BookSuccessful";
+import bookSuccessfulResponse from "../../fixtures/Book";
 import resetAllMocks = jest.resetAllMocks;
 
 jest.mock("@/services/ServiceApi");

@@ -2,16 +2,16 @@ import App from "@/components/App.vue";
 import { apiClient } from "@/services/ServiceApi";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
-import healthCheckServerErrorResponse from "../../fixtures/HealthCheckServerError";
-import healthCheckSuccessfulResponse from "../../fixtures/HealthCheckSuccessful";
+import healthCheckResponse from "../../fixtures/HealthCheck";
 import networkError from "../../fixtures/NetworkError";
+import serverError from "../../fixtures/ServerError";
 
 jest.mock("@/services/ServiceApi");
 
 describe("App", () => {
   it("displays successful message when application is running", async () => {
     /* Given */
-    mocked(apiClient.get).mockResolvedValueOnce(healthCheckSuccessfulResponse);
+    mocked(apiClient.get).mockResolvedValueOnce(healthCheckResponse);
 
     /* When */
     const wrapper = shallowMount(App);
@@ -39,7 +39,7 @@ describe("App", () => {
 
   it("displays unsuccessful message when application is not healthy", async () => {
     /* Given */
-    mocked(apiClient.get).mockResolvedValueOnce(healthCheckServerErrorResponse);
+    mocked(apiClient.get).mockResolvedValueOnce(serverError);
 
     /* When */
     const wrapper = shallowMount(App);

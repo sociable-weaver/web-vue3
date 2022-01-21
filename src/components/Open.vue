@@ -62,37 +62,28 @@
       <button class="primary" v-if="openFrom === 'openLocal'" @click="onOpenBook">Open</button>
       <button class="primary" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
       <button class="primary" v-if="openFrom === 'createNew'" @click="onCreateBook">Create</button>
-      <span class="actionMessage">{{ actionMessage }}</span>
+      <span class="actionMessage">{{ book.error }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Book } from "@/models/Chapter";
-import { apiClient, formatError } from "@/services/ServiceApi";
+import { isNonBlank } from "@/models/Common";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
   name: "Open",
-  emits: ["bookOpened"],
+  props: {
+    book: Object,
+  },
 })
 export default class Open extends Vue {
+  private book!: Book;
   private pathToRepository = "";
   private openFrom = "openLocal";
-  private actionMessage = "";
   private bookPath = "";
   private workPath = "";
-
-  mounted(): void {
-    this.$nextTick(() => {
-      this.bookPath = Open.asString(this.$route.params.bookPath);
-      this.workPath = Open.asString(this.$route.params.workPath);
-
-      if (this.isBookPathSet() && this.isWorkPathSet()) {
-        this.handleOpenBook();
-      }
-    });
-  }
 
   private tryItOut() {
     this.openFrom = "checkout";
@@ -100,76 +91,32 @@ export default class Open extends Vue {
   }
 
   private onCheckoutBook(): void {
-    this.actionMessage = "This feature is not yet implemented";
+    this.book.error = "This feature is not yet implemented";
   }
 
   private onCreateBook(): void {
-    this.actionMessage = "This feature is not yet implemented";
+    this.book.error = "This feature is not yet implemented";
   }
 
   private onOpenBook(): void {
-    this.actionMessage = "";
+    this.book.error = "";
     if (!this.isBookPathSet() || !this.isWorkPathSet()) {
-      this.actionMessage = "Please provide both the book and workspace folder paths";
+      this.book.error = "Please provide both the book and workspace directory paths";
       return;
     }
 
-    this.handleOpenBook();
-  }
-
-  private handleOpenBook(): void {
-    const bookPath = this.bookPath;
-    const workPath = this.workPath;
-
-    this.openBook(bookPath)
-      .then((book) => {
-        const workbook = {
-          ...book,
-          bookPath: bookPath,
-          workPath: workPath,
-          opened: true,
-        };
-        this.updatePath(bookPath, workPath);
-        this.$emit("bookOpened", workbook);
-      })
-      .catch((e) => (this.actionMessage = `Failed to open working book (${formatError(e)})`));
-  }
-
-  private updatePath(bookPath: string, workPath: string) {
     this.$router.push({
       name: "Book",
-      params: { bookPath, workPath },
+      params: { bookPath: this.bookPath, workPath: this.workPath },
     });
   }
 
-  private openBook(bookPath: string): Promise<Book> {
-    return apiClient
-      .get("/api/book", { params: { bookPath } })
-      .then((response) => response.data)
-      .then((json) => json as Book);
-  }
-
   private isBookPathSet(): boolean {
-    return Open.isNonBlank(this.bookPath);
+    return isNonBlank(this.bookPath);
   }
 
   private isWorkPathSet(): boolean {
-    return Open.isNonBlank(this.workPath);
-  }
-
-  /* TODO: move to a common place */
-  private static isNonBlank(text: string | undefined): boolean {
-    return text !== undefined && text.trim().length > 0;
-  }
-
-  /* TODO: move to a common place */
-  private static asString(param: undefined | string | string[]): string {
-    if (param === undefined || param === "undefined") {
-      return "";
-    }
-
-    /* TODO: need to handle the string[] */
-    return param as string;
+    return isNonBlank(this.workPath);
   }
 }
 </script>

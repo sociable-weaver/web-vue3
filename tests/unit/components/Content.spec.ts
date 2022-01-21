@@ -4,7 +4,7 @@ import { apiClient, formatError } from "@/services/ServiceApi";
 import { flushPromises, mount, shallowMount } from "@vue/test-utils";
 import { mocked } from "ts-jest/utils";
 import networkError from "../../fixtures/NetworkError";
-import saveEntrySuccessfulResponse from "../../fixtures/SaveEntrySuccessful";
+import saveEntrySuccessfulResponse from "../../fixtures/SaveEntry";
 import resetAllMocks = jest.resetAllMocks;
 
 jest.mock("@/services/ServiceApi");

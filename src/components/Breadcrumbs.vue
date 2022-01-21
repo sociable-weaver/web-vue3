@@ -1,11 +1,11 @@
 <template>
   <ol class="breadcrumbs">
-    <li><a :href="tocPath" @click="onGoToToc">Table of Contents</a></li>
+    <li><a :href="tocPath">Table of Contents</a></li>
     <li v-if="previous">
-      <a :href="previousPath" @click="onGoToPrevious">Previous ({{ previous }})</a>
+      <a :href="previousPath">Previous ({{ previous }})</a>
     </li>
     <li v-if="next">
-      <a :href="nextPath" @click="onGoToNext">Next ({{ next }})</a>
+      <a :href="nextPath">Next ({{ next }})</a>
     </li>
   </ol>
 </template>
@@ -18,79 +18,54 @@ import { Options, Vue } from "vue-class-component";
   name: "Breadcrumbs",
   props: {
     book: Object,
-    chapter: Object,
   },
 })
 export default class Breadcrumbs extends Vue {
   private book!: Book;
-  private chapter!: Chapter;
 
   private get chapterTitle(): string {
-    const entry = this.chapter.entries.find((e) => e.type === "chapter");
-    if (entry === undefined) {
-      return "No title";
-    }
+    const chapterIndex = this.book.chapterIndex;
+    const chapter = this.book.chapters[chapterIndex];
 
-    return entry.parameters[0];
+    return this.title(chapter);
   }
 
   private get tocPath(): string {
-    return `/#/${encodeURIComponent(this.chapter.bookPath)}/${encodeURIComponent(this.chapter.workPath)}`;
-  }
-
-  private onGoToToc(): void {
-    this.$router.push({
-      name: "Book",
-      params: { bookPath: this.chapter.bookPath, workPath: this.chapter.workPath, chapterPath: "" },
-    });
+    return `/#/${encodeURIComponent(this.book.bookPath)}/${encodeURIComponent(this.book.workPath)}`;
   }
 
   private get previous(): string {
-    const title = this.chapterTitle;
-    const index = this.book.chapters.findIndex((c) => Breadcrumbs.title(c) === title);
-
-    if (index < 1) {
+    const chapterIndex = this.book.chapterIndex;
+    if (chapterIndex < 1) {
       return "";
     }
 
-    return Breadcrumbs.title(this.book.chapters[index - 1]);
+    return this.title(this.book.chapters[chapterIndex - 1]);
   }
 
   private get previousPath(): string {
-    return `/#/${encodeURIComponent(this.chapter.bookPath)}/${encodeURIComponent(this.chapter.workPath)}`;
-  }
-
-  private onGoToPrevious(): void {
-    this.$router.push({
-      name: "Book",
-      params: { bookPath: this.chapter.bookPath, workPath: this.chapter.workPath, chapterPath: "" },
-    });
+    const chapterIndex = this.book.chapterIndex;
+    const previousIndex = chapterIndex - 1;
+    return `/#/${encodeURIComponent(this.book.bookPath)}/${encodeURIComponent(this.book.workPath)}/${previousIndex}`;
   }
 
   private get next(): string {
-    const title = this.chapterTitle;
-    const index = this.book.chapters.findIndex((c) => Breadcrumbs.title(c) === title);
-
-    if (index == -1 || index >= this.book.chapters.length - 1) {
+    const chapterIndex = this.book.chapterIndex;
+    if (chapterIndex < 0 || chapterIndex >= this.book.chapters.length - 1) {
       return "";
     }
 
-    return Breadcrumbs.title(this.book.chapters[index + 1]);
+    return this.title(this.book.chapters[chapterIndex + 1]);
   }
 
   private get nextPath(): string {
-    return `/#/${encodeURIComponent(this.chapter.bookPath)}/${encodeURIComponent(this.chapter.workPath)}`;
-  }
-
-  private onGoToNext(): void {
-    this.$router.push({
-      name: "Book",
-      params: { bookPath: this.chapter.bookPath, workPath: this.chapter.workPath, chapterPath: "" },
-    });
+    const chapterIndex = this.book.chapterIndex;
+    const nextIndex = chapterIndex + 1;
+    return `/#/${encodeURIComponent(this.book.bookPath)}/${encodeURIComponent(this.book.workPath)}/${nextIndex}`;
   }
 
   /* TODO: move to a common place */
-  private static title(chapter: Chapter): string {
+  private title(chapter: Chapter): string {
     const entry = chapter.entries.find((e) => e.type === "chapter");
     if (entry === undefined) {
       return "Missing chapter entry";

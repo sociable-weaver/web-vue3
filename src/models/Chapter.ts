@@ -5,10 +5,11 @@ export interface HasError {
 export interface Book extends HasError {
   title: string;
   description: string;
+  chapters: Chapter[];
   bookPath: string;
   workPath: string;
-  chapterPath: string;
-  chapters: Chapter[];
+  chapterIndex: number;
+  entryId: string;
   opened: boolean;
 }
 
@@ -135,10 +136,11 @@ export function emptyBook(): Book {
   return {
     title: "",
     description: "",
+    chapters: [] as Chapter[],
     bookPath: "",
     workPath: "",
-    chapterPath: "",
-    chapters: [] as Chapter[],
+    chapterIndex: -1,
+    entryId: "",
     error: "",
     opened: false,
   };
