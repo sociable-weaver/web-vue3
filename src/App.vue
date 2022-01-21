@@ -63,6 +63,11 @@
     border-radius: 5px;
   }
 
+  span.error {
+    padding: 5px;
+    border-radius: 5px;
+  }
+
   button {
     font-size: 0.8em;
     text-align: center;

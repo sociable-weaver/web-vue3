@@ -1,19 +1,12 @@
 import Toc from "@/components/Toc.vue";
 import { Book } from "@/models/Chapter";
 import { flushPromises, shallowMount } from "@vue/test-utils";
-import bookSuccessfulResponse from "../../fixtures/Book";
-import resetAllMocks = jest.resetAllMocks;
-
-jest.mock("@/services/ServiceApi");
+import bookResponse from "../../fixtures/Book";
 
 describe("Toc component", () => {
-  beforeEach(() => {
-    resetAllMocks();
-  });
-
   it("displays the table of contents", async () => {
     /* Given */
-    const book = bookSuccessfulResponse.data;
+    const book = bookResponse.data;
 
     /* When */
     const wrapper = shallowMount(Toc, { props: { book } });
@@ -27,10 +20,13 @@ describe("Toc component", () => {
     expect(wrapper.text()).toContain("Test chapter 2");
   });
 
-  it("notifies the parent about the user selection", async () => {
+  it("updates the URL when a chapter is selected", async () => {
     /* Given */
+    const bookPath = "path-to-book";
+    const workPath = "path-to-workspace";
+    const chapterIndex = 0;
     const $router = { push: jest.fn() };
-    const book = { ...bookSuccessfulResponse.data, workPath: "path-to-workspace" } as Book;
+    const book = { ...bookResponse.data, workPath } as Book;
     const wrapper = shallowMount(Toc, { props: { book }, global: { mocks: { $router } } });
 
     /* When */
@@ -39,9 +35,6 @@ describe("Toc component", () => {
 
     /* Then */
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({
-      name: "Book",
-      params: { bookPath: "path-to-book", workPath: "path-to-workspace", chapterPath: "chapter-1" },
-    });
+    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath, chapterIndex } });
   });
 });

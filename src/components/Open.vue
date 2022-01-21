@@ -62,7 +62,7 @@
       <button class="primary" v-if="openFrom === 'openLocal'" @click="onOpenBook">Open</button>
       <button class="primary" v-if="openFrom === 'checkout'" @click="onCheckoutBook">Checkout and Open</button>
       <button class="primary" v-if="openFrom === 'createNew'" @click="onCreateBook">Create</button>
-      <span class="actionMessage">{{ book.error }}</span>
+      <span v-if="book.error" class="error">{{ book.error }}</span>
     </div>
   </div>
 </template>

@@ -1,3 +1,5 @@
+import { Marked } from "@ts-stack/markdown";
+
 export interface HasError {
   error: string | null;
 }
@@ -240,4 +242,22 @@ export function hasChanged(entry: Entry, edit: SaveEntry): boolean {
     entry.expectedExitValue !== edit.expectedExitValue ||
     entry.commandTimeout !== edit.commandTimeout
   );
+}
+
+export function title(chapter: Chapter): string {
+  const entry = chapter.entries.find((e) => e.type === "chapter");
+  if (entry === undefined) {
+    return "Missing chapter entry";
+  }
+
+  return join(getPart("Title", entry.parameters));
+}
+
+export function description(chapter: Chapter): string {
+  const entry = chapter.entries.find((e) => e.type === "chapter");
+  if (entry === undefined) {
+    return "Missing chapter entry";
+  }
+
+  return Marked.parse(join(getPart("Description", entry.parameters)));
 }

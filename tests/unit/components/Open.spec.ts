@@ -1,26 +1,16 @@
 import Open from "@/components/Open.vue";
-import { apiClient } from "@/services/ServiceApi";
+import { emptyBook } from "@/models/Chapter";
 import { flushPromises, shallowMount, VueWrapper } from "@vue/test-utils";
-import { mocked } from "ts-jest/utils";
 import { ComponentPublicInstance, VNodeProps } from "vue";
-import bookSuccessfulResponse from "../../fixtures/Book";
-import resetAllMocks = jest.resetAllMocks;
-
-jest.mock("@/services/ServiceApi");
 
 describe("Open component", () => {
-  beforeEach(() => {
-    resetAllMocks();
-  });
-
-  it("starts with the open local option selected", async () => {
+  it("starts with the open local option selected", () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
 
     /* When */
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
-    await flushPromises();
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
 
     /* Then */
     expect(wrapper.find("input[id=openFromFolder]").exists()).toBeTruthy();
@@ -28,19 +18,17 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
     expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
   it("displays the open local input when the open local option is checked", async () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
 
     /* When */
-    await wrapper.find("input[id=openLocal]").trigger("click");
-    await flushPromises();
+    await checkOpenLocal(wrapper);
 
     /* Then */
     expect(wrapper.find("input[id=openFromFolder]").exists()).toBeTruthy();
@@ -48,19 +36,17 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
     expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Open");
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
   it("displays the checkout input when the checkout option is checked", async () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
 
     /* When */
-    await wrapper.find("input[id=checkout]").trigger("click");
-    await flushPromises();
+    await checkCheckout(wrapper);
 
     /* Then */
     expect(wrapper.find("input[id=openFromFolder]").exists()).toBeFalsy();
@@ -68,19 +54,17 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeTruthy();
     expect(wrapper.find("input[id=createNewFolder]").exists()).toBeFalsy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Checkout and Open");
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
   it("displays the create new input when the create new is option checked", async () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
 
     /* When */
-    await wrapper.find("input[id=createNew]").trigger("click");
-    await flushPromises();
+    await checkCreateNew(wrapper);
 
     /* Then */
     expect(wrapper.find("input[id=openFromFolder]").exists()).toBeFalsy();
@@ -88,38 +72,29 @@ describe("Open component", () => {
     expect(wrapper.find("input[id=checkoutToFolder]").exists()).toBeFalsy();
     expect(wrapper.find("input[id=createNewFolder]").exists()).toBeTruthy();
     expect(wrapper.find("button[class=primary]").text()).toEqual("Create");
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
-  it("fetches the book and notifies the parent when the parameters are available in the URL", async () => {
+  it("displays the book error when provided", async () => {
     /* Given */
-    mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
-    const bookPath = "path-to-book";
-    const workPath = "work-directory";
-    const $route = { params: { bookPath, workPath } };
-    const $router = { push: jest.fn() };
+    const error = "Cannot open book!!";
+    const book = { ...emptyBook(), error };
 
     /* When */
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
-    await flushPromises();
+    const wrapper = shallowMount(Open, { props: { book } });
 
     /* Then */
-    const expected = { ...bookSuccessfulResponse.data, bookPath, workPath, opened: true };
-    expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
-    expect(wrapper.emitted()["bookOpened"]).toEqual([[expected]]);
-    expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath } });
+    expect(wrapper.find("span[class=error]").text()).toEqual(error);
   });
 });
 
 describe("Open repository from local file system", () => {
   it("displays an error when trying to open local without providing a book path", async () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
-    await selectOpenLocal(wrapper);
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    await checkOpenLocal(wrapper);
 
     /* When */
     await wrapper.find("input[id=openFromFolder]").setValue("");
@@ -128,19 +103,18 @@ describe("Open repository from local file system", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("span[class=actionMessage]").text()).toEqual(
-      "Please provide both the book and workspace folder paths"
+    expect(wrapper.find("span[class=error]").text()).toEqual(
+      "Please provide both the book and workspace directory paths"
     );
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
   it("displays an error when trying to open local without providing a work path", async () => {
     /* Given */
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
-    await selectOpenLocal(wrapper);
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    await checkOpenLocal(wrapper);
 
     /* When */
     await wrapper.find("input[id=openFromFolder]").setValue("book-path");
@@ -149,22 +123,20 @@ describe("Open repository from local file system", () => {
     await flushPromises();
 
     /* Then */
-    expect(wrapper.find("span[class=actionMessage]").text()).toEqual(
-      "Please provide both the book and workspace folder paths"
+    expect(wrapper.find("span[class=error]").text()).toEqual(
+      "Please provide both the book and workspace directory paths"
     );
-    expect(wrapper.emitted()["bookOpened"]).toBeUndefined();
     expect($router.push).not.toHaveBeenCalled();
   });
 
-  it("fetches the book and notifies the parent", async () => {
+  it("updates the URL when the book is opened", async () => {
     /* Given */
-    mocked(apiClient.get).mockResolvedValueOnce(bookSuccessfulResponse);
     const bookPath = "book-path";
     const workPath = "work-path";
-    const $route = { params: {} };
+    const book = emptyBook();
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { global: { mocks: { $route, $router } } });
-    await selectOpenLocal(wrapper);
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    await checkOpenLocal(wrapper);
 
     /* When */
     await wrapper.find("input[id=openFromFolder]").setValue(bookPath);
@@ -173,9 +145,7 @@ describe("Open repository from local file system", () => {
     await flushPromises();
 
     /* Then */
-    const expected = { ...bookSuccessfulResponse.data, bookPath, workPath, opened: true };
-    expect(wrapper.find("span[class=actionMessage]").text()).toEqual("");
-    expect(wrapper.emitted()["bookOpened"]).toEqual([[expected]]);
+    expect(wrapper.find("span[class=error]").exists()).toBeFalsy();
     expect($router.push).toHaveBeenCalledTimes(1);
     expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath } });
   });
@@ -183,9 +153,26 @@ describe("Open repository from local file system", () => {
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 /* eslint @typescript-eslint/ban-types: "off" */
-async function selectOpenLocal(
+async function checkOpenLocal(
   wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
     Record<string, any>
 ) {
   await wrapper.find("input[id=openLocal]").trigger("click");
+  await flushPromises();
+}
+
+async function checkCheckout(
+  wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
+    Record<string, any>
+) {
+  await wrapper.find("input[id=checkout]").trigger("click");
+  await flushPromises();
+}
+
+async function checkCreateNew(
+  wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
+    Record<string, any>
+) {
+  await wrapper.find("input[id=createNew]").trigger("click");
+  await flushPromises();
 }

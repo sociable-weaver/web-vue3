@@ -4,16 +4,15 @@
     <p class="description">{{ book.description }}</p>
     <ol>
       <li v-for="(chapter, index) in book.chapters" :key="chapter.chapterPath">
-        <h2 @click="onReadChapter(index)" class="chapter">{{ title(chapter) }}</h2>
-        <p class="description" v-html="description(chapter)" />
+        <h2 @click="onReadChapter(index)" class="chapter">{{ getTitle(chapter) }}</h2>
+        <p class="description" v-html="getDescription(chapter)" />
       </li>
     </ol>
   </div>
 </template>
 
 <script lang="ts">
-import { Book, Chapter, getPart, join } from "@/models/Chapter";
-import { Marked } from "@ts-stack/markdown";
+import { Book, Chapter, description, title } from "@/models/Chapter";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -36,24 +35,12 @@ export default class Toc extends Vue {
     });
   }
 
-  /* TODO: move to a common place */
-  private title(chapter: Chapter): string {
-    const entry = chapter.entries.find((e) => e.type === "chapter");
-    if (entry === undefined) {
-      return "Missing chapter entry";
-    }
-
-    return join(getPart("Title", entry.parameters));
+  private getTitle(chapter: Chapter): string {
+    return title(chapter);
   }
 
-  /* TODO: move to a common place */
-  private description(chapter: Chapter): string {
-    const entry = chapter.entries.find((e) => e.type === "chapter");
-    if (entry === undefined) {
-      return "Missing chapter entry";
-    }
-
-    return Marked.parse(join(getPart("Description", entry.parameters)));
+  private getDescription(chapter: Chapter): string {
+    return description(chapter);
   }
 }
 </script>

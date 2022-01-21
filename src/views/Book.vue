@@ -46,19 +46,12 @@ export default class BookView extends Vue {
     const chapterIndex = asNumber(this.$route.params.chapterIndex);
     const entryId = asString(this.$route.params.entryId);
 
-    console.log("Updated", `'${bookPath}'`, `'${workPath}'`, `'${chapterIndex}'`, `'${entryId}'`);
-
     if (this.book.bookPath !== bookPath) {
-      console.log("handleOpenBook");
       this.handleOpenBook(bookPath, workPath);
     } else if (this.book.chapterIndex !== chapterIndex) {
-      console.log("handleReadChapter");
       this.handleReadChapter(chapterIndex);
     } else if (this.book.entryId !== entryId) {
-      console.log("handleReadEntry");
       this.handleReadEntry(entryId);
-    } else {
-      console.log("Book", this.book);
     }
   }
 
