@@ -161,6 +161,8 @@ async function checkOpenLocal(
   await flushPromises();
 }
 
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+/* eslint @typescript-eslint/ban-types: "off" */
 async function checkCheckout(
   wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
     Record<string, any>
@@ -169,6 +171,8 @@ async function checkCheckout(
   await flushPromises();
 }
 
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+/* eslint @typescript-eslint/ban-types: "off" */
 async function checkCreateNew(
   wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
     Record<string, any>
