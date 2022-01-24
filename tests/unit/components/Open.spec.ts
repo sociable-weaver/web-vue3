@@ -7,10 +7,11 @@ describe("Open component", () => {
   it("starts with the open local option selected", () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
 
     /* When */
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
 
     /* Then */
     expect(wrapper.find("input[id=openFromFolder]").exists()).toBeTruthy();
@@ -24,8 +25,9 @@ describe("Open component", () => {
   it("displays the open local input when the open local option is checked", async () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
 
     /* When */
     await checkOpenLocal(wrapper);
@@ -42,8 +44,9 @@ describe("Open component", () => {
   it("displays the checkout input when the checkout option is checked", async () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
 
     /* When */
     await checkCheckout(wrapper);
@@ -60,8 +63,9 @@ describe("Open component", () => {
   it("displays the create new input when the create new is option checked", async () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
 
     /* When */
     await checkCreateNew(wrapper);
@@ -79,9 +83,10 @@ describe("Open component", () => {
     /* Given */
     const error = "Cannot open book!!";
     const book = { ...emptyBook(), error };
+    const $route = { params: {} };
 
     /* When */
-    const wrapper = shallowMount(Open, { props: { book } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route } } });
 
     /* Then */
     expect(wrapper.find("span[class=error]").text()).toEqual(error);
@@ -89,11 +94,12 @@ describe("Open component", () => {
 });
 
 describe("Open repository from local file system", () => {
-  it("displays an error when trying to open local without providing a book path", async () => {
+  it("displays the book and workspace path from the route parameters", async () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
     await checkOpenLocal(wrapper);
 
     /* When */
@@ -109,11 +115,30 @@ describe("Open repository from local file system", () => {
     expect($router.push).not.toHaveBeenCalled();
   });
 
+  it("displays an error when trying to open local without providing a book path", async () => {
+    /* Given */
+    const book = emptyBook();
+    const bookPath = "path-to-book";
+    const workPath = "path-to-workspace";
+    const $route = { params: { bookPath, workPath } };
+    const $router = { push: jest.fn() };
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
+    await checkOpenLocal(wrapper);
+
+    /* When */
+    await flushPromises();
+
+    /* Then */
+    expect(findInputElement(wrapper, "input[id=openFromFolder]").value).toEqual(bookPath);
+    expect(findInputElement(wrapper, "input[id=workspace]").value).toEqual(workPath);
+  });
+
   it("displays an error when trying to open local without providing a work path", async () => {
     /* Given */
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
     await checkOpenLocal(wrapper);
 
     /* When */
@@ -134,8 +159,9 @@ describe("Open repository from local file system", () => {
     const bookPath = "book-path";
     const workPath = "work-path";
     const book = emptyBook();
+    const $route = { params: {} };
     const $router = { push: jest.fn() };
-    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $router } } });
+    const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
     await checkOpenLocal(wrapper);
 
     /* When */
@@ -179,4 +205,10 @@ async function checkCreateNew(
 ) {
   await wrapper.find("input[id=createNew]").trigger("click");
   await flushPromises();
+}
+
+
+function findInputElement(wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>>
+    & Record<string, any>, selector:string) {
+  return wrapper.find(selector).element as HTMLInputElement;
 }

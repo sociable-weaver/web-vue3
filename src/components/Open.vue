@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { Book } from "@/models/Chapter";
-import { isNonBlank } from "@/models/Common";
+import { asString, isNonBlank } from "@/models/Common";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -85,6 +85,15 @@ export default class Open extends Vue {
   private bookPath = "";
   private workPath = "";
 
+  mounted() {
+    if (this.bookPath === "") {
+      this.bookPath = asString(this.$route.params.bookPath);
+    }
+    if (this.workPath === "") {
+      this.workPath = asString(this.$route.params.workPath);
+    }
+  }
+
   private tryItOut() {
     this.openFrom = "checkout";
     this.pathToRepository = "https://github.com/albertattard/gradle-boot-camp";
@@ -99,7 +108,6 @@ export default class Open extends Vue {
   }
 
   private onOpenBook(): void {
-    this.book.error = "";
     if (!this.isBookPathSet() || !this.isWorkPathSet()) {
       this.book.error = "Please provide both the book and workspace directory paths";
       return;
