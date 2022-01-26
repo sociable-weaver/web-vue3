@@ -104,18 +104,20 @@ export function setPart(name: string, value: string[], parameters: string[]): vo
   }
 }
 
-function findPart(name: string, parameters: string[]): IndexAndLength {
-  let i = 0;
+function findPart(name: string, parameters: string[] | undefined): IndexAndLength {
+  if (parameters !== undefined) {
+    let i = 0;
 
-  while (i < parameters.length) {
-    const header = parameters[i];
-    const parts = header.split(":");
-    const length = parseInt(parts[1]);
-    if (name === parts[0]) {
-      return { index: i, length };
+    while (i < parameters.length) {
+      const header = parameters[i];
+      const parts = header.split(":");
+      const length = parseInt(parts[1]);
+      if (name === parts[0]) {
+        return { index: i, length };
+      }
+
+      i += length + 1;
     }
-
-    i += length + 1;
   }
 
   return { index: -1, length: -1 };
@@ -225,14 +227,13 @@ export function createSaveEntry(entry: Entry): SaveEntry {
   } as SaveEntry;
 }
 
-function copyArray(parameters: string[]|undefined) {
-  if(parameters===undefined){
+function copyArray(parameters: string[] | undefined) {
+  if (parameters === undefined) {
     return undefined;
   }
 
   return Object.assign([], parameters);
 }
-
 
 export function hasChanged(entry: Entry, edit: SaveEntry): boolean {
   return (

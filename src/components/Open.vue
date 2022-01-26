@@ -115,7 +115,7 @@ export default class Open extends Vue {
 
     this.$router.push({
       name: "Book",
-      params: { bookPath: this.bookPath, workPath: this.workPath },
+      params: { action: "read", bookPath: this.bookPath, workPath: this.workPath },
     });
   }
 

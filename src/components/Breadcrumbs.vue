@@ -24,7 +24,7 @@ export default class Breadcrumbs extends Vue {
   private book!: Book;
 
   private get tocPath(): string {
-    return `#/${encodeURIComponent(this.book.bookPath)}/${encodeURIComponent(this.book.workPath)}`;
+    return `#/read/${encodeURIComponent(this.book.bookPath)}/${encodeURIComponent(this.book.workPath)}`;
   }
 
   private get previous(): string {

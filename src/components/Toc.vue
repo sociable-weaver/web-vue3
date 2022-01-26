@@ -28,6 +28,7 @@ export default class Toc extends Vue {
     this.$router.push({
       name: "Book",
       params: {
+        action: "read",
         bookPath: this.book.bookPath,
         workPath: this.book.workPath,
         chapterIndex: chapterIndex,

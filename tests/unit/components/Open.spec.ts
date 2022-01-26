@@ -156,6 +156,7 @@ describe("Open repository from local file system", () => {
 
   it("updates the URL when the book is opened", async () => {
     /* Given */
+    const action = "read";
     const bookPath = "book-path";
     const workPath = "work-path";
     const book = emptyBook();
@@ -173,7 +174,7 @@ describe("Open repository from local file system", () => {
     /* Then */
     expect(wrapper.find("span[class=error]").exists()).toBeFalsy();
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { bookPath, workPath } });
+    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, bookPath, workPath } });
   });
 });
 
@@ -207,8 +208,10 @@ async function checkCreateNew(
   await flushPromises();
 }
 
-
-function findInputElement(wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>>
-    & Record<string, any>, selector:string) {
+function findInputElement(
+  wrapper: VueWrapper<ComponentPublicInstance<{}, {}, {}, {}, {}, Record<string, any>, VNodeProps>> &
+    Record<string, any>,
+  selector: string
+) {
   return wrapper.find(selector).element as HTMLInputElement;
 }
