@@ -35,7 +35,9 @@ describe("Breadcrumbs component", () => {
     expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`#/read/${bookPath}/${workPath}`);
     expect(wrapper.find("li[role=previous]").exists()).toBeFalsy();
     expect(wrapper.find("li[role=next]").exists()).toBeTruthy();
-    expect(wrapper.find("li[role=next] > a").attributes("href")).toEqual(`#/read/${bookPath}/${workPath}/${chapterIndex + 1}`);
+    expect(wrapper.find("li[role=next] > a").attributes("href")).toEqual(
+      `#/read/${bookPath}/${workPath}/${chapterIndex + 1}`
+    );
   });
 
   it("shows the table of content and previous links as the last chapter is selected", () => {
@@ -52,7 +54,9 @@ describe("Breadcrumbs component", () => {
     expect(wrapper.find("li[role=toc]").exists()).toBeTruthy();
     expect(wrapper.find("li[role=toc] > a").attributes("href")).toEqual(`#/read/${bookPath}/${workPath}`);
     expect(wrapper.find("li[role=previous]").exists()).toBeTruthy();
-    expect(wrapper.find("li[role=previous] > a").attributes("href")).toEqual(`#/read/${bookPath}/${workPath}/${chapterIndex - 1}`);
+    expect(wrapper.find("li[role=previous] > a").attributes("href")).toEqual(
+      `#/read/${bookPath}/${workPath}/${chapterIndex - 1}`
+    );
     expect(wrapper.find("li[role=next]").exists()).toBeFalsy();
   });
 });

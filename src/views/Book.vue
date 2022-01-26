@@ -41,17 +41,13 @@ export default class BookView extends Vue {
   private book: Book = emptyBook();
 
   updated(): void {
-    const bookPath = asString(this.$route.params.bookPath);
-    const workPath = asString(this.$route.params.workPath);
-    const chapterIndex = asNumber(this.$route.params.chapterIndex);
-    const entryId = asString(this.$route.params.entryId);
-
-    if (this.book.bookPath !== bookPath) {
-      this.handleOpenBook(bookPath, workPath);
-    } else if (this.book.chapterIndex !== chapterIndex) {
-      this.handleReadChapter(chapterIndex);
-    } else if (this.book.entryId !== entryId) {
-      this.handleReadEntry(entryId);
+    const action = asString(this.$route.params.action);
+    switch (action) {
+      case "read":
+        this.handleReadBook();
+        break;
+      default:
+        this.handleUnknownAction(action);
     }
   }
 
@@ -79,6 +75,21 @@ export default class BookView extends Vue {
     this.book.chapters.forEach((chapter) => {
       chapter.entries.forEach((entry) => setValue(entry, update));
     });
+  }
+
+  private handleReadBook() {
+    const bookPath = asString(this.$route.params.bookPath);
+    const workPath = asString(this.$route.params.workPath);
+    const chapterIndex = asNumber(this.$route.params.chapterIndex);
+    const entryId = asString(this.$route.params.entryId);
+
+    if (this.book.bookPath !== bookPath) {
+      this.handleOpenBook(bookPath, workPath);
+    } else if (this.book.chapterIndex !== chapterIndex) {
+      this.handleReadChapter(chapterIndex);
+    } else if (this.book.entryId !== entryId) {
+      this.handleReadEntry(entryId);
+    }
   }
 
   private handleOpenBook(bookPath: string, workPath: string): void {
@@ -114,6 +125,10 @@ export default class BookView extends Vue {
 
   private handleReadEntry(entryId: string) {
     this.book.entryId = entryId;
+  }
+
+  private handleUnknownAction(action: string) {
+    this.book.error = `Something went wrong.  Unknown action '${action}'!!`;
   }
 }
 </script>
