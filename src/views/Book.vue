@@ -84,13 +84,19 @@ export default class BookView extends Vue {
     const chapterIndex = asNumber(this.$route.params.chapterIndex);
     const entryId = asString(this.$route.params.entryId);
 
-    if (this.book.bookPath !== bookPath) {
+    if (bookPath === "") {
+      this.handleShowOpenBookPane();
+    } else if (this.book.bookPath !== bookPath) {
       this.handleOpenBook(bookPath, workPath);
     } else if (this.book.chapterIndex !== chapterIndex) {
       this.handleReadChapter(chapterIndex);
     } else if (this.book.entryId !== entryId) {
       this.handleReadEntry(entryId);
     }
+  }
+
+  private handleShowOpenBookPane() {
+    this.book = emptyBook();
   }
 
   private handleOpenBook(bookPath: string, workPath: string): void {
@@ -129,6 +135,7 @@ export default class BookView extends Vue {
   }
 
   private handleUnknownAction(action: string) {
+    this.book = emptyBook();
     this.book.error = `Something went wrong.  Unknown action '${action}'!!`;
   }
 }
