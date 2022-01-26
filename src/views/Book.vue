@@ -43,6 +43,7 @@ export default class BookView extends Vue {
   updated(): void {
     const action = asString(this.$route.params.action);
     switch (action) {
+      case "":
       case "read":
         this.handleReadBook();
         break;
