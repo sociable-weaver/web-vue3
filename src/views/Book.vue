@@ -135,7 +135,7 @@ export default class BookView extends Vue {
   }
 
   private handleUnknownAction(action: string) {
-    this.book = emptyBook();
+    this.book.opened = false;
     this.book.error = `Something went wrong.  Unknown action '${action}'!!`;
   }
 }
