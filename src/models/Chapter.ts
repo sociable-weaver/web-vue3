@@ -214,9 +214,9 @@ export function createSaveEntry(entry: Entry): SaveEntry {
     id: entry.id,
     name: entry.name,
     workingDirectory: entry.workingDirectory,
-    parameters: Object.assign([], entry.parameters),
-    variables: Object.assign([], entry.variables),
-    environmentVariables: Object.assign([], entry.environmentVariables),
+    parameters: copyArray(entry.parameters),
+    variables: copyArray(entry.variables),
+    environmentVariables: copyArray(entry.environmentVariables),
     ignoreErrors: entry.ignoreErrors,
     dryRun: entry.dryRun,
     sensitive: entry.sensitive,
@@ -224,6 +224,15 @@ export function createSaveEntry(entry: Entry): SaveEntry {
     commandTimeout: entry.commandTimeout,
   } as SaveEntry;
 }
+
+function copyArray(parameters: string[]|undefined) {
+  if(parameters===undefined){
+    return undefined;
+  }
+
+  return Object.assign([], parameters);
+}
+
 
 export function hasChanged(entry: Entry, edit: SaveEntry): boolean {
   return (

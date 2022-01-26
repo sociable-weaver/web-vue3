@@ -117,11 +117,7 @@ describe("Entry", () => {
       const result = createSaveEntry(entry);
 
       /* Then */
-      const expected = {
-        parameters: [],
-        variables: [],
-        environmentVariables: [],
-      };
+      const expected = {};
       expect(result).toEqual(expected);
     });
 
