@@ -96,7 +96,7 @@ export default class BookView extends Vue {
   }
 
   private handleShowOpenBookPane() {
-    this.book = emptyBook();
+    this.book.opened = false;
   }
 
   private handleOpenBook(bookPath: string, workPath: string): void {
