@@ -99,8 +99,8 @@ describe("Book view", () => {
     const action = "read";
     const pathParam1 = "path-to-book";
     const pathParam2 = "path-to-workspace";
-    const chapterIndex = 0;
-    const $route = { params: { action, pathParam1, pathParam2, chapterIndex } };
+    const pathParam3 = 0;
+    const $route = { params: { action, pathParam1, pathParam2, pathParam3 } };
     const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await appIsRunningEventEmitted(wrapper);
 

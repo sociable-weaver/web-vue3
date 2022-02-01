@@ -81,8 +81,8 @@ export default class BookView extends Vue {
   private handleReadBook() {
     const bookPath = asString(this.$route.params.pathParam1);
     const workPath = asString(this.$route.params.pathParam2);
-    const chapterIndex = asNumber(this.$route.params.chapterIndex);
-    const entryId = asString(this.$route.params.entryId);
+    const chapterIndex = asNumber(this.$route.params.pathParam3);
+    const entryId = asString(this.$route.params.pathParam4);
 
     if (bookPath === "") {
       this.handleShowOpenBookPane();

@@ -25,7 +25,7 @@ describe("Toc component", () => {
     const action = "read";
     const pathParam1 = "path-to-book";
     const pathParam2 = "path-to-workspace";
-    const chapterIndex = 0;
+    const pathParam3 = 0;
     const $router = { push: jest.fn() };
     const book = { ...bookResponse.data, workPath: pathParam2 } as Book;
     const wrapper = shallowMount(Toc, { props: { book }, global: { mocks: { $router } } });
@@ -38,7 +38,7 @@ describe("Toc component", () => {
     expect($router.push).toHaveBeenCalledTimes(1);
     expect($router.push).toHaveBeenCalledWith({
       name: "Book",
-      params: { action, pathParam1, pathParam2, chapterIndex },
+      params: { action, pathParam1, pathParam2, pathParam3 },
     });
   });
 });
