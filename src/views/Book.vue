@@ -79,7 +79,7 @@ export default class BookView extends Vue {
   }
 
   private handleReadBook() {
-    const bookPath = asString(this.$route.params.bookPath);
+    const bookPath = asString(this.$route.params.pathParam1);
     const workPath = asString(this.$route.params.workPath);
     const chapterIndex = asNumber(this.$route.params.chapterIndex);
     const entryId = asString(this.$route.params.entryId);

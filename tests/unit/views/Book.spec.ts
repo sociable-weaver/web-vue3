@@ -61,9 +61,9 @@ describe("Book view", () => {
     mocked(apiClient.get).mockRejectedValueOnce(networkError);
     mocked(formatError).mockReturnValue(networkError.message);
     const action = "read";
-    const bookPath = "path-to-book";
+    const pathParam1 = "path-to-book";
     const workPath = "path-to-workspace";
-    const $route = { params: { action, bookPath, workPath } };
+    const $route = { params: { action, pathParam1, workPath } };
     const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await appIsRunningEventEmitted(wrapper);
 
@@ -79,9 +79,9 @@ describe("Book view", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookResponse);
     const action = "read";
-    const bookPath = "path-to-book";
+    const pathParam1 = "path-to-book";
     const workPath = "path-to-workspace";
-    const $route = { params: { action, bookPath, workPath } };
+    const $route = { params: { action, pathParam1, workPath } };
     const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await appIsRunningEventEmitted(wrapper);
 
@@ -97,10 +97,10 @@ describe("Book view", () => {
     /* Given */
     mocked(apiClient.get).mockResolvedValueOnce(bookResponse);
     const action = "read";
-    const bookPath = "path-to-book";
+    const pathParam1 = "path-to-book";
     const workPath = "path-to-workspace";
     const chapterIndex = 0;
-    const $route = { params: { action, bookPath, workPath, chapterIndex } };
+    const $route = { params: { action, pathParam1, workPath, chapterIndex } };
     const wrapper = shallowMount(BookView, { global: { mocks: { $route } } });
     await appIsRunningEventEmitted(wrapper);
 

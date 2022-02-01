@@ -167,12 +167,12 @@ export default class Command extends Vue {
 
   private get variablesAndValues(): VariableValue[] {
     return arrayContainsValues(this.entry.variables)
-      ? this.entry.variables.map((variable) => ({ variable, value: this.entry.values[variable] } as VariableValue))
+      ? this.entry.variables.map((variable) => ({ variable, value: this.getValue(variable) } as VariableValue))
       : [];
   }
 
   private getValue(variable: string): string {
-    return this.entry.values[variable] || "";
+    return this.entry.values === undefined ? "" : this.entry.values[variable] || "";
   }
 
   private get workingDirectory(): string {

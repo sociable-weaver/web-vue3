@@ -118,9 +118,9 @@ describe("Open repository from local file system", () => {
   it("displays an error when trying to open local without providing a book path", async () => {
     /* Given */
     const book = emptyBook();
-    const bookPath = "path-to-book";
+    const pathParam1 = "path-to-book";
     const workPath = "path-to-workspace";
-    const $route = { params: { bookPath, workPath } };
+    const $route = { params: { pathParam1, workPath } };
     const $router = { push: jest.fn() };
     const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
     await checkOpenLocal(wrapper);
@@ -129,7 +129,7 @@ describe("Open repository from local file system", () => {
     await flushPromises();
 
     /* Then */
-    expect(findInputElement(wrapper, "input[id=openFromFolder]").value).toEqual(bookPath);
+    expect(findInputElement(wrapper, "input[id=openFromFolder]").value).toEqual(pathParam1);
     expect(findInputElement(wrapper, "input[id=workspace]").value).toEqual(workPath);
   });
 
@@ -157,7 +157,7 @@ describe("Open repository from local file system", () => {
   it("updates the URL when the book is opened", async () => {
     /* Given */
     const action = "read";
-    const bookPath = "book-path";
+    const pathParam1 = "book-path";
     const workPath = "work-path";
     const book = emptyBook();
     const $route = { params: {} };
@@ -166,7 +166,7 @@ describe("Open repository from local file system", () => {
     await checkOpenLocal(wrapper);
 
     /* When */
-    await wrapper.find("input[id=openFromFolder]").setValue(bookPath);
+    await wrapper.find("input[id=openFromFolder]").setValue(pathParam1);
     await wrapper.find("input[id=workspace]").setValue(workPath);
     await wrapper.find("button[class=primary]").trigger("click");
     await flushPromises();
@@ -174,7 +174,7 @@ describe("Open repository from local file system", () => {
     /* Then */
     expect(wrapper.find("span[class=error]").exists()).toBeFalsy();
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, bookPath, workPath } });
+    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, pathParam1, workPath } });
   });
 });
 

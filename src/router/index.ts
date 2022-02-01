@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/:action?/:bookPath?/:workPath?/:chapterIndex?/:entryId?",
+    path: "/:action?/:pathParam1?/:workPath?/:chapterIndex?/:entryId?",
     name: "Book",
     component: Book,
     props: true,

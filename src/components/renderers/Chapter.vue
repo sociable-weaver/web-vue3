@@ -51,7 +51,6 @@ export default class Chapter extends Vue {
 
   private onSave(): OnSaveResult {
     const title = Chapter.getTitlePart(this.edit.parameters);
-    console.log("Title", title);
     if (title.length === 0 || title[0].length === 0) {
       this.entry.error = "The chapter cannot be empty";
       return { outcome: OnSaveOutcome.KeepEditing } as OnSaveResult;

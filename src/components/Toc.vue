@@ -29,7 +29,7 @@ export default class Toc extends Vue {
       name: "Book",
       params: {
         action: "read",
-        bookPath: this.book.bookPath,
+        pathParam1: this.book.bookPath,
         workPath: this.book.workPath,
         chapterIndex: chapterIndex,
       },
