@@ -119,8 +119,8 @@ describe("Open repository from local file system", () => {
     /* Given */
     const book = emptyBook();
     const pathParam1 = "path-to-book";
-    const workPath = "path-to-workspace";
-    const $route = { params: { pathParam1, workPath } };
+    const pathParam2 = "path-to-workspace";
+    const $route = { params: { pathParam1, pathParam2 } };
     const $router = { push: jest.fn() };
     const wrapper = shallowMount(Open, { props: { book }, global: { mocks: { $route, $router } } });
     await checkOpenLocal(wrapper);
@@ -130,7 +130,7 @@ describe("Open repository from local file system", () => {
 
     /* Then */
     expect(findInputElement(wrapper, "input[id=openFromFolder]").value).toEqual(pathParam1);
-    expect(findInputElement(wrapper, "input[id=workspace]").value).toEqual(workPath);
+    expect(findInputElement(wrapper, "input[id=workspace]").value).toEqual(pathParam2);
   });
 
   it("displays an error when trying to open local without providing a work path", async () => {
@@ -158,7 +158,7 @@ describe("Open repository from local file system", () => {
     /* Given */
     const action = "read";
     const pathParam1 = "book-path";
-    const workPath = "work-path";
+    const pathParam2 = "work-path";
     const book = emptyBook();
     const $route = { params: {} };
     const $router = { push: jest.fn() };
@@ -167,14 +167,14 @@ describe("Open repository from local file system", () => {
 
     /* When */
     await wrapper.find("input[id=openFromFolder]").setValue(pathParam1);
-    await wrapper.find("input[id=workspace]").setValue(workPath);
+    await wrapper.find("input[id=workspace]").setValue(pathParam2);
     await wrapper.find("button[class=primary]").trigger("click");
     await flushPromises();
 
     /* Then */
     expect(wrapper.find("span[class=error]").exists()).toBeFalsy();
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, pathParam1, workPath } });
+    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, pathParam1, pathParam2 } });
   });
 });
 

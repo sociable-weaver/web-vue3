@@ -90,7 +90,7 @@ export default class Open extends Vue {
       this.bookPath = asString(this.$route.params.pathParam1);
     }
     if (this.workPath === "") {
-      this.workPath = asString(this.$route.params.workPath);
+      this.workPath = asString(this.$route.params.pathParam2);
     }
   }
 
@@ -115,7 +115,7 @@ export default class Open extends Vue {
 
     this.$router.push({
       name: "Book",
-      params: { action: "read", pathParam1: this.bookPath, workPath: this.workPath },
+      params: { action: "read", pathParam1: this.bookPath, pathParam2: this.workPath },
     });
   }
 

@@ -24,10 +24,10 @@ describe("Toc component", () => {
     /* Given */
     const action = "read";
     const pathParam1 = "path-to-book";
-    const workPath = "path-to-workspace";
+    const pathParam2 = "path-to-workspace";
     const chapterIndex = 0;
     const $router = { push: jest.fn() };
-    const book = { ...bookResponse.data, workPath } as Book;
+    const book = { ...bookResponse.data, workPath: pathParam2 } as Book;
     const wrapper = shallowMount(Toc, { props: { book }, global: { mocks: { $router } } });
 
     /* When */
@@ -36,6 +36,9 @@ describe("Toc component", () => {
 
     /* Then */
     expect($router.push).toHaveBeenCalledTimes(1);
-    expect($router.push).toHaveBeenCalledWith({ name: "Book", params: { action, pathParam1, workPath, chapterIndex } });
+    expect($router.push).toHaveBeenCalledWith({
+      name: "Book",
+      params: { action, pathParam1, pathParam2, chapterIndex },
+    });
   });
 });

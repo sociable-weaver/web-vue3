@@ -30,7 +30,7 @@ export default class Toc extends Vue {
       params: {
         action: "read",
         pathParam1: this.book.bookPath,
-        workPath: this.book.workPath,
+        pathParam2: this.book.workPath,
         chapterIndex: chapterIndex,
       },
     });
