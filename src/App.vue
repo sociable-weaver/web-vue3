@@ -22,9 +22,9 @@
 
   code {
     padding: 2px;
-    border: 1px solid lightgrey;
+    border: 1px solid #f0f0f0;
     border-radius: 5px;
-    background-color: lightgrey;
+    background-color: #f0f0f0;
     color: black;
   }
 
@@ -44,6 +44,7 @@
     border: 0;
     padding: 0;
     margin: 0;
+    background-color: inherit;
   }
 
   pre.runnable {
